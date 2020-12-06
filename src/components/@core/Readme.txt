@@ -1,0 +1,1 @@
+This folder will contain all component that is recycled
