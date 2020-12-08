@@ -1,0 +1,56 @@
+#header {
+  position: fixed;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.712);
+  border-bottom: 1px solid transparent;
+  transition: border 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955),
+    background 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  height: 80px;
+  padding: 0 48px;
+  width: 100%;
+}
+
+#logo {
+  float: left;
+  height: 80px;
+  line-height: 80px;
+}
+
+#logo img {
+  height: 80px;
+  line-height: 80px;
+  width: 40px;
+  margin-right: 8px;
+}
+
+#logo span {
+  float: right;
+  font-size: 16px;
+  height: 80px;
+  line-height: 80px;
+  text-transform: uppercase;
+}
+
+.header-lang-button {
+  float: right;
+  margin-top: 29px;
+  margin-left: 10px;
+  color: #fff;
+  border-color: #fff;
+}
+
+#nav {
+  border: 0;
+  float: right;
+  font-size: 14px;
+  background-color: transparent;
+  color: #fff;
+}
+
+#nav li {
+  height: 80px;
+  line-height: 80px;
+  min-width: 72px;
+  text-align: center;
+  border-bottom-width: 3px;
+}
