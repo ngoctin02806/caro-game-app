@@ -4,6 +4,8 @@ import {
   LOGIN_FAIL,
   USER_LOADING,
   USER_LOADED,
+  REGISTER_FAIL,
+  AUTH_ERROR,
   LOGIN_LOADING,
 } from "./auth.types";
 
@@ -33,6 +35,15 @@ const authReducer = (state = INIT_STATE, action) => {
         token: action.value.auth.token,
         expireTime: action.value.auth.expire_time,
         isAuthenticated: true,
+        isLoading: false,
+      };
+    }
+    case AUTH_ERROR:
+    case LOGIN_FAIL:
+    case REGISTER_FAIL: {
+      return {
+        ...state,
+        isAuthenticated: false,
         isLoading: false,
       };
     }

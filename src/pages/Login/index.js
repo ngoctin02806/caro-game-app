@@ -4,13 +4,15 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
+import Error from "../../components/@core/Error";
+
 import { WrapperLogin, WrapperForm } from "./styled";
 import Logo from "../../public/images/logo.svg";
 
 import { login } from "../../redux/Auth/auth.actions";
 
 const Login = (props) => {
-  const { login, auth } = props;
+  const { login, auth, error } = props;
 
   const [cert, setCert] = useState({ email: "", password: "" });
 
@@ -51,6 +53,12 @@ const Login = (props) => {
                   Care game
                 </div>
               </div>
+              {error.message && (
+                <>
+                  <Error fontSize={12} message={error.message} />
+                  <div style={{ marginBottom: "9px" }}></div>
+                </>
+              )}
               <Form.Item
                 name="email"
                 rules={[
@@ -60,6 +68,7 @@ const Login = (props) => {
                   },
                   ({ getFieldValue }) => ({
                     validator(rule, value) {
+                      // eslint-disable-next-line
                       const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                       if (!value || regex.test(getFieldValue("email"))) {
                         return Promise.resolve();
@@ -136,6 +145,9 @@ const Login = (props) => {
 
 const mapStateToProps = (state) => {
   return {
+    error: {
+      ...state.error,
+    },
     auth: {
       ...state.auth,
       token: state.auth.token,

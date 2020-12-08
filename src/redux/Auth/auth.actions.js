@@ -1,6 +1,7 @@
 import axios from "axios";
 
-import { LOGIN_SUCCESS, LOGIN_LOADING } from "./auth.types";
+import { LOGIN_SUCCESS, LOGIN_LOADING, LOGIN_FAIL } from "./auth.types";
+import { GET_ERRORS } from "../Error/error.types";
 
 export const login = (dispatch, { email, password }) => {
   dispatch({ type: LOGIN_LOADING });
@@ -21,5 +22,13 @@ export const login = (dispatch, { email, password }) => {
     })
     .catch((e) => {
       console.log(e.response);
+      dispatch({ type: LOGIN_FAIL });
+      dispatch({
+        type: GET_ERRORS,
+        value: {
+          message: e.response.data.message,
+          code: e.response.data.errors[0].code,
+        },
+      });
     });
 };
