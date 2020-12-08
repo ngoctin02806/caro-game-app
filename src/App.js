@@ -1,4 +1,6 @@
 import "./App.css";
+import "antd/dist/antd.css";
+import socket from "./config/socket.config";
 import { connect } from "react-redux";
 
 import {
