@@ -5,19 +5,39 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Error from "../../components/@core/Error";
+import FacebookIcon from "../../components/Icons/FacebookIcon";
 
-import { WrapperLogin, WrapperForm } from "./styled";
+import "./style.css";
+import {
+  WrapperLogin,
+  WrapperForm,
+  StyledGoogleLogin,
+  StyledFacebookLogin,
+} from "./styled";
 import Logo from "../../public/images/logo.svg";
 
-import { login } from "../../redux/Auth/auth.actions";
+import {
+  login,
+  loginByGoogle,
+  loginByFacebook,
+} from "../../redux/Auth/auth.actions";
+import config from "../../config/default.config";
 
 const Login = (props) => {
-  const { login, auth, error } = props;
+  const { login, loginByGoogle, loginByFacebook, auth, error } = props;
 
   const [cert, setCert] = useState({ email: "", password: "" });
 
   const onFinish = (values) => {
     login({ email: values.email, password: values.password });
+  };
+
+  const responseGoogle = (response) => {
+    loginByGoogle({ accessToken: response.accessToken });
+  };
+
+  const responseFacebook = (response) => {
+    loginByFacebook({ accessToken: response.accessToken });
   };
 
   return (
@@ -136,6 +156,23 @@ const Login = (props) => {
                 Or <Link to="/dang-ky">Đăng ký ngay !</Link>
               </Form.Item>
             </Form>
+            <StyledGoogleLogin
+              className="caro-game-google-btn"
+              clientId={config.GOOGLE_CLIENT_ID}
+              buttonText="Đăng nhập bằng Google"
+              onSuccess={responseGoogle}
+              onFailure={(response) => {
+                console.log(response);
+              }}
+            />
+            <div style={{ margin: "5px 0px" }}></div>
+            <StyledFacebookLogin
+              icon={<FacebookIcon style={{ marginRight: "20px" }} />}
+              cssClass="caro-game-facebook-btn"
+              textButton="Đăng nhập bằng Facebook"
+              appId={config.FACEBOOK_CLIENT_ID}
+              callback={responseFacebook}
+            />
           </WrapperForm>
         </Col>
       </Row>
@@ -160,6 +197,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     login: ({ email, password }) => login(dispatch, { email, password }),
+    loginByGoogle: ({ accessToken }) =>
+      loginByGoogle(dispatch, { accessToken }),
+    loginByFacebook: ({ accessToken }) =>
+      loginByFacebook(dispatch, { accessToken }),
   };
 };
 

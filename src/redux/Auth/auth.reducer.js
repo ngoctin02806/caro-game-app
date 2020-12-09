@@ -15,6 +15,8 @@ import {
   USER_VALIDATE_EMAIL_SUCCESS,
   USER_VALIDATE_EMAIL_FAIL,
   USER_RESEND_MAIL_FAIL,
+  LOGIN_GOOGLE_SUCCESS,
+  LOGIN_FACEBOOK_SUCCESS,
 } from "./auth.types";
 
 const existToken = localStorage.getItem("token");
@@ -57,11 +59,14 @@ const authReducer = (state = INIT_STATE, action) => {
         isValidated: true,
       };
     }
+    case LOGIN_FACEBOOK_SUCCESS:
+    case LOGIN_GOOGLE_SUCCESS:
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS: {
       return {
         ...state,
         token: action.value.auth.token,
+        profileId: action.value.user._id,
         expireTime: action.value.auth.expire_time,
         isAuthenticated: true,
         isLoading: false,
