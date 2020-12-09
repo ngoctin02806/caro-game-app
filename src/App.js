@@ -7,13 +7,17 @@ import { connect } from "react-redux";
 import { Switch } from "react-router-dom";
 
 import PublicRoute from "./routers/PublicRoute";
-// import PrivateRoute from "./routers/PrivateRoute";
+import ValidateEmailRoute from "./routers/ValidateEmailRoute";
+import PreventRoute from "./routers/PreventRoute";
+import PrivateRoute from "./routers/PrivateRoute";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ValidateEmail from "./pages/ValidateEmail";
 
 import {
   increaseCounter,
@@ -25,13 +29,16 @@ const App = (props) => {
     <>
       <Header />
       <Switch>
-        <PublicRoute exact path="/">
+        <PreventRoute exact path="/">
           <Home />
-        </PublicRoute>
-        <PublicRoute path="/dang-nhap">
+        </PreventRoute>
+        <PreventRoute path="/dang-nhap">
           <Login />
-        </PublicRoute>
-        <PublicRoute exact path="/counter">
+        </PreventRoute>
+        <PreventRoute path="/dang-ky">
+          <Register />
+        </PreventRoute>
+        <ValidateEmailRoute path="/counter">
           <div className="App">
             <div>Count: {props.count}</div>
 
@@ -43,7 +50,10 @@ const App = (props) => {
               Decrease Count
             </button>
           </div>
-        </PublicRoute>
+        </ValidateEmailRoute>
+        <PrivateRoute path="/xac-thuc-tai-khoan">
+          <ValidateEmail />
+        </PrivateRoute>
         <PublicRoute>
           <div>Not found</div>
         </PublicRoute>

@@ -1,15 +1,15 @@
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
-const PrivateRoute = ({
+const ValidateEmailRoute = ({
   component: Component,
-  auth: { isAuthenticated },
+  auth: { isAuthenticated, isValidated },
   ...rest
 }) => {
-  return isAuthenticated ? (
+  return isAuthenticated && isValidated ? (
     <Route {...rest} render={(props) => <Component {...props} />} />
   ) : (
-    <Redirect to={{ pathname: "/dang-nhap" }} />
+    <Redirect to={{ pathname: "/xac-thuc-tai-khoan" }} />
   );
 };
 
@@ -21,4 +21,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(PrivateRoute);
+export default connect(mapStateToProps)(ValidateEmailRoute);

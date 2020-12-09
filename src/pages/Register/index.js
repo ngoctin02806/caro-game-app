@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Row, Col } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -9,15 +9,19 @@ import Error from "../../components/@core/Error";
 import { WrapperLogin, WrapperForm } from "./styled";
 import Logo from "../../public/images/logo.svg";
 
-import { login } from "../../redux/Auth/auth.actions";
+import { register } from "../../redux/Auth/auth.actions";
 
-const Login = (props) => {
-  const { login, auth, error } = props;
+const Register = (props) => {
+  const { register, auth, error } = props;
 
-  const [cert, setCert] = useState({ email: "", password: "" });
+  const [cert, setCert] = useState({ email: "", password: "", username: "" });
 
   const onFinish = (values) => {
-    login({ email: values.email, password: values.password });
+    register({
+      email: values.email,
+      password: values.password,
+      username: values.username,
+    });
   };
 
   return (
@@ -59,6 +63,24 @@ const Login = (props) => {
                   <div style={{ marginBottom: "9px" }}></div>
                 </>
               )}
+              <Form.Item
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng cung cấp họ và tên!",
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<IdcardOutlined className="site-form-item-icon" />}
+                  placeholder="Họ và tên"
+                  value={cert.username}
+                  onChange={(e) => {
+                    setCert({ ...cert, username: e.target.value });
+                  }}
+                />
+              </Form.Item>
               <Form.Item
                 name="email"
                 rules={[
@@ -117,6 +139,39 @@ const Login = (props) => {
                   }}
                 />
               </Form.Item>
+              <Form.Item
+                name="confirmpassword"
+                validateEmail={true}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng xác nhận mật khẩu!",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(rule, value) {
+                      if (
+                        !value ||
+                        getFieldValue("password").length ===
+                          getFieldValue("confirmpassword").length
+                      ) {
+                        return Promise.resolve();
+                      }
+
+                      return Promise.reject("Mật khẩu không khớp");
+                    },
+                  }),
+                ]}
+              >
+                <Input
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  placeholder="Mật khẩu"
+                  value={cert.password}
+                  onChange={(e) => {
+                    setCert({ ...cert, password: e.target.value });
+                  }}
+                />
+              </Form.Item>
               <Form.Item>
                 <Link className="login-form-forgot" to="/dang-ky">
                   Quên mật khẩu
@@ -131,9 +186,9 @@ const Login = (props) => {
                   style={{ width: "100.15px" }}
                   loading={auth.isLoading}
                 >
-                  {!auth.isLoading && "Đăng nhập"}
+                  {!auth.isLoading && "Đăng ký"}
                 </Button>
-                Or <Link to="/dang-ky">Đăng ký ngay !</Link>
+                Or <Link to="/dang-ky">Đăng nhập ngay !</Link>
               </Form.Item>
             </Form>
           </WrapperForm>
@@ -159,8 +214,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    login: ({ email, password }) => login(dispatch, { email, password }),
+    register: ({ email, password, username }) =>
+      register(dispatch, { email, password, username }),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
