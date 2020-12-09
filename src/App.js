@@ -1,7 +1,9 @@
 import "./App.css";
 import "antd/dist/antd.css";
 
+/* Import all config */
 import "./config/axios.config";
+import "./config/socket.config";
 
 import { connect } from "react-redux";
 import { Switch } from "react-router-dom";
@@ -18,6 +20,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ValidateEmail from "./pages/ValidateEmail";
+import GameDashboard from "./pages/GameDashboard";
 
 import {
   increaseCounter,
@@ -50,6 +53,9 @@ const App = (props) => {
               Decrease Count
             </button>
           </div>
+        </ValidateEmailRoute>
+        <ValidateEmailRoute path="/trang-chu">
+          <GameDashboard />
         </ValidateEmailRoute>
         <PrivateRoute path="/xac-thuc-tai-khoan">
           <ValidateEmail />

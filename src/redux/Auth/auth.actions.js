@@ -1,4 +1,5 @@
 import axios from "axios";
+import socket from "../../config/socket.config";
 
 import {
   LOGIN_SUCCESS,
@@ -35,6 +36,8 @@ export const login = (dispatch, { email, password }) => {
       localStorage.setItem("expire_time", res.data.data.auth.expire_in);
       localStorage.setItem("profile_id", res.data.data.user._id);
 
+      socket.emit("emit-user-login", { user_id: res.data.data.user._id });
+
       dispatch({ type: LOGIN_SUCCESS, value: res.data.data });
     })
     .catch((e) => {
@@ -66,6 +69,8 @@ export const register = (dispatch, { email, password, username }) => {
       localStorage.setItem("token", res.data.data.auth.token);
       localStorage.setItem("expire_time", res.data.data.auth.expire_in);
       localStorage.setItem("profile_id", res.data.data.user._id);
+
+      socket.emit("emit-user-login", { user_id: res.data.data.user._id });
 
       dispatch({ type: REGISTER_SUCCESS, value: res.data.data });
     })
@@ -140,6 +145,8 @@ export const loginByGoogle = (dispatch, { accessToken }) => {
       localStorage.setItem("expire_time", res.data.data.auth.expire_in);
       localStorage.setItem("profile_id", res.data.data.user._id);
 
+      socket.emit("emit-user-login", { user_id: res.data.data.user._id });
+
       dispatch({ type: LOGIN_GOOGLE_SUCCESS, value: res.data.data });
     })
     .catch((e) => {
@@ -166,6 +173,8 @@ export const loginByFacebook = (dispatch, { accessToken }) => {
       localStorage.setItem("token", res.data.data.auth.token);
       localStorage.setItem("expire_time", res.data.data.auth.expire_in);
       localStorage.setItem("profile_id", res.data.data.user._id);
+
+      socket.emit("emit-user-login", { user_id: res.data.data.user._id });
 
       dispatch({ type: LOGIN_FACEBOOK_SUCCESS, value: res.data.data });
     })

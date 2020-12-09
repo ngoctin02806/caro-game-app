@@ -1,3 +1,5 @@
-import socket from "socket.io-client";
+import io from "socket.io-client";
 
-socket("http://localhost:8001");
+const socket = io("http://103.137.184.140:8012");
+
+export default socket;

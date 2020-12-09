@@ -9,7 +9,7 @@ const PreventRoute = ({
   return !isAuthenticated ? (
     <Route {...rest} render={(props) => <Component {...props} />} />
   ) : (
-    <Redirect to={{ pathname: "/counter" }} />
+    <Redirect to={{ pathname: "/trang-chu" }} />
   );
 };
 
