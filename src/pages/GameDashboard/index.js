@@ -13,13 +13,17 @@ import { WrapperDashboard } from "./styled";
 import Widget from "../../components/@core/Widget";
 import UserOnline from "./UserOnline";
 
-import { getUserOnline } from "../../redux/UserOnline/userOnline.actions";
+import { getUserOnlineMiddleware } from "../../redux/UserOnline/userOnline.middlewares";
 
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
 
 const GameDashboard = (props) => {
   const { game, getUserOnline } = props;
+
+  useEffect(() => {
+    document.title = "Trang chủ Game";
+  }, []);
 
   useEffect(() => {
     getUserOnline();
@@ -113,7 +117,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUserOnline: () => getUserOnline(dispatch),
+    getUserOnline: () => {
+      dispatch(getUserOnlineMiddleware());
+    },
   };
 };
 

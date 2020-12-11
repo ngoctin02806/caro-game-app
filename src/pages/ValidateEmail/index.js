@@ -10,7 +10,10 @@ import Success from "../../components/@core/Success";
 import { WrapperLogin, WrapperForm } from "./styled";
 import Logo from "../../public/images/logo.svg";
 
-import { reSendMail, validateEmail } from "../../redux/Auth/auth.actions";
+import {
+  reSendMailMiddleware,
+  validateEmailMiddleware,
+} from "../../redux/Auth/auth.middlewares";
 
 const ValidateEmail = (props) => {
   const { error, auth, validateEmail, reSendMail } = props;
@@ -183,8 +186,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    reSendMail: () => reSendMail(dispatch),
-    validateEmail: (code) => validateEmail(dispatch, { code }),
+    reSendMail: () => dispatch(reSendMailMiddleware()),
+    validateEmail: (code) => dispatch(validateEmailMiddleware({ code })),
   };
 };
 

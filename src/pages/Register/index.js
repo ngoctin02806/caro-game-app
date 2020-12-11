@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Row, Col } from "antd";
 import { UserOutlined, LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
@@ -9,7 +9,7 @@ import Error from "../../components/@core/Error";
 import { WrapperLogin, WrapperForm } from "./styled";
 import Logo from "../../public/images/logo.svg";
 
-import { register } from "../../redux/Auth/auth.actions";
+import { registerMiddleware } from "../../redux/Auth/auth.middlewares";
 
 const Register = (props) => {
   const { register, auth, error } = props;
@@ -23,6 +23,10 @@ const Register = (props) => {
       username: values.username,
     });
   };
+
+  useEffect(() => {
+    document.title = "Đăng ký";
+  }, []);
 
   return (
     <WrapperLogin>
@@ -215,7 +219,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     register: ({ email, password, username }) =>
-      register(dispatch, { email, password, username }),
+      dispatch(registerMiddleware({ username, email, password })),
   };
 };
 

@@ -19,6 +19,8 @@ export const StyledGoogleLogin = styled(GoogleLogin)`
   justify-content: center;
   padding: 0px !important;
   font-family: inherit;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045) !important;
+  border: 0.5px solid rgba(0, 0, 0, 0.045) !important;
   & > div {
     display: flex;
     align-items: center;
@@ -32,3 +34,17 @@ export const StyledGoogleLogin = styled(GoogleLogin)`
 `;
 
 export const StyledFacebookLogin = styled(FacebookLogin)``;
+
+export const StyledLine = styled.hr`
+  border: none;
+  border-bottom: 1px solid #ddd;
+  width: 140px;
+`;
+
+export const BreakLineWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -7px;
+  margin-bottom: 10px;
+`;

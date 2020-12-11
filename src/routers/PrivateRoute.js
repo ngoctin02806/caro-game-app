@@ -1,4 +1,4 @@
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 
 const PrivateRoute = ({
@@ -6,6 +6,8 @@ const PrivateRoute = ({
   auth: { isAuthenticated },
   ...rest
 }) => {
+  const location = useLocation();
+
   return isAuthenticated ? (
     <Route {...rest} render={(props) => <Component {...props} />} />
   ) : (

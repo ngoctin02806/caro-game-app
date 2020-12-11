@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Row, Col } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
@@ -13,14 +13,16 @@ import {
   WrapperForm,
   StyledGoogleLogin,
   StyledFacebookLogin,
+  StyledLine,
+  BreakLineWrapper,
 } from "./styled";
 import Logo from "../../public/images/logo.svg";
 
 import {
-  login,
-  loginByGoogle,
-  loginByFacebook,
-} from "../../redux/Auth/auth.actions";
+  loginMiddleware,
+  loginByFacebookMiddleware,
+  loginByGoogleMiddleware,
+} from "../../redux/Auth/auth.middlewares";
 import config from "../../config/default.config";
 
 const Login = (props) => {
@@ -39,6 +41,10 @@ const Login = (props) => {
   const responseFacebook = (response) => {
     loginByFacebook({ accessToken: response.accessToken });
   };
+
+  useEffect(() => {
+    document.title = "Đăng nhập";
+  }, []);
 
   return (
     <WrapperLogin>
@@ -137,9 +143,12 @@ const Login = (props) => {
                   }}
                 />
               </Form.Item>
-              <Form.Item>
-                <Link className="login-form-forgot" to="/dang-ky">
+              <Form.Item className="caro-game-authen-wrapper">
+                <Link className="login-form-forgot" to="/quen-mat-khau">
                   Quên mật khẩu
+                </Link>
+                <Link className="login-form-forgot" to="/dang-ky">
+                  Đăng ký
                 </Link>
               </Form.Item>
 
@@ -148,14 +157,18 @@ const Login = (props) => {
                   type="primary"
                   htmlType="submit"
                   className="login-form-button"
-                  style={{ width: "100.15px" }}
+                  style={{ width: "100%" }}
                   loading={auth.isLoading}
                 >
                   {!auth.isLoading && "Đăng nhập"}
                 </Button>
-                Or <Link to="/dang-ky">Đăng ký ngay !</Link>
               </Form.Item>
             </Form>
+            <BreakLineWrapper>
+              <StyledLine />
+              <label>Or</label>
+              <StyledLine />
+            </BreakLineWrapper>
             <StyledGoogleLogin
               className="caro-game-google-btn"
               clientId={config.GOOGLE_CLIENT_ID}
@@ -196,11 +209,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    login: ({ email, password }) => login(dispatch, { email, password }),
+    login: ({ email, password }) =>
+      dispatch(loginMiddleware({ email, password })),
     loginByGoogle: ({ accessToken }) =>
-      loginByGoogle(dispatch, { accessToken }),
+      dispatch(loginByGoogleMiddleware({ accessToken })),
     loginByFacebook: ({ accessToken }) =>
-      loginByFacebook(dispatch, { accessToken }),
+      dispatch(loginByFacebookMiddleware({ accessToken })),
   };
 };
 
