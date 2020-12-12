@@ -6,7 +6,7 @@ import { GET_ERRORS } from "../Error/error.types";
 
 export const getUserOnlineMiddleware = () => {
   return (dispatch) => {
-    axios("/me/user-online", {
+    return axios("/me/user-online", {
       method: "GET",
     })
       .then((res) => {

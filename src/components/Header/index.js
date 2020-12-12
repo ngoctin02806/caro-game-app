@@ -1,24 +1,33 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import "./styles.css";
 import { Menu, Row, Col, Button } from "antd";
 
+import UserDropDown from "./UserDropdown";
+
+import { getUserProfileMiddleware } from "../../redux/User/user.actions";
+
 import Logo from "../../public/images/logo.svg";
 
 const Header = (props) => {
+  const { auth, user, getUserProfile } = props;
+
   const menu = [
-    <Button className="header-lang-button" ghost size="small" key="lang">
-      Register
-    </Button>,
-    <Button className="header-lang-button" ghost size="small" key="lang">
-      Login
-    </Button>,
+    !auth.isAuthenticated ? (
+      <>
+        <Button className="header-lang-button" ghost size="small" key="lang">
+          Register
+        </Button>
+        <Button className="header-lang-button" ghost size="small" key="lang">
+          Login
+        </Button>
+      </>
+    ) : (
+      <UserDropDown user={user} getUserProfile={getUserProfile} />
+    ),
     <Menu mode="horizontal" defaultSelectedKeys={["home"]} id="nav" key="nav">
-      <Menu.Item key="home">Home</Menu.Item>
-      <Menu.Item key="docs/spec">Guidelines</Menu.Item>
-      <Menu.Item key="docs/react">Components</Menu.Item>
-      <Menu.Item key="docs/pattern">Patterns</Menu.Item>
-      <Menu.Item key="docs/resource">Resources</Menu.Item>
+      <Menu.Item key="home">Trang chủ</Menu.Item>
     </Menu>,
   ];
 
@@ -39,4 +48,21 @@ const Header = (props) => {
   );
 };
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    auth: {
+      ...state.auth,
+    },
+    user: {
+      ...state.user,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getUserProfile: () => dispatch(getUserProfileMiddleware()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

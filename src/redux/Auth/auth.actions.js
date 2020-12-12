@@ -13,6 +13,7 @@ import {
   USER_RESEND_MAIL_FAIL,
   LOGIN_GOOGLE_SUCCESS,
   LOGIN_FACEBOOK_SUCCESS,
+  USER_LOGOUT,
 } from "./auth.types";
 
 export const loginLoading = () => {
@@ -100,5 +101,11 @@ export const loginByFacebook = (payload) => {
   return {
     type: LOGIN_FACEBOOK_SUCCESS,
     value: payload,
+  };
+};
+
+export const logout = () => {
+  return {
+    type: USER_LOGOUT,
   };
 };

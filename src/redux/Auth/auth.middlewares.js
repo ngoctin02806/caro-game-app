@@ -16,6 +16,7 @@ import {
   validateEmailSuccess,
   loginByGoogle,
   loginByFacebook,
+  logout,
 } from "./auth.actions";
 import { GET_ERRORS } from "../Error/error.types";
 
@@ -23,7 +24,7 @@ export const loginMiddleware = ({ email, password }) => {
   return (dispatch) => {
     dispatch(loginLoading());
 
-    axios("/me/login", {
+    return axios("/me/login", {
       method: "POST",
       data: {
         email: email,
@@ -59,7 +60,7 @@ export const registerMiddleware = ({ username, email, password }) => {
   return (dispatch) => {
     dispatch(registerLoading());
 
-    axios("/me/register", {
+    return axios("/me/register", {
       method: "POST",
       data: {
         username: username,
@@ -96,7 +97,7 @@ export const reSendMailMiddleware = () => {
   return (dispatch) => {
     dispatch(reSendMailLoading());
 
-    axios("/me/verified-code/send", {
+    return axios("/me/verified-code/send", {
       method: "POST",
     })
       .then((res) => {
@@ -119,7 +120,7 @@ export const validateEmailMiddleware = ({ code }) => {
   return (dispatch) => {
     dispatch(validateEmailLoading());
 
-    axios("/me/account/activate", {
+    return axios("/me/account/activate", {
       method: "POST",
       data: {
         code,
@@ -143,7 +144,7 @@ export const validateEmailMiddleware = ({ code }) => {
 
 export const loginByGoogleMiddleware = ({ accessToken }) => {
   return (dispatch) => {
-    axios("/me/google/login", {
+    return axios("/me/google/login", {
       method: "POST",
       data: {
         access_token: accessToken,
@@ -175,7 +176,7 @@ export const loginByGoogleMiddleware = ({ accessToken }) => {
 
 export const loginByFacebookMiddleware = ({ accessToken }) => {
   return (dispatch) => {
-    axios("/me/facebook/login", {
+    return axios("/me/facebook/login", {
       method: "POST",
       data: {
         access_token: accessToken,
@@ -202,5 +203,15 @@ export const loginByFacebookMiddleware = ({ accessToken }) => {
           },
         });
       });
+  };
+};
+
+export const logoutMiddleware = () => {
+  return (dispatch) => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("expire_time");
+    localStorage.removeItem("profile_id");
+
+    dispatch(logout());
   };
 };

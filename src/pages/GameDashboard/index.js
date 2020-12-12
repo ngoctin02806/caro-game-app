@@ -32,7 +32,7 @@ const GameDashboard = (props) => {
   const menu = (
     <Menu style={{ width: "300px" }}>
       {game.users.map((user) => (
-        <Menu.Item>
+        <Menu.Item key={user._id}>
           <UserOnline isOnline={true} userName={user.username} />
         </Menu.Item>
       ))}

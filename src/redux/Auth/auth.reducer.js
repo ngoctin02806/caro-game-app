@@ -17,6 +17,7 @@ import {
   USER_RESEND_MAIL_FAIL,
   LOGIN_GOOGLE_SUCCESS,
   LOGIN_FACEBOOK_SUCCESS,
+  USER_LOGOUT,
 } from "./auth.types";
 
 const existToken = localStorage.getItem("token");
@@ -84,7 +85,16 @@ const authReducer = (state = INIT_STATE, action) => {
         isLoading: false,
       };
     }
-
+    case USER_LOGOUT: {
+      return {
+        ...state,
+        token: null,
+        expireTime: 0,
+        profileId: 0,
+        isAuthenticated: false,
+        isValidated: false,
+      };
+    }
     case GET_AUTH: {
       return {
         ...state,

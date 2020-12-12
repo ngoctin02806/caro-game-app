@@ -33,3 +33,5 @@ export const REGISTER_LOADING = "LOGIN_LOADING";
 export const AUTH_ERROR = "AUTH_ERROR";
 
 export const GET_AUTH = "GET_AUTH";
+
+export const USER_LOGOUT = "USER_LOGOUT";

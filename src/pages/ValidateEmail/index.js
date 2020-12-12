@@ -54,7 +54,7 @@ const ValidateEmail = (props) => {
         countdown--;
       }
     }, 1000);
-  }, []);
+  }, []); // eslint-disable-line
 
   const onFinish = (values) => {
     validateEmail(values.code);

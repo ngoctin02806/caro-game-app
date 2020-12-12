@@ -112,6 +112,7 @@ const Login = (props) => {
                   onChange={(e) => {
                     setCert({ ...cert, email: e.target.value });
                   }}
+                  lang="vi"
                 />
               </Form.Item>
               <Form.Item
@@ -141,6 +142,7 @@ const Login = (props) => {
                   onChange={(e) => {
                     setCert({ ...cert, password: e.target.value });
                   }}
+                  lang="vi"
                 />
               </Form.Item>
               <Form.Item className="caro-game-authen-wrapper">

@@ -3,7 +3,7 @@ import React from "react";
 const FacebookIcon = (props) => {
   return (
     <svg
-      enable-background="new 0 0 24 24"
+      enableBackground="new 0 0 24 24"
       height="23"
       viewBox="0 0 24 24"
       width="23"
