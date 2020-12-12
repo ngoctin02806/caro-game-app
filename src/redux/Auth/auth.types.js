@@ -35,3 +35,5 @@ export const AUTH_ERROR = "AUTH_ERROR";
 export const GET_AUTH = "GET_AUTH";
 
 export const USER_LOGOUT = "USER_LOGOUT";
+
+export const USER_AUTO_LOGOUT = "USER_AUTO_LOGOUT";

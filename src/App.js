@@ -5,6 +5,7 @@ import "antd/dist/antd.css";
 import "./config/axios.config";
 import "./config/socket.config";
 
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Switch } from "react-router-dom";
 
@@ -26,8 +27,15 @@ import {
   increaseCounter,
   decreaseCounter,
 } from "./redux/Counter/counter.actions";
+import { autoLogoutMiddleware } from "./redux/Auth/auth.middlewares";
 
 const App = (props) => {
+  const { auth, autoLogout } = props;
+
+  useEffect(() => {
+    autoLogout();
+  }, [auth.isAuthenticated]);
+
   return (
     <>
       <Header />
@@ -81,8 +89,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     increaseCounter: () => dispatch(increaseCounter()),
-
     decreaseCounter: () => dispatch(decreaseCounter()),
+    autoLogout: () => dispatch(autoLogoutMiddleware()),
   };
 };
 

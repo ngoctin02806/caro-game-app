@@ -18,6 +18,7 @@ import {
   LOGIN_GOOGLE_SUCCESS,
   LOGIN_FACEBOOK_SUCCESS,
   USER_LOGOUT,
+  USER_AUTO_LOGOUT,
 } from "./auth.types";
 
 const existToken = localStorage.getItem("token");
@@ -29,7 +30,7 @@ axios.defaults.headers.common["x-auth-token"] = existToken;
 
 const INIT_STATE = {
   token: existToken,
-  expireTime: expireTime,
+  expireTime: expireTime || 0,
   profileId: profileId,
   isAuthenticated: existToken ? true : false,
   isLoading: false,
@@ -68,7 +69,7 @@ const authReducer = (state = INIT_STATE, action) => {
         ...state,
         token: action.value.auth.token,
         profileId: action.value.user._id,
-        expireTime: action.value.auth.expire_time,
+        expireTime: action.value.auth.expire_in,
         isAuthenticated: true,
         isLoading: false,
         isValidated: action.value.user.is_verified,
@@ -85,6 +86,7 @@ const authReducer = (state = INIT_STATE, action) => {
         isLoading: false,
       };
     }
+    case USER_AUTO_LOGOUT:
     case USER_LOGOUT: {
       return {
         ...state,

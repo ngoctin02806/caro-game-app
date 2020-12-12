@@ -14,6 +14,7 @@ import {
   LOGIN_GOOGLE_SUCCESS,
   LOGIN_FACEBOOK_SUCCESS,
   USER_LOGOUT,
+  USER_AUTO_LOGOUT,
 } from "./auth.types";
 
 export const loginLoading = () => {
@@ -107,5 +108,11 @@ export const loginByFacebook = (payload) => {
 export const logout = () => {
   return {
     type: USER_LOGOUT,
+  };
+};
+
+export const autoLogout = () => {
+  return {
+    type: USER_AUTO_LOGOUT,
   };
 };

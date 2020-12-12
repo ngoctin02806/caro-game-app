@@ -17,6 +17,7 @@ import {
   loginByGoogle,
   loginByFacebook,
   logout,
+  autoLogout,
 } from "./auth.actions";
 import { GET_ERRORS } from "../Error/error.types";
 
@@ -213,5 +214,23 @@ export const logoutMiddleware = () => {
     localStorage.removeItem("profile_id");
 
     dispatch(logout());
+  };
+};
+
+export const autoLogoutMiddleware = () => {
+  return (dispatch, getState) => {
+    const { auth } = getState();
+
+    console.log(auth);
+
+    const now = new Date().getTime();
+
+    return setTimeout(() => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("expire_time");
+      localStorage.removeItem("profile_id");
+
+      dispatch(autoLogout());
+    }, auth.expireTime - now);
   };
 };
