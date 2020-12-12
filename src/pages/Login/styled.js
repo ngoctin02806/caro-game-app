@@ -2,14 +2,22 @@ import styled from "styled-components";
 import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login";
 
+import AuthBackground from "../../public/images/auth-background.png";
+
 export const WrapperLogin = styled.div`
   height: 100vh;
+  background-image: url("${AuthBackground}");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom;
+  background-color: #f9fafc;
 `;
 
 export const WrapperForm = styled.div`
   padding: 20px;
   box-shadow: 0 8px 24px rgba(163, 177, 191, 0.35);
   border-radius: 4px;
+  background-color: #fff;
 `;
 
 export const StyledGoogleLogin = styled(GoogleLogin)`

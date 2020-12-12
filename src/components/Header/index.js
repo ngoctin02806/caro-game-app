@@ -17,10 +17,10 @@ const Header = (props) => {
     !auth.isAuthenticated ? (
       <>
         <Button className="header-lang-button" ghost size="small" key="lang">
-          Register
+          Đăng ký
         </Button>
         <Button className="header-lang-button" ghost size="small" key="lang">
-          Login
+          Đăng nhập
         </Button>
       </>
     ) : (

@@ -59,7 +59,7 @@ const GameDashboard = (props) => {
             className="site-layout-background"
             style={{ padding: "24px 0", width: "14%" }}
           >
-            <Button type="primary">Tùy chỉnh game</Button>
+            <Button type="primary">Tạo bàn</Button>
           </Layout>
           <Layout
             className="site-layout-background"

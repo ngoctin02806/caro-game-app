@@ -5,14 +5,27 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Error from "../../components/@core/Error";
+import FacebookIcon from "../../components/Icons/FacebookIcon";
 
-import { WrapperLogin, WrapperForm } from "./styled";
+import {
+  WrapperLogin,
+  WrapperForm,
+  StyledLine,
+  BreakLineWrapper,
+  StyledFacebookLogin,
+  StyledGoogleLogin,
+} from "./styled";
 import Logo from "../../public/images/logo.svg";
 
-import { registerMiddleware } from "../../redux/Auth/auth.middlewares";
+import {
+  registerMiddleware,
+  loginByFacebookMiddleware,
+  loginByGoogleMiddleware,
+} from "../../redux/Auth/auth.middlewares";
+import config from "../../config/default.config";
 
 const Register = (props) => {
-  const { register, auth, error } = props;
+  const { register, auth, error, loginByGoogle, loginByFacebook } = props;
 
   const [cert, setCert] = useState({ email: "", password: "", username: "" });
 
@@ -22,6 +35,14 @@ const Register = (props) => {
       password: values.password,
       username: values.username,
     });
+  };
+
+  const responseGoogle = (response) => {
+    loginByGoogle({ accessToken: response.accessToken });
+  };
+
+  const responseFacebook = (response) => {
+    loginByFacebook({ accessToken: response.accessToken });
   };
 
   useEffect(() => {
@@ -176,9 +197,12 @@ const Register = (props) => {
                   }}
                 />
               </Form.Item>
-              <Form.Item>
-                <Link className="login-form-forgot" to="/dang-ky">
+              <Form.Item className="caro-game-authen-wrapper">
+                <Link className="login-form-forgot" to="/quen-mat-khau">
                   Quên mật khẩu
+                </Link>
+                <Link className="login-form-forgot" to="/dang-nhap">
+                  Đăng nhập
                 </Link>
               </Form.Item>
 
@@ -187,14 +211,35 @@ const Register = (props) => {
                   type="primary"
                   htmlType="submit"
                   className="login-form-button"
-                  style={{ width: "100.15px" }}
+                  style={{ width: "100%" }}
                   loading={auth.isLoading}
                 >
                   {!auth.isLoading && "Đăng ký"}
                 </Button>
-                Or <Link to="/dang-ky">Đăng nhập ngay !</Link>
               </Form.Item>
             </Form>
+            <BreakLineWrapper>
+              <StyledLine />
+              <label>Or</label>
+              <StyledLine />
+            </BreakLineWrapper>
+            <StyledGoogleLogin
+              className="caro-game-google-btn"
+              clientId={config.GOOGLE_CLIENT_ID}
+              buttonText="Đăng nhập bằng Google"
+              onSuccess={responseGoogle}
+              onFailure={(response) => {
+                console.log(response);
+              }}
+            />
+            <div style={{ margin: "5px 0px" }}></div>
+            <StyledFacebookLogin
+              icon={<FacebookIcon style={{ marginRight: "20px" }} />}
+              cssClass="caro-game-facebook-btn"
+              textButton="Đăng nhập bằng Facebook"
+              appId={config.FACEBOOK_CLIENT_ID}
+              callback={responseFacebook}
+            />
           </WrapperForm>
         </Col>
       </Row>
@@ -220,6 +265,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     register: ({ email, password, username }) =>
       dispatch(registerMiddleware({ username, email, password })),
+    loginByGoogle: ({ accessToken }) =>
+      dispatch(loginByGoogleMiddleware({ accessToken })),
+    loginByFacebook: ({ accessToken }) =>
+      dispatch(loginByFacebookMiddleware({ accessToken })),
   };
 };
 
