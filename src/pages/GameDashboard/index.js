@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Layout, Button, Menu, Tooltip, Dropdown } from "antd";
 import {
   UserOutlined,
@@ -6,30 +6,35 @@ import {
   NotificationOutlined,
   UsergroupAddOutlined,
 } from "@ant-design/icons";
+import { connect } from "react-redux";
 
 import { WrapperDashboard } from "./styled";
 
 import Widget from "../../components/@core/Widget";
 import UserOnline from "./UserOnline";
 
+import { getUserOnline } from "../../redux/UserOnline/userOnline.actions";
+
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
 
-const menu = (
-  <Menu style={{ width: "300px" }}>
-    <Menu.Item>
-      <UserOnline isOnline={true} userName="Test" />
-    </Menu.Item>
-    <Menu.Item>
-      <UserOnline isOnline={true} userName="Test" />
-    </Menu.Item>
-    <Menu.Item>
-      <UserOnline isOnline={true} userName="Test" />
-    </Menu.Item>
-  </Menu>
-);
+const GameDashboard = (props) => {
+  const { game, getUserOnline } = props;
 
-const GameDashboard = () => {
+  useEffect(() => {
+    getUserOnline();
+  }, []);
+
+  const menu = (
+    <Menu style={{ width: "300px" }}>
+      {game.users.map((user) => (
+        <Menu.Item>
+          <UserOnline isOnline={true} userName={user.username} />
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
+
   return (
     <WrapperDashboard>
       <Tooltip placement="left" title="Danh sách người dùng online">
@@ -97,4 +102,19 @@ const GameDashboard = () => {
   );
 };
 
-export default GameDashboard;
+const mapStateToProps = (state) => {
+  return {
+    game: {
+      ...state.game,
+      users: state.game.users,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getUserOnline: () => getUserOnline(dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameDashboard);
