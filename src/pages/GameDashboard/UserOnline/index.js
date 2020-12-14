@@ -4,7 +4,7 @@ import { Avatar, Badge } from "antd";
 import { WrapperUserOnline, StyledText } from "./styled";
 
 const UserOnline = (props) => {
-  const { userName, isOnline, openChatBox } = props;
+  const { userName, avatar, isOnline, openChatBox } = props;
 
   return (
     <WrapperUserOnline onClick={openChatBox}>
@@ -14,9 +14,8 @@ const UserOnline = (props) => {
             color: "#f56a00",
             backgroundColor: "#fde3cf",
           }}
-        >
-          U
-        </Avatar>
+          src={avatar}
+        />
         <StyledText>{userName}</StyledText>
       </div>
       {isOnline && <Badge size="small" status="success" />}

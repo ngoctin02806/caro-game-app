@@ -7,7 +7,7 @@ const PartnerMessage = (props) => {
   return (
     <PartnerMessageWrapper>
       <Avatar style={{ marginRight: "5px" }} />
-      <StyledPartnerMessage>Testing message</StyledPartnerMessage>
+      <StyledPartnerMessage>{props.children}</StyledPartnerMessage>
     </PartnerMessageWrapper>
   );
 };

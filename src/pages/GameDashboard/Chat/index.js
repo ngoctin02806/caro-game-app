@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { Card, Avatar, Input, Skeleton } from "antd";
 import {
   CloseOutlined,
@@ -12,17 +12,28 @@ import { connect } from "react-redux";
 import "./style.css";
 import { ChatBoxWrapper, MessageBoxWrapper } from "./styled";
 
-// import Message from "./Message";
+import Message from "./Message";
 import PartnerMessage from "./PartnerMessage";
 
-import { addMessageToConverMiddleware } from "../../../redux/Conversation/conversation.actions";
+import {
+  addMessageToConverMiddleware,
+  closeConversation,
+} from "../../../redux/Conversation/conversation.actions";
 
 const { Search } = Input;
 
 const Chat = (props) => {
-  const { chat, conversationId, addMessage, partner } = props;
+  const {
+    userId,
+    chat,
+    conversationId,
+    addMessage,
+    partner,
+    closeChatBox,
+  } = props;
 
-  const [message, setMessage] = useState("");
+  const inputRef = useRef(null);
+  const bodyMessageRef = useRef(null);
 
   const conversationIndex = chat.conversations.findIndex(
     (con) => con.conversationId === conversationId
@@ -30,10 +41,31 @@ const Chat = (props) => {
 
   const addMessageToConver = () => {
     addMessage({
-      message: { messageId: "2", content: message },
+      message: { content: inputRef.current.state.value },
       conversationId,
+      senderId: userId,
     });
+    inputRef.current.state.value = "";
+
+    const scrollHeight = bodyMessageRef.current.scrollHeight;
+    const height = bodyMessageRef.current.clientHeight;
+    const maxScrollTop = scrollHeight - height;
+
+    bodyMessageRef.current.scrollTop =
+      maxScrollTop > 0 ? maxScrollTop + 100 : 0;
   };
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    const scrollHeight = bodyMessageRef.current.scrollHeight;
+    const height = bodyMessageRef.current.clientHeight;
+    const maxScrollTop = scrollHeight - height;
+
+    bodyMessageRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+  }, [chat.loading]);
 
   return (
     <ChatBoxWrapper>
@@ -49,10 +81,6 @@ const Chat = (props) => {
         type="inner"
         title={
           <>
-            {/* <>
-              <Skeleton.Avatar size="default" active={true} shape="circle" />
-              <Skeleton.Button size="default" active={true} shape="default" />
-            </> */}
             <Skeleton
               avatar={{ shape: "circle" }}
               title={{ width: "150px" }}
@@ -71,9 +99,14 @@ const Chat = (props) => {
             </Skeleton>
           </>
         }
-        extra={<CloseOutlined color="white" />}
+        extra={
+          <CloseOutlined
+            style={{ color: "#fff" }}
+            onClick={() => closeChatBox(conversationId)}
+          />
+        }
       >
-        <MessageBoxWrapper>
+        <MessageBoxWrapper ref={bodyMessageRef}>
           {chat.loading && (
             <LoadingOutlined
               style={{
@@ -85,7 +118,11 @@ const Chat = (props) => {
           )}
           {chat.conversations[conversationIndex].messages.map((mess) => (
             <div style={{ overflow: "auto" }}>
-              <PartnerMessage>{mess.content}</PartnerMessage>
+              {userId === mess.created_by ? (
+                <Message hasReceived={mess.hasReceived}>{mess.content}</Message>
+              ) : (
+                <PartnerMessage>{mess.content}</PartnerMessage>
+              )}
             </div>
           ))}
         </MessageBoxWrapper>
@@ -94,7 +131,7 @@ const Chat = (props) => {
         placeholder="Nhập tin nhắn"
         enterButton={<SendOutlined />}
         onSearch={addMessageToConver}
-        onChange={(e) => setMessage(e.target.value)}
+        ref={inputRef}
       />
     </ChatBoxWrapper>
   );
@@ -102,6 +139,7 @@ const Chat = (props) => {
 
 const mapStateToProps = (state) => {
   return {
+    userId: state.auth.profileId,
     chat: {
       ...state.chat,
     },
@@ -110,8 +148,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addMessage: ({ message, conversationId }) =>
-      dispatch(addMessageToConverMiddleware({ message, conversationId })),
+    addMessage: ({ message, conversationId, senderId }) =>
+      dispatch(
+        addMessageToConverMiddleware({ message, conversationId, senderId })
+      ),
+    closeChatBox: (conversationId) =>
+      dispatch(closeConversation(conversationId)),
   };
 };
 

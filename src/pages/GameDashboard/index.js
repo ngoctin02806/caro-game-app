@@ -47,6 +47,7 @@ const GameDashboard = (props) => {
             }
             isOnline={true}
             userName={user.username}
+            avatar={user.avatar}
           />
         </Menu.Item>
       ))}

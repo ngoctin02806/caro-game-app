@@ -1,7 +1,10 @@
+import { message } from "antd";
 import {
   ADD_CONVERSATION,
   ADD_MESSAGE,
+  CLOSE_CONVERSATION,
   LOAD_CONVERSATION,
+  RECEIVED_MESSAGE,
 } from "./conversation.types";
 
 const INIT_STATE = {
@@ -22,23 +25,37 @@ const conversationReducer = (state = INIT_STATE, action) => {
         }),
       };
     }
-    case ADD_CONVERSATION:
+
+    case CLOSE_CONVERSATION: {
+      const newArray = state.conversations.slice();
+      const index = newArray.findIndex(
+        (con) => con.conversationId === action.value
+      );
+
+      newArray.splice(index, 1);
+
+      return {
+        ...state,
+        conversations: newArray,
+      };
+    }
+
+    case ADD_CONVERSATION: {
       const index = state.conversations.findIndex(
         (con) => con.conversationId === action.value.identify
       );
 
-      console.log(index);
-
       const newConversations = Array.from(state.conversations);
       newConversations[index] = action.value.conversation;
 
-      console.log(newConversations);
+      console.log("dasdasd");
 
       return {
         ...state,
         conversations: newConversations,
         loading: false,
       };
+    }
 
     case ADD_MESSAGE: {
       const conversationIndex = state.conversations.findIndex(
@@ -54,16 +71,38 @@ const conversationReducer = (state = INIT_STATE, action) => {
         action.value.message
       );
 
-      console.log(conversation);
-
       const newConversations = Array.from(state.conversations);
       newConversations.splice(conversationIndex, 1, conversation);
-
-      console.log(newConversations);
 
       return {
         ...state,
         conversations: newConversations,
+      };
+    }
+
+    case RECEIVED_MESSAGE: {
+      const conversations = state.conversations.slice();
+      const index = conversations.findIndex(
+        (con) => con.conversationId === action.value.conversationId
+      );
+
+      console.log(action.value.identify, action.value.conversationId);
+
+      const messages = conversations[index].messages.slice();
+
+      console.log(messages);
+
+      const indexMessage = messages.findIndex(
+        (mes) => mes.identify === action.value.identify
+      );
+
+      messages[indexMessage].hasReceived = true;
+
+      conversations[index].messages = messages;
+
+      return {
+        ...state,
+        conversations: conversations,
       };
     }
 

@@ -6,8 +6,12 @@ import { MessageWrapper, StyledMessage } from "./styled";
 const Message = (props) => {
   return (
     <MessageWrapper>
-      <StyledMessage>Testing message</StyledMessage>
-      <CheckCircleOutlined style={{ color: "#cccccc", marginLeft: "3px" }} />
+      <StyledMessage>{props.children}</StyledMessage>
+      {props.hasReceived ? (
+        <CheckCircleFilled style={{ color: "#cccccc", marginLeft: "3px" }} />
+      ) : (
+        <CheckCircleOutlined style={{ color: "#cccccc", marginLeft: "3px" }} />
+      )}
     </MessageWrapper>
   );
 };
