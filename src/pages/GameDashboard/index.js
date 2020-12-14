@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Layout, Button, Menu, Tooltip, Dropdown } from "antd";
+import { Layout, Button, Menu, Tooltip, Dropdown, Row, Col } from "antd";
 import {
   UserOutlined,
   LaptopOutlined,
@@ -8,18 +8,21 @@ import {
 } from "@ant-design/icons";
 import { connect } from "react-redux";
 
-import { WrapperDashboard } from "./styled";
+import { WrapperDashboard, ChatBoxWrapper } from "./styled";
 
 import Widget from "../../components/@core/Widget";
 import UserOnline from "./UserOnline";
+import RoomCard from "./Room";
+import ChatBox from "./Chat";
 
 import { getUserOnlineMiddleware } from "../../redux/UserOnline/userOnline.middlewares";
+import { addConversationMiddleware } from "../../redux/Conversation/conversation.actions";
 
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
 
 const GameDashboard = (props) => {
-  const { game, getUserOnline } = props;
+  const { auth, game, getUserOnline, conversations, openChatBox } = props;
 
   useEffect(() => {
     document.title = "Trang chủ Game";
@@ -33,7 +36,18 @@ const GameDashboard = (props) => {
     <Menu style={{ width: "300px" }}>
       {game.users.map((user) => (
         <Menu.Item key={user._id}>
-          <UserOnline isOnline={true} userName={user.username} />
+          <UserOnline
+            openChatBox={() =>
+              openChatBox({
+                userId: auth.profileId,
+                partnerId: user._id,
+                avatarPartner: user.avatar,
+                userNamePartner: user.username,
+              })
+            }
+            isOnline={true}
+            userName={user.username}
+          />
         </Menu.Item>
       ))}
     </Menu>
@@ -52,6 +66,18 @@ const GameDashboard = (props) => {
           />
         </Dropdown>
       </Tooltip>
+
+      <ChatBoxWrapper>
+        {conversations.map((box, index) => {
+          return (
+            <ChatBox
+              key={index}
+              partner={box.participants[1]}
+              conversationId={box.conversationId}
+            />
+          );
+        })}
+      </ChatBoxWrapper>
 
       <Layout style={{ height: "100%" }}>
         <Content style={{ padding: "0 50px" }}>
@@ -97,7 +123,13 @@ const GameDashboard = (props) => {
               </Menu>
             </Sider>
             <Content style={{ padding: "0 24px", minHeight: 280 }}>
-              GameDashboard
+              <Row gutter={[10, 0]}>
+                {[1, 2, 3, 4, 5, 6].map((item) => (
+                  <Col span={4} key={item}>
+                    <RoomCard />
+                  </Col>
+                ))}
+              </Row>
             </Content>
           </Layout>
         </Content>
@@ -108,10 +140,14 @@ const GameDashboard = (props) => {
 
 const mapStateToProps = (state) => {
   return {
+    auth: {
+      ...state.auth,
+    },
     game: {
       ...state.game,
       users: state.game.users,
     },
+    conversations: state.chat.conversations,
   };
 };
 
@@ -120,6 +156,15 @@ const mapDispatchToProps = (dispatch) => {
     getUserOnline: () => {
       dispatch(getUserOnlineMiddleware());
     },
+    openChatBox: ({ userId, partnerId, avatarPartner, userNamePartner }) =>
+      dispatch(
+        addConversationMiddleware({
+          userId,
+          partnerId,
+          avatarPartner,
+          userNamePartner,
+        })
+      ),
   };
 };
 

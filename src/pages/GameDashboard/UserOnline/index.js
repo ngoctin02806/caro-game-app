@@ -4,10 +4,10 @@ import { Avatar, Badge } from "antd";
 import { WrapperUserOnline, StyledText } from "./styled";
 
 const UserOnline = (props) => {
-  const { userName, isOnline } = props;
+  const { userName, isOnline, openChatBox } = props;
 
   return (
-    <WrapperUserOnline>
+    <WrapperUserOnline onClick={openChatBox}>
       <div style={{ display: "flex", alignItems: "center" }}>
         <Avatar
           style={{

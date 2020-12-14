@@ -3,7 +3,7 @@ import "antd/dist/antd.css";
 
 /* Import all config */
 import "./config/axios.config";
-import "./config/socket.config";
+import socket from "./config/socket.config";
 
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
@@ -34,6 +34,12 @@ const App = (props) => {
 
   useEffect(() => {
     autoLogout();
+  }, [auth.isAuthenticated]);
+
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      socket.emit("emit-user-login", { user_id: auth.profileId });
+    }
   }, [auth.isAuthenticated]);
 
   return (
@@ -72,7 +78,7 @@ const App = (props) => {
           <div>Not found</div>
         </PublicRoute>
       </Switch>
-      <Footer />
+      {!auth.isAuthenticated && <Footer />}
     </>
   );
 };
