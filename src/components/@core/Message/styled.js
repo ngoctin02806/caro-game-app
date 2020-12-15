@@ -14,4 +14,5 @@ export const MessageWrapper = styled.div`
   align-items: flex-end;
   float: right;
   margin-bottom: 3px;
+  overflow: auto;
 `;

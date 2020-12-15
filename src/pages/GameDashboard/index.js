@@ -2,13 +2,9 @@ import socket from "../../config/socket.config";
 
 import React, { useEffect, useState } from "react";
 import { Layout, Button, Menu, Tooltip, Dropdown, Row, Col } from "antd";
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-  UsergroupAddOutlined,
-} from "@ant-design/icons";
+import { UsergroupAddOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
+import { useRouteMatch, Route, Switch, Link } from "react-router-dom";
 
 import { WrapperDashboard, ChatBoxWrapper } from "./styled";
 
@@ -16,15 +12,16 @@ import Widget from "../../components/@core/Widget";
 import UserOnline from "./UserOnline";
 import RoomCard from "./Room";
 import ChatBox from "./Chat";
+import Sider from "./SiderCustom";
+import GameRoom from "../GameRoom";
 
-import { getUserOnlineMiddleware } from "../../redux/UserOnline/userOnline.middlewares";
+import { getUserOnlineMiddleware } from "../../redux/Game/game.middlewares";
 import {
   addConversationMiddleware,
   addMessageFromSocketMiddleware,
 } from "../../redux/Conversation/conversation.actions";
 
-const { SubMenu } = Menu;
-const { Content, Sider } = Layout;
+const { Content } = Layout;
 
 const GameDashboard = (props) => {
   const {
@@ -37,6 +34,8 @@ const GameDashboard = (props) => {
   } = props;
 
   const [partnerData, setPartnerData] = useState(null);
+
+  let { path, url } = useRouteMatch();
 
   useEffect(() => {
     document.title = "Trang chủ Game";
@@ -143,46 +142,30 @@ const GameDashboard = (props) => {
             className="site-layout-background"
             style={{ padding: "24px 0" }}
           >
-            <Sider className="site-layout-background" width={200}>
-              <Menu
-                mode="inline"
-                defaultSelectedKeys={["1"]}
-                defaultOpenKeys={["sub1"]}
-                style={{ height: "100%" }}
-              >
-                <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-                  <Menu.Item key="1">option1</Menu.Item>
-                  <Menu.Item key="2">option2</Menu.Item>
-                  <Menu.Item key="3">option3</Menu.Item>
-                  <Menu.Item key="4">option4</Menu.Item>
-                </SubMenu>
-                <SubMenu key="sub2" icon={<LaptopOutlined />} title="subnav 2">
-                  <Menu.Item key="5">option5</Menu.Item>
-                  <Menu.Item key="6">option6</Menu.Item>
-                  <Menu.Item key="7">option7</Menu.Item>
-                  <Menu.Item key="8">option8</Menu.Item>
-                </SubMenu>
-                <SubMenu
-                  key="sub3"
-                  icon={<NotificationOutlined />}
-                  title="subnav 3"
-                >
-                  <Menu.Item key="9">option9</Menu.Item>
-                  <Menu.Item key="10">option10</Menu.Item>
-                  <Menu.Item key="11">option11</Menu.Item>
-                  <Menu.Item key="12">option12</Menu.Item>
-                </SubMenu>
-              </Menu>
-            </Sider>
-            <Content style={{ padding: "0 24px", minHeight: 280 }}>
-              <Row gutter={[10, 0]}>
-                {[1, 2, 3, 4, 5, 6].map((item) => (
-                  <Col span={4} key={item}>
-                    <RoomCard />
-                  </Col>
-                ))}
-              </Row>
-            </Content>
+            <Switch>
+              <Route exact path={`${path}`}>
+                <>
+                  <Sider />
+                  <Content style={{ padding: "0 24px", minHeight: 280 }}>
+                    <Row gutter={[10, 0]}>
+                      {[1, 2, 3, 4, 5, 6].map((item) => (
+                        <Col key={item} span={4}>
+                          <Link
+                            key={item}
+                            to={`${url}/tro-choi/teErzw09Am-Yq_ylT8gb3zBCbpnSWgeS-m_xv5-v`}
+                          >
+                            <RoomCard />
+                          </Link>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Content>
+                </>
+              </Route>
+              <Route path={`${path}/tro-choi/:roomId`}>
+                <GameRoom />
+              </Route>
+            </Switch>
           </Layout>
         </Content>
       </Layout>

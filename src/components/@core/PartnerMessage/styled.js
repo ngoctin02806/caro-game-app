@@ -14,4 +14,5 @@ export const PartnerMessageWrapper = styled.div`
   align-items: flex-start;
   float: left;
   margin-bottom: 3px;
+  overflow: auto;
 `;

@@ -12,8 +12,8 @@ import { connect } from "react-redux";
 import "./style.css";
 import { ChatBoxWrapper, MessageBoxWrapper } from "./styled";
 
-import Message from "./Message";
-import PartnerMessage from "./PartnerMessage";
+import Message from "../../../components/@core/Message";
+import PartnerMessage from "../../../components/@core/PartnerMessage";
 
 import {
   addMessageToConverMiddleware,

@@ -19,7 +19,7 @@ const UserDropDown = (props) => {
         <Link to="/thong-tin-ca-nhan">Thông tin cá nhân</Link>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="3" onClick={logout}>
+      <Menu.Item key="2" onClick={logout}>
         <LogoutOutlined />
         <label>Đăng xuất</label>
       </Menu.Item>

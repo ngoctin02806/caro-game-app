@@ -1,4 +1,3 @@
-import { message } from "antd";
 import {
   ADD_CONVERSATION,
   ADD_MESSAGE,

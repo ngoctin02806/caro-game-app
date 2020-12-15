@@ -16,15 +16,15 @@ const Header = (props) => {
   const menu = [
     !auth.isAuthenticated ? (
       <>
-        <Button className="header-lang-button" ghost size="small" key="lang">
+        <Button className="header-lang-button" ghost size="small" key="key1">
           Đăng ký
         </Button>
-        <Button className="header-lang-button" ghost size="small" key="lang">
+        <Button className="header-lang-button" ghost size="small" key="key2">
           Đăng nhập
         </Button>
       </>
     ) : (
-      <UserDropDown user={user} getUserProfile={getUserProfile} />
+      <UserDropDown user={user} getUserProfile={getUserProfile} key="key3" />
     ),
     <Menu mode="horizontal" defaultSelectedKeys={["home"]} id="nav" key="nav">
       <Menu.Item key="home">Trang chủ</Menu.Item>
