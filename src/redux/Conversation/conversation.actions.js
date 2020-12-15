@@ -66,75 +66,81 @@ export const addConversationMiddleware = ({
   avatarPartner,
   userNamePartner,
 }) => {
-  return (dispatch, getState) => {
-    const state = getState();
+  return (dispatch, getState) =>
+    new Promise((resolve, reject) => {
+      const state = getState();
 
-    const conversations = state.chat.conversations;
+      const conversations = state.chat.conversations;
 
-    console.log(conversations);
+      console.log(`user-id: ${userId}`, `partner_id: ${partnerId}`);
 
-    const check = conversations.findIndex((con) => {
-      if (
-        con.type === "CONVERSATION_SINGLE" &&
-        con.participants[0] === userId &&
-        con.participants[1].user_id === partnerId
-      ) {
-        return true;
-      }
+      const check = conversations.findIndex((con) => {
+        if (
+          con.type === "CONVERSATION_SINGLE" &&
+          con.participants[0] === userId &&
+          con.participants[1].user_id === partnerId
+        ) {
+          return true;
+        }
 
-      return false;
-    });
-
-    if (check === -1) {
-      const identify = shortid.generate();
-
-      dispatch(loadConversation({ identify }));
-
-      axios("/conversations", {
-        method: "POST",
-        data: {
-          participants: [userId, partnerId],
-          type: "CONVERSATION_SINGLE",
-        },
-      })
-        .then((res) => {
-          const conversation = res.data.data || res.data;
-
-          return axios(`/conversations/${conversation._id}/messages`, {
-            method: "GET",
-          });
-        })
-        .then((res) => {
-          const preparedConversation = {
-            conversationId: res.config.url.split("/")[2],
-            participants: [
-              userId,
-              {
-                user_id: partnerId,
-                avatar: avatarPartner,
-                username: userNamePartner,
-              },
-            ],
-            type: "CONVERSATION_SINGLE",
-            messages: res.data.messages,
-          };
-
-          dispatch(
-            addConversation({
-              conversation: preparedConversation,
-              identify: identify,
-            })
-          );
-        });
-
-      socket.emit("emit-conversation-single", {
-        room_id: "Q6VB8LYM-pI33R6vV1j9wThUdJ2YP9qFpaXE6qeR",
-        partner_id: "RBWHl-P7J5tXm9nCPUQrkU-EmwG78pXovt3ue0Nx",
+        return false;
       });
-    } else {
-      dispatch(nothing());
-    }
-  };
+
+      if (check === -1) {
+        const identify = shortid.generate();
+        console.log("loading");
+
+        dispatch(loadConversation({ identify }));
+
+        axios("/conversations", {
+          method: "POST",
+          data: {
+            participants: [userId, partnerId],
+            type: "CONVERSATION_SINGLE",
+          },
+        })
+          .then((res) => {
+            const conversation = res.data.data || res.data;
+
+            return axios(`/conversations/${conversation._id}/messages`, {
+              method: "GET",
+            });
+          })
+          .then((res) => {
+            const preparedConversation = {
+              conversationId: res.config.url.split("/")[2],
+              participants: [
+                userId,
+                {
+                  user_id: partnerId,
+                  avatar: avatarPartner,
+                  username: userNamePartner,
+                },
+              ],
+              type: "CONVERSATION_SINGLE",
+              messages: res.data.messages,
+            };
+
+            socket.emit("emit-conversation-single", {
+              room_id: res.config.url.split("/")[2],
+              partner_id: partnerId,
+            });
+
+            dispatch(
+              addConversation({
+                conversation: preparedConversation,
+                identify: identify,
+              })
+            );
+
+            resolve({ conversatioId: res.config.url.split("/")[2] });
+          });
+      } else {
+        console.log("nothing");
+        dispatch(nothing());
+        resolve({ conversatioId: conversations[check].conversationId });
+      }
+    });
 };
 
 export const addMessageToConverMiddleware = ({
@@ -170,6 +176,25 @@ export const addMessageToConverMiddleware = ({
           created_by: senderId,
           hasReceived: false,
           identify: id,
+        },
+        conversationId,
+      })
+    );
+  };
+};
+
+export const addMessageFromSocketMiddleware = ({
+  message,
+  conversationId,
+  senderId,
+}) => {
+  return (dispatch) => {
+    dispatch(
+      addMessageToConver({
+        message: {
+          ...message,
+          created_by: senderId,
+          hasReceived: false,
         },
         conversationId,
       })

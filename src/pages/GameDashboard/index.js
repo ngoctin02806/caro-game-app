@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import socket from "../../config/socket.config";
+
+import React, { useEffect, useState } from "react";
 import { Layout, Button, Menu, Tooltip, Dropdown, Row, Col } from "antd";
 import {
   UserOutlined,
@@ -16,13 +18,25 @@ import RoomCard from "./Room";
 import ChatBox from "./Chat";
 
 import { getUserOnlineMiddleware } from "../../redux/UserOnline/userOnline.middlewares";
-import { addConversationMiddleware } from "../../redux/Conversation/conversation.actions";
+import {
+  addConversationMiddleware,
+  addMessageFromSocketMiddleware,
+} from "../../redux/Conversation/conversation.actions";
 
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
 
 const GameDashboard = (props) => {
-  const { auth, game, getUserOnline, conversations, openChatBox } = props;
+  const {
+    auth,
+    game,
+    getUserOnline,
+    conversations,
+    openChatBox,
+    addMessageFromSocket,
+  } = props;
+
+  const [partnerData, setPartnerData] = useState(null);
 
   useEffect(() => {
     document.title = "Trang chủ Game";
@@ -31,6 +45,43 @@ const GameDashboard = (props) => {
   useEffect(() => {
     getUserOnline();
   }, []);
+
+  // Listen join room event
+  useEffect(() => {
+    socket.on("joined-room", (msg) => {
+      const { avatar, username, _id } = msg;
+
+      setPartnerData({ avatar, username, _id });
+    });
+
+    return () => socket.off("joined-room");
+  }, []);
+
+  // Listen message event
+  useEffect(() => {
+    const callback = (msg) => {
+      const { message, sender_id, room_id } = msg;
+
+      const partnerInfo = game.users.find((u) => u._id === sender_id);
+
+      openChatBox({
+        userId: auth.profileId,
+        partnerId: sender_id,
+        avatarPartner: partnerInfo.avatar,
+        userNamePartner: partnerInfo.username,
+      }).then((res) => {
+        console.log(res);
+        addMessageFromSocket({
+          message: { content: message.content },
+          senderId: sender_id,
+          conversationId: room_id,
+        });
+      });
+    };
+    socket.on("conversation-message", callback);
+
+    return () => socket.off("conversation-message", callback);
+  }, [partnerData]);
 
   const menu = (
     <Menu style={{ width: "300px" }}>
@@ -154,6 +205,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    addMessageFromSocket: ({ message, conversationId, senderId }) =>
+      dispatch(
+        addMessageFromSocketMiddleware({
+          message,
+          conversationId,
+          senderId,
+        })
+      ),
     getUserOnline: () => {
       dispatch(getUserOnlineMiddleware());
     },

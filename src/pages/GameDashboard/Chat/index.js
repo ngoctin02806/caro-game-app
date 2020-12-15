@@ -121,7 +121,9 @@ const Chat = (props) => {
               {userId === mess.created_by ? (
                 <Message hasReceived={mess.hasReceived}>{mess.content}</Message>
               ) : (
-                <PartnerMessage>{mess.content}</PartnerMessage>
+                <PartnerMessage avatar={partner && partner.avatar}>
+                  {mess.content}
+                </PartnerMessage>
               )}
             </div>
           ))}

@@ -46,9 +46,9 @@ const conversationReducer = (state = INIT_STATE, action) => {
       );
 
       const newConversations = Array.from(state.conversations);
-      newConversations[index] = action.value.conversation;
-
-      console.log("dasdasd");
+      if (index !== -1) {
+        newConversations[index] = action.value.conversation;
+      }
 
       return {
         ...state,
@@ -58,6 +58,8 @@ const conversationReducer = (state = INIT_STATE, action) => {
     }
 
     case ADD_MESSAGE: {
+      console.log(state.conversations);
+
       const conversationIndex = state.conversations.findIndex(
         (con) => con.conversationId === action.value.conversationId
       );
@@ -86,11 +88,7 @@ const conversationReducer = (state = INIT_STATE, action) => {
         (con) => con.conversationId === action.value.conversationId
       );
 
-      console.log(action.value.identify, action.value.conversationId);
-
       const messages = conversations[index].messages.slice();
-
-      console.log(messages);
 
       const indexMessage = messages.findIndex(
         (mes) => mes.identify === action.value.identify
