@@ -4,8 +4,12 @@ import { connect } from "react-redux";
 
 import socket from "../../config/socket.config";
 
+import { Row } from "antd";
+
+import { CenterCol } from "./styled";
 import ParticipantSider from "./ParticipantSider";
 import ChatBox from "./ChatBox";
+import Board from "./Board";
 
 import {
   openConversationMiddleware,
@@ -30,7 +34,17 @@ const GameRoom = (props) => {
 
   return (
     <div>
-      <ParticipantSider />
+      <Row>
+        <CenterCol span={4}>
+          <ParticipantSider />
+        </CenterCol>
+        <CenterCol span={14}>
+          <Board />
+        </CenterCol>
+        <CenterCol span={4}>
+          <ParticipantSider />
+        </CenterCol>
+      </Row>
       <ChatBox />
     </div>
   );
