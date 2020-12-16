@@ -7,6 +7,7 @@ import {
   LOAD_MESSAGE_GAME,
   LOAD_ROOMS_GAME,
   OPEN_CONVERSATION,
+  SAVE_PARTICIPANTS_ROOM_GAME,
   USER_ONLINE,
 } from "./game.types";
 
@@ -75,5 +76,12 @@ export const loadedRoomsGame = (rooms) => {
   return {
     type: LOADED_ROOMS_GAME,
     value: rooms,
+  };
+};
+
+export const saveParticipants = (participants) => {
+  return {
+    type: SAVE_PARTICIPANTS_ROOM_GAME,
+    value: participants,
   };
 };

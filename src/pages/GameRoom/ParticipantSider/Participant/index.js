@@ -1,15 +1,16 @@
 import React from "react";
 import { Avatar, Typography } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 
 import { ParticipantWrapper } from "./styled";
 
 const { Text } = Typography;
 
-const Participant = () => {
+const Participant = (props) => {
+  const { player } = props;
+
   return (
     <ParticipantWrapper>
-      <Avatar shape="square" size="large" icon={<UserOutlined />} />
+      <Avatar src={player.avatar} shape="square" size="large" />
       <div
         style={{
           display: "flex",
@@ -17,7 +18,7 @@ const Participant = () => {
           marginLeft: "5px",
         }}
       >
-        <Text style={{ fontSize: "13px" }}>Người dùng 1</Text>
+        <Text style={{ fontSize: "13px" }}>{player.username}</Text>
         <Text style={{ fontSize: "12px" }}>Ant Design</Text>
       </div>
     </ParticipantWrapper>

@@ -13,6 +13,7 @@ import {
   loadingCreateRoomGame,
   loadingRoomsGame,
   loadedRoomsGame,
+  saveParticipants,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -166,5 +167,17 @@ export const loadRoomsGameMiddleware = ({ offset = 1, limit = 20 }) => {
           },
         });
       });
+  };
+};
+
+export const saveParticipantsMiddleware = (roomId) => {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    const participants = state.game.dashboard.rooms.find(
+      (room) => room._id === roomId
+    ).players;
+
+    dispatch(saveParticipants(participants));
   };
 };

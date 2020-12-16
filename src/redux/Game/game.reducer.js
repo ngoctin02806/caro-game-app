@@ -7,12 +7,15 @@ import {
   LOAD_MESSAGE_GAME,
   LOAD_ROOMS_GAME,
   OPEN_CONVERSATION,
+  SAVE_PARTICIPANTS_ROOM_GAME,
   USER_ONLINE,
 } from "./game.types";
 
 const INIT_STATE = {
   users: [],
-  information: null,
+  information: {
+    participants: [],
+  },
   conversation: null,
   messages: [],
   dashboard: {
@@ -34,7 +37,6 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         conversation: action.value.conversation,
-        information: "Testing",
       };
     }
     case LOAD_MESSAGE_GAME: {
@@ -94,6 +96,15 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
             ...state.dashboard.pagination,
             ...action.value.pagination,
           },
+        },
+      };
+    }
+    case SAVE_PARTICIPANTS_ROOM_GAME: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          participants: action.value,
         },
       };
     }

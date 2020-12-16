@@ -10,16 +10,20 @@ import ChatBox from "./ChatBox";
 import {
   openConversationMiddleware,
   loadMessageMiddleware,
+  saveParticipantsMiddleware,
 } from "../../redux/Game/game.middlewares";
 
 const GameRoom = (props) => {
-  const { auth, openConversation, loadMessage } = props;
+  const { auth, openConversation, loadMessage, loadParticipantsInGame } = props;
 
   const { roomId } = useParams();
 
   useEffect(() => {
+    loadParticipantsInGame(roomId);
+  }, [loadParticipantsInGame, roomId]);
+
+  useEffect(() => {
     openConversation(roomId).then((conversationId) => {
-      console.log(conversationId);
       loadMessage(conversationId);
       socket.emit("emit-conversation-game", {
         room_id: conversationId,
@@ -49,6 +53,8 @@ const mapDispatchToProps = (dispatch) => {
     openConversation: (roomId) => dispatch(openConversationMiddleware(roomId)),
     loadMessage: (conversationId) =>
       dispatch(loadMessageMiddleware(conversationId)),
+    loadParticipantsInGame: (roomId) =>
+      dispatch(saveParticipantsMiddleware(roomId)),
   };
 };
 

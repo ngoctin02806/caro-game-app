@@ -1,16 +1,24 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import Participant from "./Participant";
 
 import { ParticipantWrapper } from "./styled";
 
-const ParticipantSider = () => {
+const ParticipantSider = (props) => {
+  const { participants } = props;
+
   return (
     <ParticipantWrapper>
-      <Participant />
-      <Participant />
+      {participants && participants.map((p) => <Participant player={p} />)}
     </ParticipantWrapper>
   );
 };
 
-export default ParticipantSider;
+const mapStateToProps = (state) => {
+  return {
+    participants: state.game.information.participants,
+  };
+};
+
+export default connect(mapStateToProps, null)(ParticipantSider);
