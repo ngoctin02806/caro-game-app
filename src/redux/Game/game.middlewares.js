@@ -64,8 +64,13 @@ export const loadMessageMiddleware = (conversationId) => {
       method: "GET",
     })
       .then((res) => {
-        console.log(res.data.messages);
-        dispatch(loadMessage(res.data.messages));
+        dispatch(
+          loadMessage(
+            res.data.messages.sort(
+              (mess1, mess2) => mess1.created_at - mess2.created_at
+            )
+          )
+        );
       })
       .catch((e) => {
         dispatch({

@@ -115,7 +115,7 @@ const GameDashboard = (props) => {
                 userNamePartner: user.username,
               })
             }
-            isOnline={true}
+            isOnline={user.online_state}
             userName={user.username}
             avatar={user.avatar}
           />
@@ -174,12 +174,9 @@ const GameDashboard = (props) => {
                   <Sider />
                   <Content style={{ padding: "0 24px", minHeight: 280 }}>
                     <Row gutter={[10, 0]}>
-                      {[1, 2, 3, 4, 5, 6].map((item) => (
-                        <Col key={item} span={4}>
-                          <Link
-                            key={item}
-                            to={`${url}/tro-choi/teErzw09Am-Yq_ylT8gb3zBCbpnSWgeS-m_xv5-v`}
-                          >
+                      {game.dashboard.rooms.map((room) => (
+                        <Col key={room._id} span={4}>
+                          <Link to={`${url}/tro-choi/${room._id}`}>
                             <RoomCard />
                           </Link>
                         </Col>

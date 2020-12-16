@@ -118,7 +118,9 @@ export const addConversationMiddleware = ({
                 },
               ],
               type: "CONVERSATION_SINGLE",
-              messages: res.data.messages,
+              messages: res.data.messages.sort((mess1, mess2) => {
+                return mess1.created_at - mess2.created_at;
+              }),
             };
 
             socket.emit("emit-conversation-single", {

@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const NODE_ENV = "development";
+const NODE_ENV = "production";
 
 const socket =
   NODE_ENV === "development"
