@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import { Card, Avatar, Badge, Tooltip } from "antd";
 import { LoginOutlined } from "@ant-design/icons";
@@ -6,10 +7,12 @@ import { LoginOutlined } from "@ant-design/icons";
 import { StyledCardCover } from "./styled";
 
 const Room = (props) => {
+  const { roomName, participants, dashboard } = props;
+
   return (
     <Card
       hoverable
-      style={{ width: "100%" }}
+      style={{ width: "100%", marginBottom: "5px" }}
       actions={[
         <Tooltip placement="bottom" title="Còn slot">
           <Badge status="processing" size="default" color="green" />
@@ -18,24 +21,23 @@ const Room = (props) => {
           <LoginOutlined />
         </Tooltip>,
         <Avatar.Group>
-          <Avatar
-            size="small"
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-          />
-          <Avatar
-            style={{
-              backgroundColor: "#f56a00",
-            }}
-            size="small"
-          >
-            K
-          </Avatar>
+          {participants.map((participant) => (
+            <Avatar size="small" src={participant.avatar} />
+          ))}
         </Avatar.Group>,
       ]}
-      cover={<StyledCardCover>Room 1</StyledCardCover>}
+      cover={<StyledCardCover>Room {roomName}</StyledCardCover>}
       bodyStyle={{ padding: "0px" }}
     ></Card>
   );
 };
 
-export default Room;
+const mapStateToProps = (state) => {
+  return {
+    dashboard: {
+      ...state.game.dashboard,
+    },
+  };
+};
+
+export default connect(mapStateToProps, null)(Room);

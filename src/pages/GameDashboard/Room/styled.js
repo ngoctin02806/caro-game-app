@@ -14,4 +14,5 @@ export const StyledCardCover = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-repeat-x: no-repeat;
 `;

@@ -11,6 +11,8 @@ import {
   nothing,
   createRoomGame,
   loadingCreateRoomGame,
+  loadingRoomsGame,
+  loadedRoomsGame,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -134,5 +136,35 @@ export const createRoomGameMiddleware = () => {
         return res.data;
       })
       .catch((e) => {});
+  };
+};
+
+export const loadRoomsGameMiddleware = ({ offset = 1, limit = 20 }) => {
+  return (dispatch) => {
+    dispatch(loadingRoomsGame());
+    return axios(`/room/get-all?offset=${offset}&limit=${limit}`, {
+      method: "GET",
+    })
+      .then((res) => {
+        dispatch(
+          loadedRoomsGame({
+            rooms: res.data.rooms,
+            pagination: {
+              total: res.data.total,
+              offset: res.data.offset,
+              limit: res.data.limit,
+            },
+          })
+        );
+      })
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+      });
   };
 };

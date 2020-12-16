@@ -26,7 +26,7 @@ const GameRoom = (props) => {
         user_id: auth.profileId,
       });
     });
-  }, [roomId]);
+  }, [roomId, openConversation, loadMessage, auth.profileId]);
 
   return (
     <div>

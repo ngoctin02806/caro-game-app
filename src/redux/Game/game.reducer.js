@@ -2,8 +2,10 @@ import {
   ADD_MESSAGE_GAME,
   ADD_PARTICIPANT_GAME,
   CREATE_ROOM_GAME,
+  LOADED_ROOMS_GAME,
   LOADING_CREATE_ROOM_GAME,
   LOAD_MESSAGE_GAME,
+  LOAD_ROOMS_GAME,
   OPEN_CONVERSATION,
   USER_ONLINE,
 } from "./game.types";
@@ -14,6 +16,7 @@ const INIT_STATE = {
   conversation: null,
   messages: [],
   dashboard: {
+    pagination: null,
     rooms: [],
     isLoading: false,
     isCreateLoading: false,
@@ -68,6 +71,29 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
           ...state.dashboard,
           rooms: state.dashboard.rooms.concat(action.value),
           isCreateLoading: false,
+        },
+      };
+    }
+    case LOAD_ROOMS_GAME: {
+      return {
+        ...state,
+        dashboard: {
+          ...state.dashboard,
+          isLoading: true,
+        },
+      };
+    }
+    case LOADED_ROOMS_GAME: {
+      return {
+        ...state,
+        dashboard: {
+          ...state.dashboard,
+          isLoading: false,
+          rooms: action.value.rooms,
+          pagination: {
+            ...state.dashboard.pagination,
+            ...action.value.pagination,
+          },
         },
       };
     }

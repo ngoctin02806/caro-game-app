@@ -1,7 +1,16 @@
 import socket from "../../config/socket.config";
 
 import React, { useEffect, useState } from "react";
-import { Layout, Button, Menu, Tooltip, Dropdown, Row, Col } from "antd";
+import {
+  Layout,
+  Button,
+  Menu,
+  Tooltip,
+  Dropdown,
+  Row,
+  Col,
+  Pagination,
+} from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import {
@@ -10,7 +19,9 @@ import {
   Switch,
   Link,
   useHistory,
+  useLocation,
 } from "react-router-dom";
+import queryString from "query-string";
 
 import { WrapperDashboard, ChatBoxWrapper } from "./styled";
 
@@ -24,6 +35,7 @@ import GameRoom from "../GameRoom";
 import {
   getUserOnlineMiddleware,
   createRoomGameMiddleware,
+  loadRoomsGameMiddleware,
 } from "../../redux/Game/game.middlewares";
 import {
   addConversationMiddleware,
@@ -41,6 +53,7 @@ const GameDashboard = (props) => {
     openChatBox,
     addMessageFromSocket,
     createRoomGame,
+    loadRooms,
   } = props;
 
   const [partnerData, setPartnerData] = useState(null);
@@ -49,6 +62,10 @@ const GameDashboard = (props) => {
 
   const history = useHistory();
 
+  const location = useLocation();
+
+  const { page = 1 } = queryString.parse(location.search);
+
   // Create a game room
   const createRoom = () => {
     createRoomGame().then((room) => {
@@ -56,14 +73,28 @@ const GameDashboard = (props) => {
     });
   };
 
+  const changePage = (currentPage) => {
+    loadRooms({ offset: currentPage, limit: 20 });
+    history.push(
+      `${url}?${queryString.stringify({
+        page: currentPage,
+      })}`
+    );
+  };
+
   useEffect(() => {
     document.title = "Trang chủ Game";
   }, []);
 
+  // Load all rooms
+  useEffect(() => {
+    loadRooms({ offset: page, limit: 20 });
+  }, []); // eslint-disable-line
+
   //Get list user online
   useEffect(() => {
     getUserOnline();
-  }, []);
+  }, []); // eslint-disable-line
 
   // Listen join room event
   useEffect(() => {
@@ -174,14 +205,36 @@ const GameDashboard = (props) => {
                   <Sider />
                   <Content style={{ padding: "0 24px", minHeight: 280 }}>
                     <Row gutter={[10, 0]}>
-                      {game.dashboard.rooms.map((room) => (
+                      {game.dashboard.rooms.map((room, index) => (
                         <Col key={room._id} span={4}>
                           <Link to={`${url}/tro-choi/${room._id}`}>
-                            <RoomCard />
+                            <RoomCard
+                              roomName={
+                                (game.dashboard.pagination.offset - 1) * 20 +
+                                index +
+                                1
+                              }
+                              participants={room.players}
+                            />
                           </Link>
                         </Col>
                       ))}
                     </Row>
+                    <Pagination
+                      onChange={changePage}
+                      style={{ textAlign: "center" }}
+                      defaultCurrent={1}
+                      defaultPageSize={
+                        game.dashboard.pagination
+                          ? game.dashboard.pagination.limit
+                          : 20
+                      }
+                      total={
+                        game.dashboard.pagination
+                          ? game.dashboard.pagination.total
+                          : 10
+                      }
+                    />
                   </Content>
                 </>
               </Route>
@@ -235,6 +288,8 @@ const mapDispatchToProps = (dispatch) => {
         })
       ),
     createRoomGame: () => dispatch(createRoomGameMiddleware()),
+    loadRooms: ({ offset, limit }) =>
+      dispatch(loadRoomsGameMiddleware({ offset, limit })),
   };
 };
 
