@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Dropdown, Avatar, Menu } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 
 import { logoutMiddleware } from "../../../redux/Auth/auth.middlewares";
@@ -13,10 +13,18 @@ const UserDropDown = (props) => {
   const menu = (
     <Menu>
       <Menu.Item key="0">
-        <Link to="/thong-tin-ca-nhan">{user.username}</Link>
+        <Link
+          to="/thong-tin-ca-nhan"
+          style={{ fontWeight: "bold", color: "#555" }}
+        >
+          {user.username}
+        </Link>
       </Menu.Item>
       <Menu.Item key="1">
-        <Link to="/thong-tin-ca-nhan">Thông tin cá nhân</Link>
+        <Link to="/thong-tin-ca-nhan">
+          <UserOutlined />
+          <label>Thông tin cá nhân</label>
+        </Link>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="2" onClick={logout}>

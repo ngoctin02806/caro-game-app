@@ -8,6 +8,7 @@ import socket from "./config/socket.config";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Switch } from "react-router-dom";
+import { notification } from "antd";
 
 import PublicRoute from "./routers/PublicRoute";
 import ValidateEmailRoute from "./routers/ValidateEmailRoute";
@@ -22,6 +23,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ValidateEmail from "./pages/ValidateEmail";
 import GameDashboard from "./pages/GameDashboard";
+import NotFound from "./pages/NotFound";
+
+import { errorResponse } from "./utils/errorResponse";
+
+import { clearErrors } from "./redux/Error/error.actions";
 
 import {
   increaseCounter,
@@ -29,18 +35,33 @@ import {
 } from "./redux/Counter/counter.actions";
 import { autoLogoutMiddleware } from "./redux/Auth/auth.middlewares";
 
+const openNotification = (placement, error, callback) => {
+  notification.error({
+    message: `Lỗi người dùng`,
+    description: error,
+    placement,
+    onClose: callback,
+  });
+};
+
 const App = (props) => {
-  const { auth, autoLogout } = props;
+  const { error, auth, autoLogout, clearErrors } = props;
 
   useEffect(() => {
     autoLogout();
-  }, [auth.isAuthenticated]);
+  }, [autoLogout, auth.isAuthenticated]);
 
   useEffect(() => {
     if (auth.isAuthenticated) {
       socket.emit("emit-user-login", { user_id: auth.profileId });
     }
-  }, [auth.isAuthenticated]);
+  }, [auth.profileId, auth.isAuthenticated]);
+
+  useEffect(() => {
+    if (error.code) {
+      openNotification("topRight", errorResponse(error.code), clearErrors);
+    }
+  }, [error.code, clearErrors]);
 
   return (
     <>
@@ -75,7 +96,7 @@ const App = (props) => {
           <ValidateEmail />
         </PrivateRoute>
         <PublicRoute>
-          <div>Not found</div>
+          <NotFound />
         </PublicRoute>
       </Switch>
       {!auth.isAuthenticated && <Footer />}
@@ -89,6 +110,9 @@ const mapStateToProps = (state) => {
     auth: {
       ...state.auth,
     },
+    error: {
+      ...state.error,
+    },
   };
 };
 
@@ -97,6 +121,7 @@ const mapDispatchToProps = (dispatch) => {
     increaseCounter: () => dispatch(increaseCounter()),
     decreaseCounter: () => dispatch(decreaseCounter()),
     autoLogout: () => dispatch(autoLogoutMiddleware()),
+    clearErrors: () => dispatch(clearErrors()),
   };
 };
 

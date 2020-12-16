@@ -40,7 +40,7 @@ export const loginMiddleware = ({ email, password }) => {
         localStorage.setItem("expire_time", res.data.data.auth.expire_in);
         localStorage.setItem("profile_id", res.data.data.user._id);
 
-        socket.emit("emit-user-login", { user_id: res.data.data.user._id });
+        // socket.emit("emit-user-login", { user_id: res.data.data.user._id });
 
         dispatch(loginSucces(res.data.data));
       })
@@ -77,7 +77,7 @@ export const registerMiddleware = ({ username, email, password }) => {
         localStorage.setItem("expire_time", res.data.data.auth.expire_in);
         localStorage.setItem("profile_id", res.data.data.user._id);
 
-        socket.emit("emit-user-login", { user_id: res.data.data.user._id });
+        // socket.emit("emit-user-login", { user_id: res.data.data.user._id });
 
         dispatch(registerSuccess(res.data.data));
       })
@@ -159,7 +159,7 @@ export const loginByGoogleMiddleware = ({ accessToken }) => {
         localStorage.setItem("expire_time", res.data.data.auth.expire_in);
         localStorage.setItem("profile_id", res.data.data.user._id);
 
-        socket.emit("emit-user-login", { user_id: res.data.data.user._id });
+        // socket.emit("emit-user-login", { user_id: res.data.data.user._id });
 
         dispatch(loginByGoogle(res.data.data));
       })
@@ -191,7 +191,7 @@ export const loginByFacebookMiddleware = ({ accessToken }) => {
         localStorage.setItem("expire_time", res.data.data.auth.expire_in);
         localStorage.setItem("profile_id", res.data.data.user._id);
 
-        socket.emit("emit-user-login", { user_id: res.data.data.user._id });
+        // socket.emit("emit-user-login", { user_id: res.data.data.user._id });
 
         dispatch(loginByFacebook(res.data.data));
       })
@@ -213,6 +213,8 @@ export const logoutMiddleware = () => {
     localStorage.removeItem("expire_time");
     localStorage.removeItem("profile_id");
 
+    socket.emit("emit-user-logout");
+
     dispatch(logout());
   };
 };
@@ -229,6 +231,8 @@ export const autoLogoutMiddleware = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("expire_time");
       localStorage.removeItem("profile_id");
+
+      socket.emit("emit-user-logout");
 
       dispatch(autoLogout());
     }, auth.expireTime - now);

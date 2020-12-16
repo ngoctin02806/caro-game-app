@@ -9,6 +9,8 @@ import {
   addMessage,
   addParticipant,
   nothing,
+  createRoomGame,
+  loadingCreateRoomGame,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -35,12 +37,9 @@ export const getUserOnlineMiddleware = () => {
 
 export const openConversationMiddleware = (roomId) => {
   return (dispatch) => {
-    return axios(
-      `/games/${"teErzw09Am-Yq_ylT8gb3zBCbpnSWgeS-m_xv5-v"}/conversation`,
-      {
-        method: "GET",
-      }
-    )
+    return axios(`/games/${roomId}/conversation`, {
+      method: "GET",
+    })
       .then((res) => {
         console.log(res.data);
         dispatch(openConversation({ conversation: res.data.data }));
@@ -116,5 +115,19 @@ export const addParticipantMiddleware = (participant) => {
 export const listenMessageMiddleware = ({ message, senderId }) => {
   return (dispatch) => {
     dispatch(addMessage({ content: message.content, created_by: senderId }));
+  };
+};
+
+export const createRoomGameMiddleware = () => {
+  return (dispatch) => {
+    dispatch(loadingCreateRoomGame());
+    return axios("/room/create", {
+      method: "POST",
+    })
+      .then((res) => {
+        dispatch(createRoomGame(res.data));
+        return res.data;
+      })
+      .catch((e) => {});
   };
 };

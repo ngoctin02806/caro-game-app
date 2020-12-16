@@ -1,6 +1,8 @@
 import {
   ADD_MESSAGE_GAME,
   ADD_PARTICIPANT_GAME,
+  CREATE_ROOM_GAME,
+  LOADING_CREATE_ROOM_GAME,
   LOAD_MESSAGE_GAME,
   OPEN_CONVERSATION,
   USER_ONLINE,
@@ -44,5 +46,19 @@ export const addParticipant = (participant) => {
   return {
     type: ADD_PARTICIPANT_GAME,
     value: participant,
+  };
+};
+
+export const loadingCreateRoomGame = (room) => {
+  return {
+    type: LOADING_CREATE_ROOM_GAME,
+    value: room,
+  };
+};
+
+export const createRoomGame = (room) => {
+  return {
+    type: CREATE_ROOM_GAME,
+    value: room,
   };
 };

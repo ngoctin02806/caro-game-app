@@ -4,7 +4,13 @@ import React, { useEffect, useState } from "react";
 import { Layout, Button, Menu, Tooltip, Dropdown, Row, Col } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
-import { useRouteMatch, Route, Switch, Link } from "react-router-dom";
+import {
+  useRouteMatch,
+  Route,
+  Switch,
+  Link,
+  useHistory,
+} from "react-router-dom";
 
 import { WrapperDashboard, ChatBoxWrapper } from "./styled";
 
@@ -15,7 +21,10 @@ import ChatBox from "./Chat";
 import Sider from "./SiderCustom";
 import GameRoom from "../GameRoom";
 
-import { getUserOnlineMiddleware } from "../../redux/Game/game.middlewares";
+import {
+  getUserOnlineMiddleware,
+  createRoomGameMiddleware,
+} from "../../redux/Game/game.middlewares";
 import {
   addConversationMiddleware,
   addMessageFromSocketMiddleware,
@@ -31,16 +40,27 @@ const GameDashboard = (props) => {
     conversations,
     openChatBox,
     addMessageFromSocket,
+    createRoomGame,
   } = props;
 
   const [partnerData, setPartnerData] = useState(null);
 
   let { path, url } = useRouteMatch();
 
+  const history = useHistory();
+
+  // Create a game room
+  const createRoom = () => {
+    createRoomGame().then((room) => {
+      history.push(`${url}/tro-choi/${room._id}`);
+    });
+  };
+
   useEffect(() => {
     document.title = "Trang chủ Game";
   }, []);
 
+  //Get list user online
   useEffect(() => {
     getUserOnline();
   }, []);
@@ -136,7 +156,13 @@ const GameDashboard = (props) => {
             className="site-layout-background"
             style={{ padding: "24px 0", width: "14%" }}
           >
-            <Button type="primary">Tạo bàn</Button>
+            <Button
+              onClick={createRoom}
+              loading={game.dashboard.isCreateLoading}
+              type="primary"
+            >
+              Tạo bàn
+            </Button>
           </Layout>
           <Layout
             className="site-layout-background"
@@ -181,6 +207,9 @@ const mapStateToProps = (state) => {
     game: {
       ...state.game,
       users: state.game.users,
+      dashboard: {
+        ...state.game.dashboard,
+      },
     },
     conversations: state.chat.conversations,
   };
@@ -208,6 +237,7 @@ const mapDispatchToProps = (dispatch) => {
           userNamePartner,
         })
       ),
+    createRoomGame: () => dispatch(createRoomGameMiddleware()),
   };
 };
 

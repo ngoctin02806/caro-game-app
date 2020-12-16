@@ -7,6 +7,8 @@ export const getErrors = (dispatch, payload) => {
   });
 };
 
-export const clearErrors = (dispatch, payload) => {
-  dispatch({ type: CLEAR_ERRORS });
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS,
+  };
 };

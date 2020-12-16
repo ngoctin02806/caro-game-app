@@ -19,13 +19,14 @@ const GameRoom = (props) => {
 
   useEffect(() => {
     openConversation(roomId).then((conversationId) => {
+      console.log(conversationId);
       loadMessage(conversationId);
       socket.emit("emit-conversation-game", {
         room_id: conversationId,
         user_id: auth.profileId,
       });
     });
-  }, []);
+  }, [roomId]);
 
   return (
     <div>
