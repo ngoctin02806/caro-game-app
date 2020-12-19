@@ -63,6 +63,8 @@ const conversationReducer = (state = INIT_STATE, action) => {
         (con) => con.conversationId === action.value.conversationId
       );
 
+      console.log(action.value);
+
       const conversation = Object.assign(
         {},
         state.conversations[conversationIndex]

@@ -110,21 +110,28 @@ const GameDashboard = (props) => {
   // Listen message event
   useEffect(() => {
     const callback = (msg) => {
-      const { message, sender_id, room_id } = msg;
+      const { message, sender_id, room_id, partner_id } = msg;
+      console.log(partner_id);
 
-      const partnerInfo = game.users.find((u) => u._id === sender_id);
+      let partnerInfo = game.users.find((u) => u._id === partner_id);
+
+      if (!partnerInfo) {
+        partnerInfo = game.users.find((u) => u._id === sender_id);
+      }
+
+      console.log(room_id);
 
       openChatBox({
         userId: auth.profileId,
-        partnerId: sender_id,
-        avatarPartner: partnerInfo.avatar,
-        userNamePartner: partnerInfo.username,
+        partnerId: partnerInfo._id,
+        avatarPartner: partnerInfo ? partnerInfo.avatar : "",
+        userNamePartner: partnerInfo ? partnerInfo.username : "",
       }).then((res) => {
         console.log(res);
         addMessageFromSocket({
           message: { content: message.content },
           senderId: sender_id,
-          conversationId: room_id,
+          conversationId: res.conversationId,
         });
       });
     };

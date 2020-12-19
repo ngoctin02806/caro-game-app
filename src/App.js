@@ -52,8 +52,18 @@ const App = (props) => {
   }, [autoLogout, auth.isAuthenticated]);
 
   useEffect(() => {
+    if (!auth.isAuthenticated) {
+      // Create conversations in localStorage
+      localStorage.setItem("conversations", JSON.stringify([]));
+    }
+
     if (auth.isAuthenticated) {
       socket.emit("emit-user-login", { user_id: auth.profileId });
+
+      socket.emit(
+        "emit-rejoin-room",
+        JSON.parse(localStorage.getItem("conversations"))
+      );
     }
   }, [auth.profileId, auth.isAuthenticated]);
 
