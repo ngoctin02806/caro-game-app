@@ -45,7 +45,6 @@ const UserDropDown = (props) => {
           float: "right",
           display: "flex",
           alignItems: "center",
-          marginTop: "29px",
         }}
       >
         <Avatar

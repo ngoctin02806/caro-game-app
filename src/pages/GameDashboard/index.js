@@ -1,16 +1,7 @@
 import socket from "../../config/socket.config";
 
 import React, { useEffect, useState } from "react";
-import {
-  Layout,
-  Button,
-  Menu,
-  Tooltip,
-  Dropdown,
-  Row,
-  Col,
-  Pagination,
-} from "antd";
+import { Layout, Menu, Tooltip, Dropdown, Row, Col, Pagination } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import {
@@ -30,11 +21,11 @@ import UserOnline from "./UserOnline";
 import RoomCard from "./Room";
 import ChatBox from "./Chat";
 import Sider from "./SiderCustom";
+import RankingSider from "./RankingSider";
 import GameRoom from "../GameRoom";
 
 import {
   getUserOnlineMiddleware,
-  createRoomGameMiddleware,
   loadRoomsGameMiddleware,
 } from "../../redux/Game/game.middlewares";
 import {
@@ -52,7 +43,6 @@ const GameDashboard = (props) => {
     conversations,
     openChatBox,
     addMessageFromSocket,
-    createRoomGame,
     loadRooms,
   } = props;
 
@@ -65,13 +55,6 @@ const GameDashboard = (props) => {
   const location = useLocation();
 
   const { page = 1 } = queryString.parse(location.search);
-
-  // Create a game room
-  const createRoom = () => {
-    createRoomGame().then((room) => {
-      history.push(`${url}/tro-choi/${room._id}`);
-    });
-  };
 
   const changePage = (currentPage) => {
     loadRooms({ offset: currentPage, limit: 20 });
@@ -190,42 +173,39 @@ const GameDashboard = (props) => {
 
       <Layout style={{ height: "100%" }}>
         <Content style={{ padding: "0 50px" }}>
-          <Layout
-            className="site-layout-background"
-            style={{ padding: "24px 0", width: "14%" }}
-          >
-            <Button
-              onClick={createRoom}
-              loading={game.dashboard.isCreateLoading}
-              type="primary"
-            >
-              Tạo bàn
-            </Button>
-          </Layout>
-          <Layout
-            className="site-layout-background"
-            style={{ padding: "24px 0" }}
-          >
+          <Layout className="site-layout-background">
+            <RankingSider />
             <Switch>
               <Route exact path={`${path}`}>
                 <>
                   <Sider />
-                  <Content style={{ padding: "0 24px", minHeight: 280 }}>
+                  <Content
+                    style={{
+                      padding: "0px 24px",
+                      minHeight: 280,
+                      marginLeft: "200px",
+                    }}
+                  >
                     <Row gutter={[10, 0]}>
-                      {game.dashboard.rooms.map((room, index) => (
-                        <Col key={room._id} span={4}>
-                          <Link to={`${url}/tro-choi/${room._id}`}>
-                            <RoomCard
-                              roomName={
-                                (game.dashboard.pagination.offset - 1) * 20 +
-                                index +
-                                1
-                              }
-                              participants={room.players}
-                            />
-                          </Link>
-                        </Col>
-                      ))}
+                      <Col span={20}>
+                        <Row gutter={[10, 0]}>
+                          {game.dashboard.rooms.map((room, index) => (
+                            <Col key={room._id} span={6}>
+                              <Link to={`${url}/tro-choi/${room._id}`}>
+                                <RoomCard
+                                  roomName={
+                                    (game.dashboard.pagination.offset - 1) *
+                                      20 +
+                                    index +
+                                    1
+                                  }
+                                  participants={room.players}
+                                />
+                              </Link>
+                            </Col>
+                          ))}
+                        </Row>
+                      </Col>
                     </Row>
                     <Pagination
                       onChange={changePage}
@@ -294,7 +274,6 @@ const mapDispatchToProps = (dispatch) => {
           userNamePartner,
         })
       ),
-    createRoomGame: () => dispatch(createRoomGameMiddleware()),
     loadRooms: ({ offset, limit }) =>
       dispatch(loadRoomsGameMiddleware({ offset, limit })),
   };
