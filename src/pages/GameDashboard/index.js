@@ -23,6 +23,7 @@ import ChatBox from "./Chat";
 import Sider from "./SiderCustom";
 import RankingSider from "./RankingSider";
 import GameRoom from "../GameRoom";
+import CustomizeModal from "./SiderCustom/CustomizeModal";
 
 import {
   getUserOnlineMiddleware,
@@ -53,6 +54,8 @@ const GameDashboard = (props) => {
   const history = useHistory();
 
   const location = useLocation();
+
+  let background = location.state && location.state.background;
 
   const { page = 1 } = queryString.parse(location.search);
 
@@ -176,7 +179,10 @@ const GameDashboard = (props) => {
           <Layout className="site-layout-background">
             <RankingSider />
             <Switch>
-              <Route exact path={`${path}`}>
+              <Route exact path={`${path}/tro-choi/:roomId`}>
+                <GameRoom />
+              </Route>
+              <Route path={`${path}`}>
                 <>
                   <Sider />
                   <Content
@@ -205,30 +211,35 @@ const GameDashboard = (props) => {
                             </Col>
                           ))}
                         </Row>
+                        <Pagination
+                          onChange={changePage}
+                          style={{ textAlign: "center" }}
+                          defaultCurrent={1}
+                          defaultPageSize={
+                            game.dashboard.pagination
+                              ? game.dashboard.pagination.limit
+                              : 20
+                          }
+                          total={
+                            game.dashboard.pagination
+                              ? game.dashboard.pagination.total
+                              : 10
+                          }
+                        />
                       </Col>
                     </Row>
-                    <Pagination
-                      onChange={changePage}
-                      style={{ textAlign: "center" }}
-                      defaultCurrent={1}
-                      defaultPageSize={
-                        game.dashboard.pagination
-                          ? game.dashboard.pagination.limit
-                          : 20
-                      }
-                      total={
-                        game.dashboard.pagination
-                          ? game.dashboard.pagination.total
-                          : 10
-                      }
-                    />
                   </Content>
                 </>
               </Route>
-              <Route path={`${path}/tro-choi/:roomId`}>
-                <GameRoom />
-              </Route>
             </Switch>
+            {background && (
+              <Route path={`${path}/tao-phong`}>
+                <CustomizeModal
+                  isModalVisible={true}
+                  handleCancel={() => history.goBack()}
+                />
+              </Route>
+            )}
           </Layout>
         </Content>
       </Layout>

@@ -1,25 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout, Menu, Button } from "antd";
 import { SettingOutlined, AppstoreAddOutlined } from "@ant-design/icons";
-import { connect } from "react-redux";
-import { useRouteMatch, useHistory } from "react-router-dom";
-
-import { createRoomGameMiddleware } from "../../../redux/Game/game.middlewares";
+import { useRouteMatch, useHistory, useLocation, Link } from "react-router-dom";
 
 const { Sider } = Layout;
 
 const SiderCustom = (props) => {
-  const { game, createRoomGame } = props;
-
-  let { url } = useRouteMatch();
+  let { path, url } = useRouteMatch();
 
   const history = useHistory();
 
-  // Create a game room
-  const createRoom = () => {
-    createRoomGame().then((room) => {
-      history.push(`${url}/tro-choi/${room._id}`);
-    });
+  const location = useLocation();
+
+  const handleCancel = () => {
+    history.goBack();
   };
 
   return (
@@ -57,32 +51,20 @@ const SiderCustom = (props) => {
         <Menu.Item
           icon={<AppstoreAddOutlined />}
           key="1"
-          onClick={createRoom}
           style={{ backgroundColor: "transparent" }}
         >
-          Tạo phòng
+          <Link
+            to={{
+              pathname: `${path}/tao-phong`,
+              state: { background: location },
+            }}
+          >
+            Tạo phòng
+          </Link>
         </Menu.Item>
       </Menu>
     </Sider>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    game: {
-      ...state.game,
-      users: state.game.users,
-      dashboard: {
-        ...state.game.dashboard,
-      },
-    },
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    createRoomGame: () => dispatch(createRoomGameMiddleware()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SiderCustom);
+export default SiderCustom;

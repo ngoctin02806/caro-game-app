@@ -40,7 +40,6 @@ const RankingSider = () => {
           danger={true}
           icon={<img style={{ width: "20px" }} src={CupIcon} alt="cup" />}
           style={{
-            background: "rgb(255,215,9)",
             background:
               "linear-gradient(90deg, rgba(255,215,9,1) 0%, rgba(255,235,115,1) 44%, rgba(255,236,184,1) 100%)",
             color: "rgb(107 91 9)",
