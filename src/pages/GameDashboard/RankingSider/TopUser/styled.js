@@ -21,4 +21,7 @@ export const Point = styled.div`
   font-weight: normal;
   box-sizing: border-box;
   line-height: initial;
+  color: rgb(255, 215, 9);
+  font-weight: bold;
+  margin-right: 10px;
 `;

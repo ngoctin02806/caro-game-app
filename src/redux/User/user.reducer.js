@@ -15,6 +15,7 @@ const userReducer = (state = INIT_STATE, action) => {
         id: action.value.user._id,
         username: action.value.user.username,
         avatar: action.value.user.avatar,
+        point: action.value.user.point || 0,
       };
 
     default:

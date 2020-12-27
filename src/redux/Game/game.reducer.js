@@ -1,20 +1,34 @@
 import {
   ADD_MESSAGE_GAME,
   ADD_PARTICIPANT_GAME,
+  CLOSE_TOPUP_MODAL,
   CREATE_ROOM_GAME,
+  GET_RANKINGS,
+  LOADED_INFORMATION_ROOM,
   LOADED_ROOMS_GAME,
   LOADING_CREATE_ROOM_GAME,
+  LOADING_RANKINGS,
+  LOAD_INFORMATION_ROOM,
   LOAD_MESSAGE_GAME,
   LOAD_ROOMS_GAME,
   OPEN_CONVERSATION,
-  SAVE_PARTICIPANTS_ROOM_GAME,
+  OPEN_PASSWORD_MODAL,
+  TOPUP_LOGIN,
   USER_ONLINE,
 } from "./game.types";
 
 const INIT_STATE = {
   users: [],
+  isTopUp: false,
   information: {
-    participants: [],
+    isLoading: false,
+    room: {
+      players: [],
+    },
+  },
+  rankings: {
+    isLoading: false,
+    data: [],
   },
   conversation: null,
   messages: [],
@@ -23,6 +37,7 @@ const INIT_STATE = {
     rooms: [],
     isLoading: false,
     isCreateLoading: false,
+    isPrivateRoom: false,
   },
 };
 
@@ -99,12 +114,72 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
         },
       };
     }
-    case SAVE_PARTICIPANTS_ROOM_GAME: {
+    case LOADING_RANKINGS: {
+      return {
+        ...state,
+        rankings: {
+          ...state.rankings,
+          isLoading: true,
+        },
+      };
+    }
+    case GET_RANKINGS: {
+      return {
+        ...state,
+        rankings: {
+          ...state.rankings,
+          data: action.value,
+          isLoading: false,
+        },
+      };
+    }
+    case TOPUP_LOGIN: {
+      return {
+        ...state,
+        isTopUp: true,
+      };
+    }
+    case CLOSE_TOPUP_MODAL: {
+      return {
+        ...state,
+        isTopUp: false,
+      };
+    }
+    case OPEN_PASSWORD_MODAL: {
+      return {
+        ...state,
+        dashboard: {
+          ...state.dashboard,
+          isPrivateRoom: true,
+        },
+      };
+    }
+    // eslint-disable-next-line no-duplicate-case
+    case CLOSE_TOPUP_MODAL: {
+      return {
+        ...state,
+        dashboard: {
+          ...state.dashboard,
+          isPrivateRoom: false,
+        },
+      };
+    }
+    case LOAD_INFORMATION_ROOM: {
       return {
         ...state,
         information: {
           ...state.information,
-          participants: action.value,
+          isLoading: true,
+        },
+      };
+    }
+    case LOADED_INFORMATION_ROOM: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          isLoading: false,
+          room: action.value,
         },
       };
     }

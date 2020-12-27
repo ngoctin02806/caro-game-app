@@ -6,4 +6,5 @@ export const ParticipantWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 2px;
+  width: 100%;
 `;

@@ -1,3 +1,4 @@
+import { Button, Divider, List } from "antd";
 import React from "react";
 import { connect } from "react-redux";
 
@@ -10,14 +11,26 @@ const ParticipantSider = (props) => {
 
   return (
     <ParticipantWrapper>
-      {participants && participants.map((p) => <Participant player={p} />)}
+      <Button type="primary" style={{ width: "100%", marginBottom: "5px" }}>
+        Rời phòng
+      </Button>
+      <List
+        itemLayout="horizontal"
+        dataSource={participants}
+        renderItem={(item) => (
+          <List.Item style={{ padding: "0px", borderBottom: "none" }}>
+            <Participant player={item} />
+          </List.Item>
+        )}
+      ></List>
+      <Divider>Mức cược</Divider>
     </ParticipantWrapper>
   );
 };
 
 const mapStateToProps = (state) => {
   return {
-    participants: state.game.information.participants,
+    participants: state.game.information.room.players,
   };
 };
 

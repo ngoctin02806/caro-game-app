@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Layout, Menu } from "antd";
+import React, { useState, useEffect } from "react";
+import { Layout, Menu, List, Skeleton } from "antd";
+import { connect } from "react-redux";
 
 import CupIcon from "../../../public/images/cup.png";
 
@@ -11,10 +12,18 @@ import StripeIcon from "../../../components/Icons/StripeIcon";
 
 import { TopRankWrapper } from "./styled";
 
+import { getRankingsMiddleware } from "../../../redux/Game/game.middlewares";
+
 const { Sider } = Layout;
 
-const RankingSider = () => {
+const RankingSider = (props) => {
+  const { rankings, getRankings } = props;
+
   const [isHover, setIsHover] = useState(false);
+
+  useEffect(() => {
+    getRankings();
+  }, [getRankings]);
 
   return (
     <Sider
@@ -54,25 +63,49 @@ const RankingSider = () => {
           onMouseLeave={() => setIsHover(false)}
           isHover={isHover}
         >
-          <TopUser width={40} icon={GoldMedalIcon} />
-          <TopUser width={40} icon={SilverMedalIcon} />
-          <TopUser width={40} icon={BronzeMedalIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
-          <TopUser width={40} icon={StripeIcon} />
+          <List
+            loading={rankings.isLoading}
+            itemLayout="horizontal"
+            dataSource={rankings.data}
+            renderItem={(rank, index) => {
+              switch (index) {
+                case 0:
+                  return (
+                    <TopUser ranking={rank} width={40} icon={GoldMedalIcon} />
+                  );
+                case 1:
+                  return (
+                    <TopUser ranking={rank} width={40} icon={SilverMedalIcon} />
+                  );
+                case 2:
+                  return (
+                    <TopUser ranking={rank} width={40} icon={BronzeMedalIcon} />
+                  );
+                default:
+                  return (
+                    <TopUser ranking={rank} width={40} icon={StripeIcon} />
+                  );
+              }
+            }}
+          />
         </TopRankWrapper>
       </Menu>
     </Sider>
   );
 };
 
-export default RankingSider;
+const mapStateToProps = (state) => {
+  return {
+    rankings: {
+      ...state.game.rankings,
+    },
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getRankings: () => dispatch(getRankingsMiddleware()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RankingSider);

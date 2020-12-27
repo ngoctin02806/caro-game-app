@@ -24,6 +24,8 @@ import Sider from "./SiderCustom";
 import RankingSider from "./RankingSider";
 import GameRoom from "../GameRoom";
 import CustomizeModal from "./SiderCustom/CustomizeModal";
+import TopUpModal from "./TopUpModal";
+import EnterPassword from "./EnterPasswordModal";
 
 import {
   getUserOnlineMiddleware,
@@ -48,6 +50,7 @@ const GameDashboard = (props) => {
   } = props;
 
   const [partnerData, setPartnerData] = useState(null);
+  const [openPassword, setOpenPassword] = useState(false);
 
   let { path, url } = useRouteMatch();
 
@@ -66,6 +69,21 @@ const GameDashboard = (props) => {
         page: currentPage,
       })}`
     );
+  };
+
+  const checkPrivateRoom = (type, room_id, url, user_id) => () => {
+    if (type === "PRIVATE_ROOM") {
+      if (user_id === auth.profileId) {
+        history.push(`${url}/tro-choi/${room_id}`);
+      } else {
+        console.log("enter password");
+        setOpenPassword(room_id);
+      }
+    } else {
+      history.push(`${url}/tro-choi/${room_id}`);
+    }
+
+    return;
   };
 
   useEffect(() => {
@@ -162,6 +180,12 @@ const GameDashboard = (props) => {
         </Dropdown>
       </Tooltip>
 
+      <TopUpModal />
+      <EnterPassword
+        visible={openPassword}
+        handleCancel={() => setOpenPassword(false)}
+      />
+
       <ChatBoxWrapper>
         {conversations.map((box, index) => {
           return (
@@ -197,8 +221,16 @@ const GameDashboard = (props) => {
                         <Row gutter={[10, 0]}>
                           {game.dashboard.rooms.map((room, index) => (
                             <Col key={room._id} span={6}>
-                              <Link to={`${url}/tro-choi/${room._id}`}>
+                              <div
+                                onClick={checkPrivateRoom(
+                                  room.type,
+                                  room._id,
+                                  url,
+                                  room.created_by
+                                )}
+                              >
                                 <RoomCard
+                                  status={room.status}
                                   roomName={
                                     (game.dashboard.pagination.offset - 1) *
                                       20 +
@@ -207,14 +239,21 @@ const GameDashboard = (props) => {
                                   }
                                   participants={room.players}
                                 />
-                              </Link>
+                              </div>
                             </Col>
                           ))}
                         </Row>
                         <Pagination
                           onChange={changePage}
-                          style={{ textAlign: "center" }}
-                          defaultCurrent={1}
+                          style={{
+                            textAlign: "center",
+                            marginTop: "20px",
+                          }}
+                          defaultCurrent={
+                            game.dashboard.pagination
+                              ? game.dashboard.pagination.offset
+                              : 1
+                          }
                           defaultPageSize={
                             game.dashboard.pagination
                               ? game.dashboard.pagination.limit

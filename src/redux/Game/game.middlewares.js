@@ -13,7 +13,10 @@ import {
   loadingCreateRoomGame,
   loadingRoomsGame,
   loadedRoomsGame,
-  saveParticipants,
+  getRankings,
+  loadingRankings,
+  loadInfoRoom,
+  loadedInfoRoom,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -148,7 +151,7 @@ export const createRoomGameMiddleware = ({ type, roomSecret, betLevel }) => {
 export const loadRoomsGameMiddleware = ({ offset = 1, limit = 20 }) => {
   return (dispatch) => {
     dispatch(loadingRoomsGame());
-    return axios(`/room/get-all?offset=${offset}&limit=${limit}`, {
+    return axios(`/rooms?offset=${offset}&limit=${limit}`, {
       method: "GET",
     })
       .then((res) => {
@@ -175,14 +178,75 @@ export const loadRoomsGameMiddleware = ({ offset = 1, limit = 20 }) => {
   };
 };
 
-export const saveParticipantsMiddleware = (roomId) => {
-  return (dispatch, getState) => {
-    const state = getState();
+export const getRankingsMiddleware = () => {
+  return (dispatch) => {
+    dispatch(loadingRankings());
+    return axios("/statistic/rankings", {
+      method: "GET",
+    })
+      .then((res) => {
+        dispatch(getRankings(res.data.top_rankings));
+      })
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+      });
+  };
+};
 
-    const participants = state.game.dashboard.rooms.find(
-      (room) => room._id === roomId
-    ).players;
+export const topUpLoginMiddleware = () => {
+  return (dispatch) => {
+    return axios("/users/coins/giveaway", {
+      method: "POST",
+    }).catch((e) => {
+      return "has_top_up";
+    });
+  };
+};
 
-    dispatch(saveParticipants(participants));
+export const enterPasswordToJoinRoom = (roomId, roomSecret = "") => {
+  return (dispatch) => {
+    return axios(`/rooms/${roomId}/join`, {
+      method: "POST",
+      data: {
+        room_secret: roomSecret,
+      },
+    })
+      .then((res) => res.data.message)
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+      });
+  };
+};
+
+export const getInformationRoomMiddleware = (roomId) => {
+  return (dispatch) => {
+    dispatch(loadInfoRoom());
+    return axios(`/rooms/${roomId}`, {
+      method: "GET",
+    })
+      .then((res) => {
+        dispatch(loadedInfoRoom(res.data));
+      })
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+      });
   };
 };

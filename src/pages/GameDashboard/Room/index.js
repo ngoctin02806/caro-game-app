@@ -7,15 +7,19 @@ import { LoginOutlined } from "@ant-design/icons";
 import { StyledCardCover } from "./styled";
 
 const Room = (props) => {
-  const { roomName, participants, dashboard } = props;
+  const { roomName, participants, status } = props;
 
   return (
     <Card
       hoverable
       style={{ width: "100%", marginBottom: "5px" }}
       actions={[
-        <Tooltip placement="bottom" title="Còn slot">
-          <Badge status="processing" size="default" color="green" />
+        <Tooltip placement="bottom" title={!status ? "Còn slot" : "Hết slot"}>
+          {!status ? (
+            <Badge status="processing" size="default" color="green" />
+          ) : (
+            <Badge status="processing" size="default" color="red" />
+          )}
         </Tooltip>,
         <Tooltip placement="bottom" title="Vào phòng">
           <LoginOutlined />

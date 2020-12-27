@@ -1,13 +1,15 @@
 import React from "react";
 
-const CupIcon = () => {
+const CupIcon = (props) => {
+  const { width } = props;
+
   return (
     <svg
       id="Capa_1"
       enable-background="new 0 0 497 497"
-      height="20"
+      height={width || 20}
       viewBox="0 0 497 497"
-      width="20"
+      width={width || 20}
       xmlns="http://www.w3.org/2000/svg"
     >
       <g>

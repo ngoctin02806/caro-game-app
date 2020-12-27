@@ -1,4 +1,5 @@
 import axios from "axios";
+import { GET_ERRORS } from "../Error/error.types";
 
 import { USER_PROFILE } from "./user.types";
 
@@ -17,6 +18,14 @@ export const getUserProfileMiddleware = () => {
       .then((res) => {
         dispatch(getUserProfile(res.data.data));
       })
-      .catch((e) => {});
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+      });
   };
 };

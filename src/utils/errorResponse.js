@@ -22,6 +22,8 @@ export const errorResponse = (code) => {
       return "Chat không tồn tại";
     case 7010:
       return "Bạn đã ở trong phòng";
+    case 7013:
+      return "Mật khẩu không đúng";
 
     default:
       return "Unknow error";

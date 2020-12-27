@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
+import { ConfigProvider, Empty } from "antd";
+import { SmileOutlined } from "@ant-design/icons";
 
 import socket from "../../config/socket.config";
 
@@ -10,17 +12,24 @@ import ChatBox from "./ChatBox";
 import {
   openConversationMiddleware,
   loadMessageMiddleware,
-  saveParticipantsMiddleware,
+  getInformationRoomMiddleware,
 } from "../../redux/Game/game.middlewares";
 
+const customizeRenderEmpty = () => (
+  <div style={{ textAlign: "center" }}>
+    <SmileOutlined style={{ fontSize: 20 }} />
+    <p>Data Not Found</p>
+  </div>
+);
+
 const GameRoom = (props) => {
-  const { auth, openConversation, loadMessage, loadParticipantsInGame } = props;
+  const { auth, openConversation, loadMessage, loadInformationRoom } = props;
 
   const { roomId } = useParams();
 
   useEffect(() => {
-    loadParticipantsInGame(roomId);
-  }, [loadParticipantsInGame, roomId]);
+    loadInformationRoom(roomId);
+  }, [roomId, loadInformationRoom]);
 
   useEffect(() => {
     openConversation(roomId).then((conversationId) => {
@@ -53,8 +62,8 @@ const mapDispatchToProps = (dispatch) => {
     openConversation: (roomId) => dispatch(openConversationMiddleware(roomId)),
     loadMessage: (conversationId) =>
       dispatch(loadMessageMiddleware(conversationId)),
-    loadParticipantsInGame: (roomId) =>
-      dispatch(saveParticipantsMiddleware(roomId)),
+    loadInformationRoom: (roomId) =>
+      dispatch(getInformationRoomMiddleware(roomId)),
   };
 };
 
