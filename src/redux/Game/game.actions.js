@@ -4,6 +4,8 @@ import {
   CLOSE_TOPUP_MODAL,
   CREATE_ROOM_GAME,
   GET_RANKINGS,
+  GUEST_JOIN_ROOM,
+  GUEST_LEAVE_ROOM,
   LOADED_INFORMATION_ROOM,
   LOADED_ROOMS_GAME,
   LOADING_CREATE_ROOM_GAME,
@@ -12,7 +14,6 @@ import {
   LOAD_MESSAGE_GAME,
   LOAD_ROOMS_GAME,
   OPEN_CONVERSATION,
-  SAVE_PARTICIPANTS_ROOM_GAME,
   TOPUP_LOGIN,
   USER_ONLINE,
 } from "./game.types";
@@ -120,5 +121,19 @@ export const loadedInfoRoom = (room) => {
   return {
     type: LOADED_INFORMATION_ROOM,
     value: room,
+  };
+};
+
+export const guestJoinRoom = (user) => {
+  return {
+    type: GUEST_JOIN_ROOM,
+    value: user,
+  };
+};
+
+export const guestLeaveRoom = (userId) => {
+  return {
+    type: GUEST_LEAVE_ROOM,
+    value: userId,
   };
 };

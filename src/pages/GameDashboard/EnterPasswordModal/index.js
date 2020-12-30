@@ -8,12 +8,12 @@ import { enterPasswordToJoinRoom } from "../../../redux/Game/game.middlewares";
 const { Text } = Typography;
 
 const EnterPassword = (props) => {
-  const { visible, handleCancel, joinRoom } = props;
+  const { user, visible, handleCancel, joinRoom } = props;
 
   const history = useHistory();
 
   const onFinish = ({ room_secret }) => {
-    joinRoom(visible, room_secret).then((type) => {
+    joinRoom(visible, room_secret, user).then((type) => {
       if (type === "HAS_JOINED") {
         history.push(`/trang-chu/tro-choi/${visible}`);
       }
@@ -50,11 +50,21 @@ const EnterPassword = (props) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state) => {
   return {
-    joinRoom: (roomId, roomSecret) =>
-      dispatch(enterPasswordToJoinRoom(roomId, roomSecret)),
+    user: {
+      id: state.user.id,
+      username: state.user.username,
+      avatar: state.user.avatar,
+    },
   };
 };
 
-export default connect(null, mapDispatchToProps)(EnterPassword);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    joinRoom: (roomId, roomSecret, user) =>
+      dispatch(enterPasswordToJoinRoom(roomId, roomSecret, user)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EnterPassword);

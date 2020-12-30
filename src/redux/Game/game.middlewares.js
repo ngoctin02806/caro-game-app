@@ -17,6 +17,8 @@ import {
   loadingRankings,
   loadInfoRoom,
   loadedInfoRoom,
+  guestJoinRoom,
+  guestLeaveRoom,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -209,7 +211,7 @@ export const topUpLoginMiddleware = () => {
   };
 };
 
-export const enterPasswordToJoinRoom = (roomId, roomSecret = "") => {
+export const enterPasswordToJoinRoom = (roomId, roomSecret = "", user) => {
   return (dispatch) => {
     return axios(`/rooms/${roomId}/join`, {
       method: "POST",
@@ -217,7 +219,18 @@ export const enterPasswordToJoinRoom = (roomId, roomSecret = "") => {
         room_secret: roomSecret,
       },
     })
-      .then((res) => res.data.message)
+      .then((res) => {
+        if (res.data.message === "FULL_SLOT") {
+          dispatch(guestJoinRoom(user));
+          socket.emit("emit-join-room-game", {
+            room_id: roomId,
+            user_id: user.id,
+            type: "GUEST",
+          });
+        }
+
+        return res.data.message;
+      })
       .catch((e) => {
         dispatch({
           type: GET_ERRORS,
@@ -238,6 +251,27 @@ export const getInformationRoomMiddleware = (roomId) => {
     })
       .then((res) => {
         dispatch(loadedInfoRoom(res.data));
+      })
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+      });
+  };
+};
+
+export const registerLeavingRoom = (roomId, userId) => {
+  return (dispatch) => {
+    return axios(`/rooms/${roomId}/leave`, {
+      method: "POST",
+    })
+      .then((res) => {
+        dispatch(guestLeaveRoom(userId));
+        return res.data;
       })
       .catch((e) => {
         dispatch({

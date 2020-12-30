@@ -8,7 +8,6 @@ import {
   useRouteMatch,
   Route,
   Switch,
-  Link,
   useHistory,
   useLocation,
 } from "react-router-dom";
@@ -74,6 +73,10 @@ const GameDashboard = (props) => {
   const checkPrivateRoom = (type, room_id, url, user_id) => () => {
     if (type === "PRIVATE_ROOM") {
       if (user_id === auth.profileId) {
+        socket.emit("emit-join-room-game", {
+          room_id: room_id,
+          user_id: user_id,
+        });
         history.push(`${url}/tro-choi/${room_id}`);
       } else {
         console.log("enter password");
@@ -276,6 +279,7 @@ const GameDashboard = (props) => {
                 <CustomizeModal
                   isModalVisible={true}
                   handleCancel={() => history.goBack()}
+                  location={url}
                 />
               </Route>
             )}

@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
-import { ConfigProvider, Empty } from "antd";
-import { SmileOutlined } from "@ant-design/icons";
 
 import socket from "../../config/socket.config";
 
@@ -14,16 +12,16 @@ import {
   loadMessageMiddleware,
   getInformationRoomMiddleware,
 } from "../../redux/Game/game.middlewares";
-
-const customizeRenderEmpty = () => (
-  <div style={{ textAlign: "center" }}>
-    <SmileOutlined style={{ fontSize: 20 }} />
-    <p>Data Not Found</p>
-  </div>
-);
+import { guestJoinRoom } from "../../redux/Game/game.actions";
 
 const GameRoom = (props) => {
-  const { auth, openConversation, loadMessage, loadInformationRoom } = props;
+  const {
+    auth,
+    openConversation,
+    loadMessage,
+    loadInformationRoom,
+    guestJoinRoom,
+  } = props;
 
   const { roomId } = useParams();
 
@@ -40,6 +38,14 @@ const GameRoom = (props) => {
       });
     });
   }, [roomId, openConversation, loadMessage, auth.profileId]);
+
+  useEffect(() => {
+    socket.on("guest-join-room-game", ({ user }) => {
+      guestJoinRoom(user);
+    });
+
+    return () => socket.off("guest-join-room-game");
+  }, [guestJoinRoom]);
 
   return (
     <div>
@@ -64,6 +70,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(loadMessageMiddleware(conversationId)),
     loadInformationRoom: (roomId) =>
       dispatch(getInformationRoomMiddleware(roomId)),
+    guestJoinRoom: (user) => dispatch(guestJoinRoom(user)),
   };
 };
 

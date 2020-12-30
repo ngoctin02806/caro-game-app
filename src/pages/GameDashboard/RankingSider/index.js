@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Menu, List, Skeleton } from "antd";
+import { Layout, Menu, List } from "antd";
 import { connect } from "react-redux";
 
 import CupIcon from "../../../public/images/cup.png";

@@ -4,10 +4,12 @@ import { connect } from "react-redux";
 
 import Participant from "./Participant";
 
-import { ParticipantWrapper } from "./styled";
+import CupIcon from "../../../components/Icons/CupIcon";
+
+import { ParticipantWrapper, StyledTextBet } from "./styled";
 
 const ParticipantSider = (props) => {
-  const { participants } = props;
+  const { participants, guests } = props;
 
   return (
     <ParticipantWrapper>
@@ -18,12 +20,38 @@ const ParticipantSider = (props) => {
         itemLayout="horizontal"
         dataSource={participants}
         renderItem={(item) => (
-          <List.Item style={{ padding: "0px", borderBottom: "none" }}>
+          <List.Item
+            key={item._id}
+            style={{ padding: "0px", borderBottom: "none" }}
+          >
             <Participant player={item} />
           </List.Item>
         )}
       ></List>
       <Divider>Mức cược</Divider>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CupIcon width={30} />
+        <StyledTextBet>100</StyledTextBet>
+      </div>
+      <Divider>Người tham gia</Divider>
+      <List
+        itemLayout="horizontal"
+        dataSource={guests}
+        renderItem={(item) => (
+          <List.Item
+            key={item.id}
+            style={{ padding: "0px", borderBottom: "none" }}
+          >
+            <Participant player={item} />
+          </List.Item>
+        )}
+      ></List>
     </ParticipantWrapper>
   );
 };
@@ -31,6 +59,7 @@ const ParticipantSider = (props) => {
 const mapStateToProps = (state) => {
   return {
     participants: state.game.information.room.players,
+    guests: state.game.information.room.guests,
   };
 };
 

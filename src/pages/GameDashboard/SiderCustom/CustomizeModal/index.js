@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Select, Typography, Input, Form, Slider, Button } from "antd";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
@@ -34,6 +34,10 @@ const CustomizeModal = (props) => {
       history.push(`/trang-chu/tro-choi/${room._id}`);
     });
   };
+
+  useEffect(() => {
+    document.title = "Tạo phòng";
+  }, []);
 
   return (
     <Modal

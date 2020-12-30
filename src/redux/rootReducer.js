@@ -16,4 +16,7 @@ const rootReducer = combineReducers({
   chat: conversationReducer,
 });
 
-export default rootReducer;
+// eslint-disable-next-line import/no-anonymous-default-export
+export default (state, action) => {
+  return rootReducer(action.type === "USER_LOGOUT" ? undefined : state, action);
+};

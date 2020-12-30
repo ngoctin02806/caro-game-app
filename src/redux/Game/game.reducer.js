@@ -4,6 +4,8 @@ import {
   CLOSE_TOPUP_MODAL,
   CREATE_ROOM_GAME,
   GET_RANKINGS,
+  GUEST_JOIN_ROOM,
+  GUEST_LEAVE_ROOM,
   LOADED_INFORMATION_ROOM,
   LOADED_ROOMS_GAME,
   LOADING_CREATE_ROOM_GAME,
@@ -24,6 +26,7 @@ const INIT_STATE = {
     isLoading: false,
     room: {
       players: [],
+      guests: [],
     },
   },
   rankings: {
@@ -179,7 +182,37 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
         information: {
           ...state.information,
           isLoading: false,
-          room: action.value,
+          room: {
+            ...action.value,
+            guests: state.information.room.guests,
+          },
+        },
+      };
+    }
+    case GUEST_JOIN_ROOM: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          room: {
+            ...state.information.room,
+            guests: state.information.room.guests.concat(action.value),
+          },
+        },
+      };
+    }
+    case GUEST_LEAVE_ROOM: {
+      const guests = state.information.room.guest.slice();
+      const newGuests = guests.filter((g) => g.id !== action.value);
+
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          room: {
+            ...state.information.room,
+            guests: newGuests,
+          },
         },
       };
     }
