@@ -14,6 +14,8 @@ import {
   LOAD_MESSAGE_GAME,
   LOAD_ROOMS_GAME,
   OPEN_CONVERSATION,
+  PLAYER_JOIN_ROOM,
+  PLAYER_LEAVE_ROOM,
   TOPUP_LOGIN,
   USER_ONLINE,
 } from "./game.types";
@@ -134,6 +136,20 @@ export const guestJoinRoom = (user) => {
 export const guestLeaveRoom = (userId) => {
   return {
     type: GUEST_LEAVE_ROOM,
+    value: userId,
+  };
+};
+
+export const playerJoinRoom = (user) => {
+  return {
+    type: PLAYER_JOIN_ROOM,
+    value: user,
+  };
+};
+
+export const playerLeaveRoom = (userId) => {
+  return {
+    type: PLAYER_LEAVE_ROOM,
     value: userId,
   };
 };

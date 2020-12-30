@@ -15,6 +15,8 @@ import {
   LOAD_ROOMS_GAME,
   OPEN_CONVERSATION,
   OPEN_PASSWORD_MODAL,
+  PLAYER_JOIN_ROOM,
+  PLAYER_LEAVE_ROOM,
   TOPUP_LOGIN,
   USER_ONLINE,
 } from "./game.types";
@@ -202,8 +204,8 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
       };
     }
     case GUEST_LEAVE_ROOM: {
-      const guests = state.information.room.guest.slice();
-      const newGuests = guests.filter((g) => g.id !== action.value);
+      const guests = state.information.room.guests.slice();
+      const newGuests = guests.filter((g) => g._id !== action.value);
 
       return {
         ...state,
@@ -212,6 +214,36 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
           room: {
             ...state.information.room,
             guests: newGuests,
+          },
+        },
+      };
+    }
+    case PLAYER_JOIN_ROOM: {
+      console.log(action.value);
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          room: {
+            ...state.information.room,
+            players: state.information.room.players.concat(action.value),
+          },
+        },
+      };
+    }
+    case PLAYER_LEAVE_ROOM: {
+      const players = state.information.room.players.slice();
+      const newPlayers = players.filter((g) => g._id !== action.value);
+
+      console.log(newPlayers);
+
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          room: {
+            ...state.information.room,
+            players: newPlayers,
           },
         },
       };

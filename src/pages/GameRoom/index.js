@@ -12,7 +12,11 @@ import {
   loadMessageMiddleware,
   getInformationRoomMiddleware,
 } from "../../redux/Game/game.middlewares";
-import { guestJoinRoom } from "../../redux/Game/game.actions";
+import {
+  guestJoinRoom,
+  guestLeaveRoom,
+  playerLeaveRoom,
+} from "../../redux/Game/game.actions";
 
 const GameRoom = (props) => {
   const {
@@ -21,6 +25,8 @@ const GameRoom = (props) => {
     loadMessage,
     loadInformationRoom,
     guestJoinRoom,
+    guestLeaveRoom,
+    playerLeaveRoom,
   } = props;
 
   const { roomId } = useParams();
@@ -39,6 +45,7 @@ const GameRoom = (props) => {
     });
   }, [roomId, openConversation, loadMessage, auth.profileId]);
 
+  // Listen that guest joins to room game
   useEffect(() => {
     socket.on("guest-join-room-game", ({ user }) => {
       guestJoinRoom(user);
@@ -46,6 +53,24 @@ const GameRoom = (props) => {
 
     return () => socket.off("guest-join-room-game");
   }, [guestJoinRoom]);
+
+  // Listen that guest leaves room game
+  useEffect(() => {
+    socket.on("guest-leave-room-game", ({ user_id }) => {
+      guestLeaveRoom(user_id);
+    });
+
+    return () => socket.off("guest-leave-room-game");
+  }, [guestLeaveRoom]);
+
+  // Listen that player leaves room game
+  useEffect(() => {
+    socket.on("player-leave-room-game", ({ user_id }) => {
+      playerLeaveRoom(user_id);
+    });
+
+    return () => socket.off("player-leave-room-game");
+  }, [playerLeaveRoom]);
 
   return (
     <div>
@@ -71,6 +96,8 @@ const mapDispatchToProps = (dispatch) => {
     loadInformationRoom: (roomId) =>
       dispatch(getInformationRoomMiddleware(roomId)),
     guestJoinRoom: (user) => dispatch(guestJoinRoom(user)),
+    guestLeaveRoom: (userId) => dispatch(guestLeaveRoom(userId)),
+    playerLeaveRoom: (userId) => dispatch(playerLeaveRoom(userId)),
   };
 };
 

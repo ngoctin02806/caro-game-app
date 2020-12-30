@@ -19,6 +19,7 @@ import {
   loadedInfoRoom,
   guestJoinRoom,
   guestLeaveRoom,
+  playerJoinRoom,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -227,6 +228,12 @@ export const enterPasswordToJoinRoom = (roomId, roomSecret = "", user) => {
             user_id: user.id,
             type: "GUEST",
           });
+        } else {
+          socket.emit("emit-join-room-game", {
+            room_id: roomId,
+            user_id: user.id,
+          });
+          dispatch(playerJoinRoom(user));
         }
 
         return res.data.message;
@@ -264,13 +271,30 @@ export const getInformationRoomMiddleware = (roomId) => {
   };
 };
 
-export const registerLeavingRoom = (roomId, userId) => {
-  return (dispatch) => {
+export const registerLeavingRoomMiddleware = (roomId, userId) => {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    if (state.game.information.room.guests.find((g) => g.id === userId)) {
+      socket.emit("emit-leave-room-game", {
+        room_id: roomId,
+        user_id: userId,
+        type: "GUEST",
+      });
+
+      dispatch(guestLeaveRoom(userId));
+
+      return Promise.resolve();
+    }
+
     return axios(`/rooms/${roomId}/leave`, {
       method: "POST",
     })
       .then((res) => {
-        dispatch(guestLeaveRoom(userId));
+        socket.emit("emit-leave-room-game", {
+          room_id: roomId,
+          user_id: userId,
+        });
         return res.data;
       })
       .catch((e) => {

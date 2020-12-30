@@ -29,6 +29,7 @@ import EnterPassword from "./EnterPasswordModal";
 import {
   getUserOnlineMiddleware,
   loadRoomsGameMiddleware,
+  enterPasswordToJoinRoom,
 } from "../../redux/Game/game.middlewares";
 import {
   addConversationMiddleware,
@@ -41,11 +42,13 @@ const GameDashboard = (props) => {
   const {
     auth,
     game,
+    user,
     getUserOnline,
     conversations,
     openChatBox,
     addMessageFromSocket,
     loadRooms,
+    joinRoom,
   } = props;
 
   const [partnerData, setPartnerData] = useState(null);
@@ -73,17 +76,27 @@ const GameDashboard = (props) => {
   const checkPrivateRoom = (type, room_id, url, user_id) => () => {
     if (type === "PRIVATE_ROOM") {
       if (user_id === auth.profileId) {
-        socket.emit("emit-join-room-game", {
-          room_id: room_id,
-          user_id: user_id,
+        const roomGame = game.dashboard.rooms.find((r) => r._id === room_id);
+
+        joinRoom(room_id, roomGame.room_secret, user).then((res) => {
+          socket.emit("emit-join-room-game", {
+            room_id: room_id,
+            user_id: auth.profileId,
+          });
+          history.push(`${url}/tro-choi/${room_id}`);
         });
-        history.push(`${url}/tro-choi/${room_id}`);
       } else {
         console.log("enter password");
         setOpenPassword(room_id);
       }
     } else {
-      history.push(`${url}/tro-choi/${room_id}`);
+      joinRoom(room_id, "", user).then((res) => {
+        socket.emit("emit-join-room-game", {
+          room_id: room_id,
+          user_id: auth.profileId,
+        });
+        history.push(`${url}/tro-choi/${room_id}`);
+      });
     }
 
     return;
@@ -303,6 +316,11 @@ const mapStateToProps = (state) => {
       },
     },
     conversations: state.chat.conversations,
+    user: {
+      id: state.user.id,
+      username: state.user.username,
+      avatar: state.user.avatar,
+    },
   };
 };
 
@@ -330,6 +348,8 @@ const mapDispatchToProps = (dispatch) => {
       ),
     loadRooms: ({ offset, limit }) =>
       dispatch(loadRoomsGameMiddleware({ offset, limit })),
+    joinRoom: (roomId, roomSecret, user) =>
+      dispatch(enterPasswordToJoinRoom(roomId, roomSecret, user)),
   };
 };
 
