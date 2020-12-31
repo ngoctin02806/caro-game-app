@@ -1,20 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { Layout, Menu, Button } from "antd";
 import { SettingOutlined, AppstoreAddOutlined } from "@ant-design/icons";
-import { useRouteMatch, useHistory, useLocation, Link } from "react-router-dom";
+import { useRouteMatch, useLocation, Link } from "react-router-dom";
 
 const { Sider } = Layout;
 
 const SiderCustom = (props) => {
-  let { path, url } = useRouteMatch();
-
-  const history = useHistory();
+  let { path } = useRouteMatch();
 
   const location = useLocation();
-
-  const handleCancel = () => {
-    history.goBack();
-  };
 
   return (
     <Sider

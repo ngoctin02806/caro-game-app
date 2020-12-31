@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Menu, List } from "antd";
 import { connect } from "react-redux";
+import { Link, useLocation, useRouteMatch } from "react-router-dom";
 
 import CupIcon from "../../../public/images/cup.png";
 
@@ -20,6 +21,10 @@ const RankingSider = (props) => {
   const { rankings, getRankings } = props;
 
   const [isHover, setIsHover] = useState(false);
+
+  let { path } = useRouteMatch();
+
+  const location = useLocation();
 
   useEffect(() => {
     getRankings();
@@ -71,19 +76,55 @@ const RankingSider = (props) => {
               switch (index) {
                 case 0:
                   return (
-                    <TopUser ranking={rank} width={40} icon={GoldMedalIcon} />
+                    <Link
+                      to={{
+                        pathname: `${path}/nguoi-choi/${rank._id}`,
+                        state: { background: location },
+                      }}
+                    >
+                      <TopUser ranking={rank} width={40} icon={GoldMedalIcon} />
+                    </Link>
                   );
                 case 1:
                   return (
-                    <TopUser ranking={rank} width={40} icon={SilverMedalIcon} />
+                    <Link
+                      to={{
+                        pathname: `${path}/nguoi-choi/${rank._id}`,
+                        state: { background: location },
+                      }}
+                    >
+                      <TopUser
+                        ranking={rank}
+                        width={40}
+                        icon={SilverMedalIcon}
+                      />
+                    </Link>
                   );
                 case 2:
                   return (
-                    <TopUser ranking={rank} width={40} icon={BronzeMedalIcon} />
+                    <Link
+                      to={{
+                        pathname: `${path}/nguoi-choi/${rank._id}`,
+                        state: { background: location },
+                      }}
+                    >
+                      <TopUser
+                        ranking={rank}
+                        width={40}
+                        icon={BronzeMedalIcon}
+                      />
+                    </Link>
                   );
                 default:
                   return (
-                    <TopUser ranking={rank} width={40} icon={StripeIcon} />
+                    <Link
+                      to={{
+                        pathname: `${path}/nguoi-choi/${rank._id}`,
+                        state: { background: location },
+                      }}
+                    >
+                      <TopUser ranking={rank} width={40} icon={StripeIcon} />
+                    </Link>
                   );
               }
             }}

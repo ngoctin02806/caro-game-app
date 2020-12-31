@@ -35,6 +35,7 @@ import {
   addConversationMiddleware,
   addMessageFromSocketMiddleware,
 } from "../../redux/Conversation/conversation.actions";
+import UserInformationModal from "../../components/@core/UserInformationModal";
 
 const { Content } = Layout;
 
@@ -61,6 +62,8 @@ const GameDashboard = (props) => {
   const location = useLocation();
 
   let background = location.state && location.state.background;
+
+  let backgroundUser = location.state && location.state.background;
 
   const { page = 1 } = queryString.parse(location.search);
 
@@ -293,6 +296,14 @@ const GameDashboard = (props) => {
                   isModalVisible={true}
                   handleCancel={() => history.goBack()}
                   location={url}
+                />
+              </Route>
+            )}
+            {background && (
+              <Route path={`${path}/nguoi-choi/:userId`}>
+                <UserInformationModal
+                  isModalVisible={true}
+                  handleCancel={() => history.goBack()}
                 />
               </Route>
             )}

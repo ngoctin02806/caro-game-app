@@ -5,11 +5,19 @@ import { connect } from "react-redux";
 
 import { createRoomGameMiddleware } from "../../../../redux/Game/game.middlewares";
 
+import socket from "../../../../config/socket.config";
+
 const { Option } = Select;
 const { Text } = Typography;
 
 const CustomizeModal = (props) => {
-  const { game, isModalVisible, handleCancel, createRoomGame } = props;
+  const {
+    profileId,
+    game,
+    isModalVisible,
+    handleCancel,
+    createRoomGame,
+  } = props;
 
   const [isPrivate, setIsPrivate] = useState(false);
 
@@ -31,6 +39,10 @@ const CustomizeModal = (props) => {
   }) => {
     createRoomGame({ type, betLevel, roomSecret }).then((room) => {
       history.push("/trang-chu");
+      socket.emit("emit-join-room-game", {
+        room_id: room._id,
+        user_id: profileId,
+      });
       history.push(`/trang-chu/tro-choi/${room._id}`);
     });
   };
@@ -124,6 +136,7 @@ const mapStateToProps = (state) => {
         ...state.game.dashboard,
       },
     },
+    profileId: state.auth.profileId,
   };
 };
 

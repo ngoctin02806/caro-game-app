@@ -219,7 +219,6 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
       };
     }
     case PLAYER_JOIN_ROOM: {
-      console.log(action.value);
       return {
         ...state,
         information: {
