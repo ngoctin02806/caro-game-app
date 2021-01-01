@@ -1,6 +1,7 @@
 import {
   ADD_MESSAGE_GAME,
   ADD_PARTICIPANT_GAME,
+  CHANGE_PLAYER_IN_GAME,
   CLOSE_TOPUP_MODAL,
   CREATE_ROOM_GAME,
   GET_RANKINGS,
@@ -16,6 +17,8 @@ import {
   OPEN_CONVERSATION,
   PLAYER_JOIN_ROOM,
   PLAYER_LEAVE_ROOM,
+  RESET_CURRENT_PLAYER,
+  START_GAME,
   TOPUP_LOGIN,
   USER_ONLINE,
 } from "./game.types";
@@ -151,5 +154,25 @@ export const playerLeaveRoom = (userId) => {
   return {
     type: PLAYER_LEAVE_ROOM,
     value: userId,
+  };
+};
+
+export const createGame = (game) => {
+  return {
+    type: START_GAME,
+    value: game,
+  };
+};
+
+export const changePlayer = (userId) => {
+  return {
+    type: CHANGE_PLAYER_IN_GAME,
+    value: userId,
+  };
+};
+
+export const resetCurrentPlayer = () => {
+  return {
+    type: RESET_CURRENT_PLAYER,
   };
 };

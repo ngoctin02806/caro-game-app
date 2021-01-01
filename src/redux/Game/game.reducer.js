@@ -1,6 +1,7 @@
 import {
   ADD_MESSAGE_GAME,
   ADD_PARTICIPANT_GAME,
+  CHANGE_PLAYER_IN_GAME,
   CLOSE_TOPUP_MODAL,
   CREATE_ROOM_GAME,
   GET_RANKINGS,
@@ -17,6 +18,8 @@ import {
   OPEN_PASSWORD_MODAL,
   PLAYER_JOIN_ROOM,
   PLAYER_LEAVE_ROOM,
+  RESET_CURRENT_PLAYER,
+  START_GAME,
   TOPUP_LOGIN,
   USER_ONLINE,
 } from "./game.types";
@@ -27,9 +30,11 @@ const INIT_STATE = {
   information: {
     isLoading: false,
     room: {
+      currentPlayer: null,
       players: [],
       guests: [],
     },
+    newGame: null,
   },
   rankings: {
     isLoading: false,
@@ -234,16 +239,42 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
       const players = state.information.room.players.slice();
       const newPlayers = players.filter((g) => g._id !== action.value);
 
-      console.log(newPlayers);
-
       return {
         ...state,
         information: {
           ...state.information,
+          currentPlayer: null,
           room: {
             ...state.information.room,
             players: newPlayers,
           },
+        },
+      };
+    }
+    case START_GAME: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          newGame: action.value,
+        },
+      };
+    }
+    case CHANGE_PLAYER_IN_GAME: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          currentPlayer: action.value,
+        },
+      };
+    }
+    case RESET_CURRENT_PLAYER: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          currentPlayer: null,
         },
       };
     }

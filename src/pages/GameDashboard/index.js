@@ -300,7 +300,7 @@ const GameDashboard = (props) => {
               </Route>
             )}
             {background && (
-              <Route path={`${path}/nguoi-choi/:userId`}>
+              <Route path={`${url}/nguoi-choi/:userId`}>
                 <UserInformationModal
                   isModalVisible={true}
                   handleCancel={() => history.goBack()}

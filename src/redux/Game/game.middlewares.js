@@ -20,6 +20,9 @@ import {
   guestJoinRoom,
   guestLeaveRoom,
   playerJoinRoom,
+  createGame,
+  changePlayer,
+  resetCurrentPlayer,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -295,7 +298,40 @@ export const registerLeavingRoomMiddleware = (roomId, userId) => {
           room_id: roomId,
           user_id: userId,
         });
+
+        dispatch(resetCurrentPlayer());
+
         return res.data;
+      })
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+      });
+  };
+};
+
+export const startGameMiddleware = (roomId) => {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    const profileId = state.auth.profileId;
+    const players = state.game.information.room.players;
+
+    return axios(`/rooms/${roomId}/games`, {
+      method: "POST",
+      data: {
+        players: players.map((p) => p._id),
+      },
+    })
+      .then((res) => {
+        dispatch(changePlayer(profileId));
+        dispatch(createGame(res.data));
+        socket.emit("emit-start-game", { room_id: roomId, user_id: profileId });
       })
       .catch((e) => {
         dispatch({
