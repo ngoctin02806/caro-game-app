@@ -9,31 +9,15 @@ import Player from "./Player";
 import { ChessTableWrapper, StyledStartGame } from "./styled";
 import { startGameMiddleware } from "../../../redux/Game/game.middlewares";
 
-import socket from "../../../config/socket.config";
-import { changePlayer } from "../../../redux/Game/game.actions";
-
 const ChessTable = (props) => {
-  const { players, profileId, currentPlayer, startGame, changePlayer } = props;
-
-  console.log(currentPlayer);
-
-  const tables = new Array(400).fill(0);
+  const { steps, players, profileId, currentPlayer, startGame } = props;
 
   const { roomId } = useParams();
 
-  useEffect(() => {
-    socket.on("start-game", ({ user_id }) => {
-      console.log(user_id);
-      changePlayer(user_id);
-    });
-
-    return () => socket.off("start-game");
-  }, [changePlayer]);
-
   return (
     <ChessTableWrapper>
-      {tables.map((c, i) => (
-        <Cell key={i} />
+      {steps.map((c, i) => (
+        <Cell c={c} key={i} index={i} />
       ))}
       {players.map((p) => {
         if (profileId === p._id) {
@@ -58,14 +42,14 @@ const mapStateToProps = (state) => {
   return {
     profileId: state.auth.profileId,
     players: state.game.information.room.players,
-    currentPlayer: state.game.information.currentPlayer,
+    currentPlayer: state.game.information.room.currentPlayer,
+    steps: state.game.information.newGame.steps,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     startGame: (roomId) => dispatch(startGameMiddleware(roomId)),
-    changePlayer: (userId) => dispatch(changePlayer(userId)),
   };
 };
 

@@ -21,8 +21,9 @@ import {
   guestLeaveRoom,
   playerJoinRoom,
   createGame,
-  changePlayer,
   resetCurrentPlayer,
+  resetNextPlayer,
+  insertXO,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -329,9 +330,17 @@ export const startGameMiddleware = (roomId) => {
       },
     })
       .then((res) => {
-        dispatch(changePlayer(profileId));
+        res.data.isXCharacter = true;
+
         dispatch(createGame(res.data));
-        socket.emit("emit-start-game", { room_id: roomId, user_id: profileId });
+
+        res.data.steps = Array(400).fill(null);
+        res.data.isXCharacter = false;
+        socket.emit("emit-start-game", {
+          room_id: roomId,
+          user_id: profileId,
+          game: res.data,
+        });
       })
       .catch((e) => {
         dispatch({
@@ -342,5 +351,43 @@ export const startGameMiddleware = (roomId) => {
           },
         });
       });
+  };
+};
+
+export const nextPlayerMiddleware = (roomId, userId, step) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const nextPlayer = state.game.information.room.players.find(
+      (p) => p._id !== userId
+    );
+
+    dispatch(resetNextPlayer());
+
+    socket.emit("emit-step-game", {
+      room_id: roomId,
+      user_id: userId,
+      next_user_id: nextPlayer._id,
+      step,
+    });
+  };
+};
+
+export const insertXOMiddleware = (roomId, userId, step, character) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const nextPlayer = state.game.information.room.players.find(
+      (p) => p._id !== userId
+    );
+
+    dispatch(insertXO(step, character));
+
+    dispatch(resetNextPlayer());
+
+    socket.emit("emit-step-game", {
+      room_id: roomId,
+      user_id: userId,
+      next_user_id: nextPlayer._id,
+      step,
+    });
   };
 };

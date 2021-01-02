@@ -7,6 +7,7 @@ import {
   GET_RANKINGS,
   GUEST_JOIN_ROOM,
   GUEST_LEAVE_ROOM,
+  INSERT_X_O,
   LOADED_INFORMATION_ROOM,
   LOADED_ROOMS_GAME,
   LOADING_CREATE_ROOM_GAME,
@@ -18,6 +19,7 @@ import {
   PLAYER_JOIN_ROOM,
   PLAYER_LEAVE_ROOM,
   RESET_CURRENT_PLAYER,
+  RESET_NEXT_PLAYER,
   START_GAME,
   TOPUP_LOGIN,
   USER_ONLINE,
@@ -174,5 +176,21 @@ export const changePlayer = (userId) => {
 export const resetCurrentPlayer = () => {
   return {
     type: RESET_CURRENT_PLAYER,
+  };
+};
+
+export const resetNextPlayer = () => {
+  return {
+    type: RESET_NEXT_PLAYER,
+  };
+};
+
+export const insertXO = (position, character) => {
+  return {
+    type: INSERT_X_O,
+    value: {
+      position,
+      character,
+    },
   };
 };

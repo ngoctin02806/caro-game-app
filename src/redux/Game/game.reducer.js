@@ -7,6 +7,7 @@ import {
   GET_RANKINGS,
   GUEST_JOIN_ROOM,
   GUEST_LEAVE_ROOM,
+  INSERT_X_O,
   LOADED_INFORMATION_ROOM,
   LOADED_ROOMS_GAME,
   LOADING_CREATE_ROOM_GAME,
@@ -19,6 +20,7 @@ import {
   PLAYER_JOIN_ROOM,
   PLAYER_LEAVE_ROOM,
   RESET_CURRENT_PLAYER,
+  RESET_NEXT_PLAYER,
   START_GAME,
   TOPUP_LOGIN,
   USER_ONLINE,
@@ -34,7 +36,9 @@ const INIT_STATE = {
       players: [],
       guests: [],
     },
-    newGame: null,
+    newGame: {
+      steps: Array(400).fill(null),
+    },
   },
   rankings: {
     isLoading: false,
@@ -243,10 +247,13 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
         ...state,
         information: {
           ...state.information,
-          currentPlayer: null,
           room: {
             ...state.information.room,
             players: newPlayers,
+            currentPlayer: null,
+          },
+          newGame: {
+            steps: Array(400).fill(null),
           },
         },
       };
@@ -256,7 +263,10 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
         ...state,
         information: {
           ...state.information,
-          newGame: action.value,
+          newGame: {
+            ...action.value,
+            steps: state.information.newGame.steps,
+          },
         },
       };
     }
@@ -265,7 +275,7 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
         ...state,
         information: {
           ...state.information,
-          currentPlayer: action.value,
+          room: { ...state.information.room, currentPlayer: action.value },
         },
       };
     }
@@ -274,7 +284,40 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
         ...state,
         information: {
           ...state.information,
-          currentPlayer: null,
+          room: {
+            currentPlayer: null,
+            players: [],
+            guests: [],
+          },
+          newGame: null,
+        },
+      };
+    }
+    case RESET_NEXT_PLAYER: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          room: {
+            ...state.information.room,
+            currentPlayer: null,
+          },
+        },
+      };
+    }
+    case INSERT_X_O: {
+      const newSteps = state.information.newGame.steps.slice();
+      debugger;
+      newSteps[action.value.position] = action.value.character;
+
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          newGame: {
+            ...state.information.newGame,
+            steps: newSteps,
+          },
         },
       };
     }

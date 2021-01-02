@@ -47,3 +47,7 @@ export const START_GAME = "START_GAME";
 export const CHANGE_PLAYER_IN_GAME = "CHANGE_PLAYER_IN_GAME";
 
 export const RESET_CURRENT_PLAYER = "RESET_CURRENT_PLAYER";
+
+export const RESET_NEXT_PLAYER = "RESET_NEXT_PLAYER";
+
+export const INSERT_X_O = "INSERT_X_O";
