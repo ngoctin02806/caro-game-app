@@ -20,6 +20,7 @@ import {
   PLAYER_JOIN_ROOM,
   PLAYER_LEAVE_ROOM,
   RESET_CURRENT_PLAYER,
+  RESET_GAME,
   RESET_NEXT_PLAYER,
   START_GAME,
   TOPUP_LOGIN,
@@ -36,9 +37,7 @@ const INIT_STATE = {
       players: [],
       guests: [],
     },
-    newGame: {
-      steps: Array(400).fill(null),
-    },
+    newGame: {},
   },
   rankings: {
     isLoading: false,
@@ -252,9 +251,6 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
             players: newPlayers,
             currentPlayer: null,
           },
-          newGame: {
-            steps: Array(400).fill(null),
-          },
         },
       };
     }
@@ -289,7 +285,6 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
             players: [],
             guests: [],
           },
-          newGame: null,
         },
       };
     }
@@ -300,14 +295,12 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
           ...state.information,
           room: {
             ...state.information.room,
-            currentPlayer: null,
           },
         },
       };
     }
     case INSERT_X_O: {
       const newSteps = state.information.newGame.steps.slice();
-      debugger;
       newSteps[action.value.position] = action.value.character;
 
       return {
@@ -317,6 +310,18 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
           newGame: {
             ...state.information.newGame,
             steps: newSteps,
+          },
+        },
+      };
+    }
+    case RESET_GAME: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          room: {
+            ...state.information.room,
+            currentPlayer: null,
           },
         },
       };

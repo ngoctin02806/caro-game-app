@@ -80,7 +80,7 @@ const GameRoom = (props) => {
         <ParticipantSider />
       </Col>
       <Col span={10.5}>
-        <ChessTable />
+        <ChessTable roomId={roomId} />
       </Col>
       <ChatBox />
     </Row>

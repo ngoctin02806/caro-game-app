@@ -334,7 +334,6 @@ export const startGameMiddleware = (roomId) => {
 
         dispatch(createGame(res.data));
 
-        res.data.steps = Array(400).fill(null);
         res.data.isXCharacter = false;
         socket.emit("emit-start-game", {
           room_id: roomId,
@@ -354,7 +353,7 @@ export const startGameMiddleware = (roomId) => {
   };
 };
 
-export const nextPlayerMiddleware = (roomId, userId, step) => {
+export const nextPlayerMiddleware = (roomId, userId, step, character) => {
   return (dispatch, getState) => {
     const state = getState();
     const nextPlayer = state.game.information.room.players.find(
@@ -367,6 +366,7 @@ export const nextPlayerMiddleware = (roomId, userId, step) => {
       room_id: roomId,
       user_id: userId,
       next_user_id: nextPlayer._id,
+      character,
       step,
     });
   };
@@ -379,15 +379,26 @@ export const insertXOMiddleware = (roomId, userId, step, character) => {
       (p) => p._id !== userId
     );
 
-    dispatch(insertXO(step, character));
+    const currentPlayer = state.game.information.room.currentPlayer;
 
-    dispatch(resetNextPlayer());
+    if (currentPlayer) {
+      dispatch(resetNextPlayer());
 
-    socket.emit("emit-step-game", {
-      room_id: roomId,
-      user_id: userId,
-      next_user_id: nextPlayer._id,
-      step,
-    });
+      socket.emit("emit-step-game", {
+        room_id: roomId,
+        user_id: userId,
+        next_user_id: nextPlayer._id,
+        character,
+        step,
+      });
+    } else {
+      socket.emit("emit-step-game", {
+        room_id: roomId,
+        user_id: userId,
+        next_user_id: null,
+        character,
+        step,
+      });
+    }
   };
 };

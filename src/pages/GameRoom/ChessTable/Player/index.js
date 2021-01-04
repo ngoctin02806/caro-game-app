@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Card } from "antd";
+import { Card, Tooltip } from "antd";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
+
+import CupIcon from "../../../../components/Icons/CupIcon";
 
 import { PlayerWrapper } from "./styled";
 import { nextPlayerMiddleware } from "../../../../redux/Game/game.middlewares";
@@ -16,6 +18,7 @@ let timer = 20;
 
 const Player = (props) => {
   const {
+    isXCharacter,
     profileId,
     left,
     right,
@@ -24,6 +27,10 @@ const Player = (props) => {
     nextPlayer,
     changePlayer,
     saveGame,
+    checkPosition,
+    randomPosition,
+    setCurrent,
+    resetChessBoard,
   } = props;
 
   const [count, setCount] = useState(0);
@@ -33,6 +40,7 @@ const Player = (props) => {
   useEffect(() => {
     socket.on("start-game-data", ({ game }) => {
       saveGame(game);
+      resetChessBoard();
     });
 
     return () => socket.off("start-game-data");
@@ -62,7 +70,13 @@ const Player = (props) => {
       if (count === 20) {
         clearTimeout(intervalId);
         if (player._id === profileId) {
-          nextPlayer(roomId, player._id);
+          const { x, y } = randomPosition();
+
+          setCurrent(x, y);
+
+          checkPosition(x, y, isXCharacter ? "X" : "O");
+
+          nextPlayer(roomId, player._id, [x, y], isXCharacter ? "X" : "O");
         }
       }
     }
@@ -104,7 +118,24 @@ const Player = (props) => {
             }}
           ></rect>
         </svg>
-        <Meta title={count} description={player.username} />
+        <Tooltip title={player.username}>
+          <Meta
+            title={player.username}
+            description={
+              <div
+                style={{
+                  color: "rgb(255,215,9)",
+                  fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <div style={{ marginRight: "10px" }}>{player.point}</div>
+                <CupIcon width={15} />
+              </div>
+            }
+          />
+        </Tooltip>
       </Card>
     </PlayerWrapper>
   );
@@ -114,13 +145,14 @@ const mapStateToProps = (state) => {
   return {
     currentPlayer: state.game.information.room.currentPlayer,
     profileId: state.auth.profileId,
+    isXCharacter: state.game.information.newGame.isXCharacter,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    nextPlayer: (roomId, userId, step) =>
-      dispatch(nextPlayerMiddleware(roomId, userId, step)),
+    nextPlayer: (roomId, userId, step, character) =>
+      dispatch(nextPlayerMiddleware(roomId, userId, step, character)),
     changePlayer: (userId) => dispatch(changePlayer(userId)),
     saveGame: (game) => dispatch(createGame(game)),
   };

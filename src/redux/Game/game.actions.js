@@ -19,6 +19,7 @@ import {
   PLAYER_JOIN_ROOM,
   PLAYER_LEAVE_ROOM,
   RESET_CURRENT_PLAYER,
+  RESET_GAME,
   RESET_NEXT_PLAYER,
   START_GAME,
   TOPUP_LOGIN,
@@ -192,5 +193,13 @@ export const insertXO = (position, character) => {
       position,
       character,
     },
+  };
+};
+
+export const resetGame = () => {
+  console.log("RESET GAME");
+
+  return {
+    type: RESET_GAME,
   };
 };

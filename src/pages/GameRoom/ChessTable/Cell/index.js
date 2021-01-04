@@ -7,14 +7,27 @@ import { insertXOMiddleware } from "../../../../redux/Game/game.middlewares";
 import { StyledCell } from "./styled";
 
 const Cell = (props) => {
-  const { profileId, index, c: character, handlePlaying } = props;
+  const {
+    active,
+    currentPlayer,
+    isXCharacter,
+    profileId,
+    position,
+    c: character,
+    onClick,
+    handlePlaying,
+  } = props;
 
   const { roomId } = useParams();
 
   return (
     <StyledCell
+      active={active}
       onClick={() => {
-        handlePlaying(roomId, profileId, index, "X");
+        if (currentPlayer === profileId) {
+          onClick();
+          handlePlaying(roomId, profileId, position, isXCharacter ? "X" : "O");
+        }
       }}
     >
       {character}
@@ -25,6 +38,8 @@ const Cell = (props) => {
 const mapStateToProps = (state) => {
   return {
     profileId: state.auth.profileId,
+    isXCharacter: state.game.information.newGame.isXCharacter,
+    currentPlayer: state.game.information.room.currentPlayer,
   };
 };
 
