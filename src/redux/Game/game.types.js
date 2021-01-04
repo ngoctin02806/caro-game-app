@@ -53,3 +53,5 @@ export const RESET_NEXT_PLAYER = "RESET_NEXT_PLAYER";
 export const INSERT_X_O = "INSERT_X_O";
 
 export const RESET_GAME = "RESET_GAME";
+
+export const END_GAME = "END_GAME";

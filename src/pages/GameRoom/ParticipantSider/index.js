@@ -27,9 +27,9 @@ const ParticipantSider = (props) => {
   const history = useHistory();
 
   useEffect(() => {
-    socket.on("player-join-room-game", ({ _id, username, avatar }) => {
+    socket.on("player-join-room-game", ({ _id, username, avatar, point }) => {
       if (participants.length < 2) {
-        playerJoinRoom({ _id, username, avatar });
+        playerJoinRoom({ _id, username, avatar, point });
       }
     });
 

@@ -23,7 +23,7 @@ import {
   createGame,
   resetCurrentPlayer,
   resetNextPlayer,
-  insertXO,
+  endGame,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -400,5 +400,43 @@ export const insertXOMiddleware = (roomId, userId, step, character) => {
         step,
       });
     }
+  };
+};
+
+export const computePointForUserMiddleware = (betLevel, chessBoard) => {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    const profileId = state.auth.profileId;
+    const roomId = state.game.information.room._id;
+    const gameId = state.game.information.newGame._id;
+
+    const players = state.game.information.room.players;
+
+    const newPlayers = players.slice();
+    const index = newPlayers.findIndex((p) => p._id === profileId);
+    const index2 = newPlayers.findIndex((p) => p._id !== profileId);
+    newPlayers[index].point = newPlayers[index].point + betLevel;
+    newPlayers[index2].point = newPlayers[index2].point - betLevel;
+
+    return axios(`/rooms/${roomId}/games/${gameId}/coins/charge`, {
+      method: "POST",
+      data: {
+        point: betLevel,
+        chess_board: chessBoard,
+      },
+    })
+      .then((res) => {
+        dispatch(endGame({ players: newPlayers, point: betLevel }));
+      })
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+      });
   };
 };

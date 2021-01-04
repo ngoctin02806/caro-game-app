@@ -4,6 +4,7 @@ import {
   CHANGE_PLAYER_IN_GAME,
   CLOSE_TOPUP_MODAL,
   CREATE_ROOM_GAME,
+  END_GAME,
   GET_RANKINGS,
   GUEST_JOIN_ROOM,
   GUEST_LEAVE_ROOM,
@@ -322,6 +323,18 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
           room: {
             ...state.information.room,
             currentPlayer: null,
+          },
+        },
+      };
+    }
+    case END_GAME: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          room: {
+            ...state.information.room,
+            players: action.value.players,
           },
         },
       };

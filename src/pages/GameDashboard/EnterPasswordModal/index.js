@@ -56,6 +56,7 @@ const mapStateToProps = (state) => {
       id: state.user.id,
       username: state.user.username,
       avatar: state.user.avatar,
+      point: state.user.point,
     },
   };
 };

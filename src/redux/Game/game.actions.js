@@ -4,6 +4,7 @@ import {
   CHANGE_PLAYER_IN_GAME,
   CLOSE_TOPUP_MODAL,
   CREATE_ROOM_GAME,
+  END_GAME,
   GET_RANKINGS,
   GUEST_JOIN_ROOM,
   GUEST_LEAVE_ROOM,
@@ -201,5 +202,12 @@ export const resetGame = () => {
 
   return {
     type: RESET_GAME,
+  };
+};
+
+export const endGame = ({ players, point }) => {
+  return {
+    type: END_GAME,
+    value: { players, point },
   };
 };

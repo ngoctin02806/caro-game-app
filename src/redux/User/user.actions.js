@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GET_ERRORS } from "../Error/error.types";
 
-import { USER_PROFILE } from "./user.types";
+import { UPDATE_POINT_END_GAME, USER_PROFILE } from "./user.types";
 
 const getUserProfile = (profile) => {
   return {

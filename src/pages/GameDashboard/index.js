@@ -120,9 +120,10 @@ const GameDashboard = (props) => {
   // Listen join room event
   useEffect(() => {
     socket.on("joined-room", (msg) => {
-      const { avatar, username, _id } = msg;
+      console.log(msg);
+      const { avatar, username, _id, point } = msg;
 
-      setPartnerData({ avatar, username, _id });
+      setPartnerData({ avatar, username, _id, point });
     });
 
     return () => socket.off("joined-room");
@@ -329,6 +330,7 @@ const mapStateToProps = (state) => {
       id: state.user.id,
       username: state.user.username,
       avatar: state.user.avatar,
+      point: state.user.point,
     },
   };
 };

@@ -10,9 +10,13 @@ import LoserModal from "../LoserModal";
 import ChessBoard from "../../../utils/table";
 
 import { ChessTableWrapper, StyledStartGame } from "./styled";
-import { startGameMiddleware } from "../../../redux/Game/game.middlewares";
+import {
+  computePointForUserMiddleware,
+  startGameMiddleware,
+} from "../../../redux/Game/game.middlewares";
 import socket from "../../../config/socket.config";
 import { insertXO, resetGame } from "../../../redux/Game/game.actions";
+import { updatePointUser } from "../../../redux/User/user.actions";
 
 class ChessTable extends Component {
   constructor(props) {
@@ -56,24 +60,31 @@ class ChessTable extends Component {
   }
 
   handleWin(character) {
-    console.log(character);
+    setTimeout(() => {
+      this.handleCloseLoserModal();
+      this.handleCloseWinnerModal();
+    }, 5000);
     this.props.resetGame();
     if (character === "X" && this.props.isXCharacter) {
+      this.props.computePoint(this.props.betLevel, this.state.table);
       this.handleOpenWinnerModal();
       return;
     }
 
     if (character === "O" && this.props.isXCharacter) {
+      this.props.computePoint(-this.props.betLevel, this.state.table);
       this.handleOpenLoserModal();
       return;
     }
 
     if (character === "O" && !this.props.isXCharacter) {
+      this.props.computePoint(this.props.betLevel, this.state.table);
       this.handleOpenWinnerModal();
       return;
     }
 
     if (character === "X" && !this.props.isXCharacter) {
+      this.props.computePoint(-this.props.betLevel, this.state.table);
       this.handleOpenLoserModal();
       return;
     }
@@ -199,6 +210,7 @@ const mapStateToProps = (state) => {
     players: state.game.information.room.players,
     currentPlayer: state.game.information.room.currentPlayer,
     isXCharacter: state.game.information.newGame.isXCharacter,
+    betLevel: state.game.information.room.bet_level,
   };
 };
 
@@ -207,6 +219,8 @@ const mapDispatchToProps = (dispatch) => {
     startGame: (roomId) => dispatch(startGameMiddleware(roomId)),
     insertXO: (position, character) => dispatch(insertXO(position, character)),
     resetGame: () => dispatch(resetGame()),
+    computePoint: (betLevel, chessBoard) =>
+      dispatch(computePointForUserMiddleware(betLevel, chessBoard)),
   };
 };
 
