@@ -1,14 +1,29 @@
 import React from "react";
 import { Layout, Menu, Button } from "antd";
 import { SettingOutlined, AppstoreAddOutlined } from "@ant-design/icons";
-import { useRouteMatch, useLocation, Link } from "react-router-dom";
+import { useRouteMatch, useLocation, useHistory, Link } from "react-router-dom";
+import { connect } from "react-redux";
+
+import { quicklyPlayMiddleware } from "../../../redux/Game/game.middlewares";
 
 const { Sider } = Layout;
 
 const SiderCustom = (props) => {
+  const { quicklyPlay } = props;
+
   let { path } = useRouteMatch();
 
   const location = useLocation();
+
+  const history = useHistory();
+
+  const autoFindRoom = () => {
+    quicklyPlay().then((res) => {
+      if (res) {
+        history.push(`/trang-chu/tro-choi/${res}`);
+      }
+    });
+  };
 
   return (
     <Sider
@@ -31,7 +46,11 @@ const SiderCustom = (props) => {
         selectable={false}
       >
         <Menu.Item>
-          <Button type="primary" style={{ width: "100%", textAlign: "center" }}>
+          <Button
+            type="primary"
+            style={{ width: "100%", textAlign: "center" }}
+            onClick={autoFindRoom}
+          >
             Chơi nhanh
           </Button>
         </Menu.Item>
@@ -61,4 +80,10 @@ const SiderCustom = (props) => {
   );
 };
 
-export default SiderCustom;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    quicklyPlay: () => dispatch(quicklyPlayMiddleware()),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(SiderCustom);

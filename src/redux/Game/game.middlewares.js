@@ -320,6 +320,8 @@ export const startGameMiddleware = (roomId) => {
   return (dispatch, getState) => {
     const state = getState();
 
+    console.log(roomId);
+
     const profileId = state.auth.profileId;
     const players = state.game.information.room.players;
 
@@ -331,6 +333,8 @@ export const startGameMiddleware = (roomId) => {
     })
       .then((res) => {
         res.data.isXCharacter = true;
+
+        console.log(res);
 
         dispatch(createGame(res.data));
 
@@ -437,6 +441,44 @@ export const computePointForUserMiddleware = (betLevel, chessBoard) => {
             code: e.response.data.errors[0].code,
           },
         });
+      });
+  };
+};
+
+export const quicklyPlayMiddleware = () => {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    const profileId = state.auth.profileId;
+    const user = state.user;
+
+    return axios("/room/emptiness")
+      .then((res) => {
+        return axios(`/rooms/${res.data._id}/join`, {
+          method: "POST",
+          data: {
+            room_secret: "",
+          },
+        }).then((response) => {
+          socket.emit("emit-join-room-game", {
+            room_id: res.data._id,
+            user_id: profileId,
+          });
+          dispatch(playerJoinRoom(user));
+
+          return res.data._id;
+        });
+      })
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+
+        return null;
       });
   };
 };

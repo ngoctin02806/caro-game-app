@@ -16,7 +16,6 @@ import {
 } from "../../../redux/Game/game.middlewares";
 import socket from "../../../config/socket.config";
 import { insertXO, resetGame } from "../../../redux/Game/game.actions";
-import { updatePointUser } from "../../../redux/User/user.actions";
 
 class ChessTable extends Component {
   constructor(props) {

@@ -38,7 +38,11 @@ const Player = (props) => {
   const { roomId } = useParams();
 
   useEffect(() => {
+    console.log("use Effect");
+
     socket.on("start-game-data", ({ game }) => {
+      console.log(game);
+
       saveGame(game);
       resetChessBoard();
     });
