@@ -63,8 +63,6 @@ const GameDashboard = (props) => {
 
   let background = location.state && location.state.background;
 
-  let backgroundUser = location.state && location.state.background;
-
   const { page = 1 } = queryString.parse(location.search);
 
   const changePage = (currentPage) => {

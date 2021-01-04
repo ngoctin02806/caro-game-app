@@ -1,56 +1,67 @@
 import React from "react";
-import { Modal } from "antd";
 import styled from "styled-components";
+import { Modal } from "antd";
 import { connect } from "react-redux";
 
-import CupIcon from "../../../components/Icons/CupIcon";
-import { closeTopUpModal } from "../../../redux/Game/game.actions";
+import WinnerBanner from "../../../public/images/winner.png";
 
 const StyledModal = styled(Modal)`
   & .ant-modal-content .ant-modal-header {
     text-align: center;
     padding: 20px 24px;
   }
+
+  & .ant-modal-content {
+    background-color: transparent;
+    box-shadow: none;
+  }
 `;
 
-const TopUpModal = (props) => {
-  const { isTopUp, closeTopUpModal } = props;
+const WinnerModal = (props) => {
+  const { betLevel, isWinner, closeWinnerModal } = props;
 
   const handleOk = () => {
-    closeTopUpModal();
+    closeWinnerModal();
   };
 
   const handleCancel = () => {
-    closeTopUpModal();
+    closeWinnerModal();
   };
 
   return (
     <StyledModal
-      title="Quà tặng mỗi ngày"
-      visible={isTopUp}
+      visible={isWinner}
       onOk={handleOk}
       onCancel={handleCancel}
       closable={false}
       footer={null}
+      width={200}
+      bodyStyle={{ backgroundColor: "transparent" }}
+      centered
     >
       <div
         style={{
           position: "absolute",
-          top: "-42px",
+          top: "-120px",
           left: "50%",
           transform: "translateX(-50%)",
         }}
       >
-        <CupIcon width={60} />
+        <img
+          style={{ width: "200px", objectFit: "cover" }}
+          src={WinnerBanner}
+          alt="winner"
+        />
       </div>
       <div
         style={{
           fontSize: "30px",
           color: "rgb(255,215,9)",
           textAlign: "center",
+          marginTop: "30px",
         }}
       >
-        +50
+        +{betLevel}
       </div>
     </StyledModal>
   );
@@ -58,14 +69,8 @@ const TopUpModal = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isTopUp: state.game.isTopUp,
+    betLevel: state.game.information.room.bet_level,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    closeTopUpModal: () => dispatch(closeTopUpModal()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TopUpModal);
+export default connect(mapStateToProps, null)(WinnerModal);

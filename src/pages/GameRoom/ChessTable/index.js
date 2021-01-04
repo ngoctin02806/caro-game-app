@@ -4,6 +4,8 @@ import { Button } from "antd";
 
 import Cell from "./Cell";
 import Player from "./Player";
+import WinnerModal from "../WinnerModal";
+import LoserModal from "../LoserModal";
 
 import ChessBoard from "../../../utils/table";
 
@@ -19,11 +21,34 @@ class ChessTable extends Component {
     this.updateState = this.updateState.bind(this);
     this.handleOnClick = this.handleOnClick.bind(this);
     this.handleWin = this.handleWin.bind(this);
+
+    this.handleOpenWinnerModal = this.handleOpenWinnerModal.bind(this);
+    this.handleCloseWinnerModal = this.handleCloseWinnerModal.bind(this);
+
+    this.handleOpenLoserModal = this.handleOpenLoserModal.bind(this);
+    this.handleCloseLoserModal = this.handleCloseLoserModal.bind(this);
+
     this.state = {
       table: [],
     };
 
     this.current = {};
+  }
+
+  handleOpenWinnerModal() {
+    this.setState({ ...this.state, isWinner: true });
+  }
+
+  handleOpenLoserModal() {
+    this.setState({ ...this.state, isLoser: true });
+  }
+
+  handleCloseWinnerModal() {
+    this.setState({ ...this.state, isWinner: false });
+  }
+
+  handleCloseLoserModal() {
+    this.setState({ ...this.state, isLoser: false });
   }
 
   updateState(value) {
@@ -33,6 +58,25 @@ class ChessTable extends Component {
   handleWin(character) {
     console.log(character);
     this.props.resetGame();
+    if (character === "X" && this.props.isXCharacter) {
+      this.handleOpenWinnerModal();
+      return;
+    }
+
+    if (character === "O" && this.props.isXCharacter) {
+      this.handleOpenLoserModal();
+      return;
+    }
+
+    if (character === "O" && !this.props.isXCharacter) {
+      this.handleOpenWinnerModal();
+      return;
+    }
+
+    if (character === "X" && !this.props.isXCharacter) {
+      this.handleOpenLoserModal();
+      return;
+    }
   }
 
   handleOnClick(i, j, character) {
@@ -66,25 +110,54 @@ class ChessTable extends Component {
     } = this.props;
 
     return (
-      <ChessTableWrapper>
-        {this.state.table.map((cols, i) =>
-          cols.map((c, j) => (
-            <Cell
-              active={this.current.x === i && this.current.y === j}
-              onClick={this.handleOnClick(i, j, isXCharacter ? "X" : "O")}
-              c={c}
-              key={`cell-${i * j + j}`}
-              position={[i, j]}
-            />
-          ))
-        )}
-        {players.map((p) => {
-          if (profileId === p._id) {
+      <>
+        <WinnerModal
+          isWinner={this.state.isWinner}
+          closeWinnerModal={this.handleCloseWinnerModal}
+        />
+        <LoserModal
+          isLoser={this.state.isLoser}
+          closeLoserModal={this.handleCloseLoserModal}
+        />
+        <ChessTableWrapper>
+          {this.state.table.map((cols, i) =>
+            cols.map((c, j) => (
+              <Cell
+                active={this.current.x === i && this.current.y === j}
+                onClick={this.handleOnClick(i, j, isXCharacter ? "X" : "O")}
+                c={c}
+                key={`cell-${i * j + j}`}
+                position={[i, j]}
+              />
+            ))
+          )}
+          {players.map((p) => {
+            if (profileId === p._id) {
+              return (
+                <Player
+                  key={p._id}
+                  player={p}
+                  left={-100}
+                  checkPosition={(x, y, character) => {
+                    this.current.x = x;
+                    this.current.y = y;
+                    this.table.checkPosition(x, y, character);
+                  }}
+                  randomPosition={() => this.table.randomPosition()}
+                  setCurrent={(x, y) => {
+                    this.current.x = x;
+                    this.current.y = y;
+                  }}
+                  resetChessBoard={() => this.table.resetChessBoard()}
+                />
+              );
+            }
             return (
               <Player
                 key={p._id}
                 player={p}
-                left={-100}
+                right={-100}
+                statusTable={this.status}
                 checkPosition={(x, y, character) => {
                   this.current.x = x;
                   this.current.y = y;
@@ -98,43 +171,24 @@ class ChessTable extends Component {
                 resetChessBoard={() => this.table.resetChessBoard()}
               />
             );
-          }
-          return (
-            <Player
-              key={p._id}
-              player={p}
-              right={-100}
-              statusTable={this.status}
-              checkPosition={(x, y, character) => {
-                this.current.x = x;
-                this.current.y = y;
-                this.table.checkPosition(x, y, character);
-              }}
-              randomPosition={() => this.table.randomPosition()}
-              setCurrent={(x, y) => {
-                this.current.x = x;
-                this.current.y = y;
-              }}
-              resetChessBoard={() => this.table.resetChessBoard()}
-            />
-          );
-        })}
-        {!currentPlayer && (
-          <StyledStartGame>
-            {players.length === 2 && (
-              <Button
-                onClick={() => {
-                  this.table.resetChessBoard();
-                  startGame(roomId);
-                }}
-                type="primary"
-              >
-                Bắt đầu
-              </Button>
-            )}
-          </StyledStartGame>
-        )}
-      </ChessTableWrapper>
+          })}
+          {!currentPlayer && (
+            <StyledStartGame>
+              {players.length === 2 && (
+                <Button
+                  onClick={() => {
+                    this.table.resetChessBoard();
+                    startGame(roomId);
+                  }}
+                  type="primary"
+                >
+                  Bắt đầu
+                </Button>
+              )}
+            </StyledStartGame>
+          )}
+        </ChessTableWrapper>
+      </>
     );
   }
 }
