@@ -1,5 +1,5 @@
-import { Button, Divider, List } from "antd";
-import React, { useEffect } from "react";
+import { Button, Divider, List, notification } from "antd";
+import React, { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 
@@ -13,9 +13,21 @@ import { registerLeavingRoomMiddleware } from "../../../redux/Game/game.middlewa
 import socket from "../../../config/socket.config";
 import { playerJoinRoom } from "../../../redux/Game/game.actions";
 
+const openNotification = (callback) => {
+  notification.info({
+    message: `Rời phòng`,
+    description: "Bạn đã đăng ký rời phòng",
+    placement: "topRight",
+    onClose: callback,
+  });
+};
+
+let leavingRoom = false;
+
 const ParticipantSider = (props) => {
   const {
     profileId,
+    currentPlayer,
     participants,
     guests,
     registerLeavingRoom,
@@ -23,8 +35,21 @@ const ParticipantSider = (props) => {
     playerJoinRoom,
   } = props;
 
+  const [openInforNoti, setOpenInforNoti] = useState(false);
+
   const { roomId } = useParams();
   const history = useHistory();
+
+  const closeInforNoti = useCallback(() => setOpenInforNoti(false), []);
+
+  useEffect(() => {
+    if (!currentPlayer && leavingRoom) {
+      setTimeout(() => {
+        history.goBack();
+        registerLeavingRoom(roomId, profileId);
+      }, 4000);
+    }
+  }, [leavingRoom, currentPlayer]);
 
   useEffect(() => {
     socket.on("player-join-room-game", ({ _id, username, avatar, point }) => {
@@ -38,13 +63,18 @@ const ParticipantSider = (props) => {
 
   return (
     <ParticipantWrapper>
+      {openInforNoti && openNotification(closeInforNoti)}
       <Button
         type="primary"
         style={{ width: "100%", marginBottom: "5px" }}
         onClick={() => {
-          history.goBack();
-          console.log(profileId);
-          registerLeavingRoom(roomId, profileId);
+          if (!currentPlayer) {
+            history.goBack();
+            registerLeavingRoom(roomId, profileId);
+          } else {
+            setOpenInforNoti(true);
+            leavingRoom = true;
+          }
         }}
       >
         Rời phòng
@@ -95,6 +125,7 @@ const mapStateToProps = (state) => {
     participants: state.game.information.room.players,
     guests: state.game.information.room.guests,
     betLevel: state.game.information.room.bet_level,
+    currentPlayer: state.game.information.room.currentPlayer,
   };
 };
 

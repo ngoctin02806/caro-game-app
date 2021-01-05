@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button } from "antd";
+import { Redirect } from "react-router-dom";
 
 import Cell from "./Cell";
 import Player from "./Player";
@@ -12,6 +13,7 @@ import ChessBoard from "../../../utils/table";
 import { ChessTableWrapper, StyledStartGame } from "./styled";
 import {
   computePointForUserMiddleware,
+  registerLeavingRoomMiddleware,
   startGameMiddleware,
 } from "../../../redux/Game/game.middlewares";
 import socket from "../../../config/socket.config";
@@ -30,6 +32,8 @@ class ChessTable extends Component {
 
     this.handleOpenLoserModal = this.handleOpenLoserModal.bind(this);
     this.handleCloseLoserModal = this.handleCloseLoserModal.bind(this);
+
+    this.redirectToHome = this.redirectToHome.bind(this);
 
     this.state = {
       table: [],
@@ -54,6 +58,10 @@ class ChessTable extends Component {
     this.setState({ ...this.state, isLoser: false });
   }
 
+  redirectToHome() {
+    this.setState({ ...this.state, isRedirect: true });
+  }
+
   updateState(value) {
     this.setState(value);
   }
@@ -71,7 +79,17 @@ class ChessTable extends Component {
     }
 
     if (character === "O" && this.props.isXCharacter) {
-      this.props.computePoint(-this.props.betLevel, this.state.table);
+      this.props
+        .computePoint(-this.props.betLevel, this.state.table)
+        .then((res) => {
+          if (res) {
+            this.props.registerLeavingRoom(
+              this.props.roomId,
+              this.props.profileId
+            );
+            this.redirectToHome();
+          }
+        });
       this.handleOpenLoserModal();
       return;
     }
@@ -83,7 +101,17 @@ class ChessTable extends Component {
     }
 
     if (character === "X" && !this.props.isXCharacter) {
-      this.props.computePoint(-this.props.betLevel, this.state.table);
+      this.props
+        .computePoint(-this.props.betLevel, this.state.table)
+        .then((res) => {
+          if (res) {
+            this.props.registerLeavingRoom(
+              this.props.roomId,
+              this.props.profileId
+            );
+            this.redirectToHome();
+          }
+        });
       this.handleOpenLoserModal();
       return;
     }
@@ -118,6 +146,10 @@ class ChessTable extends Component {
       roomId,
       isXCharacter,
     } = this.props;
+
+    if (this.state.isRedirect) {
+      return <Redirect to="/trang-chu" />;
+    }
 
     return (
       <>
@@ -220,6 +252,8 @@ const mapDispatchToProps = (dispatch) => {
     resetGame: () => dispatch(resetGame()),
     computePoint: (betLevel, chessBoard) =>
       dispatch(computePointForUserMiddleware(betLevel, chessBoard)),
+    registerLeavingRoom: (roomId, userId) =>
+      dispatch(registerLeavingRoomMiddleware(roomId, userId)),
   };
 };
 

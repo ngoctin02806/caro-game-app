@@ -80,11 +80,13 @@ const GameDashboard = (props) => {
         const roomGame = game.dashboard.rooms.find((r) => r._id === room_id);
 
         joinRoom(room_id, roomGame.room_secret, user).then((res) => {
-          socket.emit("emit-join-room-game", {
-            room_id: room_id,
-            user_id: auth.profileId,
-          });
-          history.push(`${url}/tro-choi/${room_id}`);
+          if (res) {
+            socket.emit("emit-join-room-game", {
+              room_id: room_id,
+              user_id: auth.profileId,
+            });
+            history.push(`${url}/tro-choi/${room_id}`);
+          }
         });
       } else {
         console.log("enter password");
@@ -92,11 +94,13 @@ const GameDashboard = (props) => {
       }
     } else {
       joinRoom(room_id, "", user).then((res) => {
-        socket.emit("emit-join-room-game", {
-          room_id: room_id,
-          user_id: auth.profileId,
-        });
-        history.push(`${url}/tro-choi/${room_id}`);
+        if (res) {
+          socket.emit("emit-join-room-game", {
+            room_id: room_id,
+            user_id: auth.profileId,
+          });
+          history.push(`${url}/tro-choi/${room_id}`);
+        }
       });
     }
 

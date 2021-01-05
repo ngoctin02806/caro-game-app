@@ -38,12 +38,14 @@ const CustomizeModal = (props) => {
     room_secret: roomSecret = "",
   }) => {
     createRoomGame({ type, betLevel, roomSecret }).then((room) => {
-      history.push("/trang-chu");
-      socket.emit("emit-join-room-game", {
-        room_id: room._id,
-        user_id: profileId,
-      });
-      history.push(`/trang-chu/tro-choi/${room._id}`);
+      if (room) {
+        history.push("/trang-chu");
+        socket.emit("emit-join-room-game", {
+          room_id: room._id,
+          user_id: profileId,
+        });
+        history.push(`/trang-chu/tro-choi/${room._id}`);
+      }
     });
   };
 

@@ -24,6 +24,7 @@ import {
   resetCurrentPlayer,
   resetNextPlayer,
   endGame,
+  errorCreateRoomGame,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -151,7 +152,19 @@ export const createRoomGameMiddleware = ({ type, roomSecret, betLevel }) => {
         dispatch(createRoomGame(res.data));
         return res.data;
       })
-      .catch((e) => {});
+      .catch((e) => {
+        dispatch({
+          type: GET_ERRORS,
+          value: {
+            message: e.response.data.message,
+            code: e.response.data.errors[0].code,
+          },
+        });
+
+        dispatch(errorCreateRoomGame());
+
+        return null;
+      });
   };
 };
 
@@ -250,6 +263,8 @@ export const enterPasswordToJoinRoom = (roomId, roomSecret = "", user) => {
             code: e.response.data.errors[0].code,
           },
         });
+
+        return null;
       });
   };
 };
@@ -420,18 +435,43 @@ export const computePointForUserMiddleware = (betLevel, chessBoard) => {
     const newPlayers = players.slice();
     const index = newPlayers.findIndex((p) => p._id === profileId);
     const index2 = newPlayers.findIndex((p) => p._id !== profileId);
-    newPlayers[index].point = newPlayers[index].point + betLevel;
-    newPlayers[index2].point = newPlayers[index2].point - betLevel;
+
+    const pointCurrent = newPlayers[index].point;
+
+    newPlayers[index].point =
+      newPlayers[index].point + betLevel < 0
+        ? 0
+        : newPlayers[index].point + betLevel;
+    newPlayers[index2].point =
+      newPlayers[index2].point - betLevel <= 0
+        ? 0
+        : newPlayers[index2].point - betLevel;
+
+    if (betLevel < 0 && Math.abs(betLevel) >= pointCurrent) {
+      betLevel = -pointCurrent;
+    }
 
     return axios(`/rooms/${roomId}/games/${gameId}/coins/charge`, {
       method: "POST",
       data: {
         point: betLevel,
         chess_board: chessBoard,
+        user_id: betLevel > 0 ? newPlayers[index]._id : newPlayers[index2]._id,
       },
     })
       .then((res) => {
         dispatch(endGame({ players: newPlayers, point: betLevel }));
+
+        if (!newPlayers[index].point) {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve({
+                message: "LEAVE_ROOM",
+                user_id: newPlayers[index]._id,
+              });
+            }, 5000);
+          });
+        }
       })
       .catch((e) => {
         dispatch({

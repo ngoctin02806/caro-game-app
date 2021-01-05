@@ -5,6 +5,7 @@ import {
   CLOSE_TOPUP_MODAL,
   CREATE_ROOM_GAME,
   END_GAME,
+  ERROR_CREATE_ROOM_GAME,
   GET_RANKINGS,
   GUEST_JOIN_ROOM,
   GUEST_LEAVE_ROOM,
@@ -79,6 +80,12 @@ export const createRoomGame = (room) => {
   return {
     type: CREATE_ROOM_GAME,
     value: room,
+  };
+};
+
+export const errorCreateRoomGame = () => {
+  return {
+    type: ERROR_CREATE_ROOM_GAME,
   };
 };
 
