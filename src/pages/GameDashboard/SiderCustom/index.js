@@ -45,7 +45,7 @@ const SiderCustom = (props) => {
         theme="dark"
         selectable={false}
       >
-        <Menu.Item>
+        <Menu.Item key={`menu-item-1`}>
           <Button
             type="primary"
             style={{ width: "100%", textAlign: "center" }}
@@ -55,6 +55,7 @@ const SiderCustom = (props) => {
           </Button>
         </Menu.Item>
         <Menu.Item
+          key={`menu-item-2`}
           danger={true}
           icon={<SettingOutlined />}
           style={{ backgroundColor: "#ff4d4f", color: "#fff" }}
@@ -63,7 +64,7 @@ const SiderCustom = (props) => {
         </Menu.Item>
         <Menu.Item
           icon={<AppstoreAddOutlined />}
-          key="1"
+          key={`menu-item-3`}
           style={{ backgroundColor: "transparent" }}
         >
           <Link

@@ -6,7 +6,7 @@ const CupIcon = (props) => {
   return (
     <svg
       id="Capa_1"
-      enable-background="new 0 0 497 497"
+      enableBackground="new 0 0 497 497"
       height={width || 20}
       viewBox="0 0 497 497"
       width={width || 20}

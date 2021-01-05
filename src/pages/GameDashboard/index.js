@@ -256,6 +256,8 @@ const GameDashboard = (props) => {
                                     1
                                   }
                                   participants={room.players}
+                                  betLevel={room.bet_level}
+                                  roomType={room.type}
                                 />
                               </div>
                             </Col>
