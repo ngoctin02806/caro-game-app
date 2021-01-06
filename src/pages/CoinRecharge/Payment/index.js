@@ -103,9 +103,9 @@ const Payment = () => {
           showArrow={false}
         >
           <div className="site-card-wrapper">
-            <Row gutter={16}>
+            <Row gutter={32}>
               <Col span={8}>
-                <Card className="card" style={{ width: 280 }}>
+                <Card className="card" style={{ width: "auto" }}>
                   <p className="step-text">
                     Bước 1: <span>&nbsp;Tham khảo bảng giá</span>
                   </p>
@@ -118,7 +118,7 @@ const Payment = () => {
                 </Card>
               </Col>
               <Col span={8}>
-                <Card className="card" style={{ width: 280 }}>
+                <Card className="card" style={{ width: "auto" }}>
                   <p className="step-text">
                     Bước 2: <span>&nbsp;Nhập số tiền chuyển</span>
                   </p>
@@ -132,7 +132,7 @@ const Payment = () => {
                 </Card>
               </Col>
               <Col span={8}>
-                <Card className="card" style={{ width: 280 }}>
+                <Card className="card" style={{ width: "auto" }}>
                   <p className="step-text">
                     Bước 3: <span>&nbsp;Xác nhận thanh toán</span>
                   </p>

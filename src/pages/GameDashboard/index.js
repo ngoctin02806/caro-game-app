@@ -25,7 +25,6 @@ import GameRoom from "../GameRoom";
 import CustomizeModal from "./SiderCustom/CustomizeModal";
 import TopUpModal from "./TopUpModal";
 import EnterPassword from "./EnterPasswordModal";
-import Payment from "./Payment";
 
 import {
   getUserOnlineMiddleware,
@@ -225,19 +224,6 @@ const GameDashboard = (props) => {
         <Content style={{ padding: "0 50px" }}>
           <Layout className="site-layout-background">
             <Switch>
-              <Route path={`${path}/thanh-toan`}>
-                <>
-                  <RankingSider />
-                  <Sider />
-                  <Content>
-                    <Row>
-                      <Col span={16} offset={4}>
-                        <Payment />
-                      </Col>
-                    </Row>
-                  </Content>
-                </>
-              </Route>
               <Route exact path={`${path}/tro-choi/:roomId`}>
                 <RankingSider />
                 <GameRoom />
