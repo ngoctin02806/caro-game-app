@@ -33,7 +33,7 @@ const ChatBox = (props) => {
     listenMessage,
   } = props;
 
-  const [openChatBox, setOpenChatBox] = useState(true);
+  const [openChatBox, setOpenChatBox] = useState(false);
 
   const inputRef = useRef(null);
 

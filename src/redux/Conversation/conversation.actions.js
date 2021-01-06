@@ -102,6 +102,21 @@ export const addConversationMiddleware = ({
           .then((res) => {
             const conversation = res.data.data || res.data;
 
+            // Save all conversations when opens
+            const conversations = JSON.parse(
+              localStorage.getItem("conversations")
+            );
+            const isExistConversation = conversations.findIndex(
+              (con) => con === conversation._id
+            );
+
+            if (isExistConversation === -1) {
+              localStorage.setItem(
+                "conversations",
+                JSON.stringify(conversations.concat(conversation._id))
+              );
+            }
+
             return axios(`/conversations/${conversation._id}/messages`, {
               method: "GET",
             });
@@ -135,12 +150,12 @@ export const addConversationMiddleware = ({
               })
             );
 
-            resolve({ conversatioId: res.config.url.split("/")[2] });
+            resolve({ conversationId: res.config.url.split("/")[2] });
           });
       } else {
         console.log("nothing");
         dispatch(nothing());
-        resolve({ conversatioId: conversations[check].conversationId });
+        resolve({ conversationId: conversations[check].conversationId });
       }
     });
 };

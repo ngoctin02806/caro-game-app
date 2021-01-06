@@ -1,44 +1,90 @@
 import React from "react";
-import { Layout, Menu } from "antd";
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from "@ant-design/icons";
+import { Layout, Menu, Button } from "antd";
+import { SettingOutlined, AppstoreAddOutlined } from "@ant-design/icons";
+import { useRouteMatch, useLocation, useHistory, Link } from "react-router-dom";
+import { connect } from "react-redux";
 
-const { SubMenu } = Menu;
+import { quicklyPlayMiddleware } from "../../../redux/Game/game.middlewares";
+
 const { Sider } = Layout;
 
-const SiderCustom = () => {
+const SiderCustom = (props) => {
+  const { quicklyPlay } = props;
+
+  let { path } = useRouteMatch();
+
+  const location = useLocation();
+
+  const history = useHistory();
+
+  const autoFindRoom = () => {
+    quicklyPlay().then((res) => {
+      if (res) {
+        history.push(`/trang-chu/tro-choi/${res}`);
+      }
+    });
+  };
+
   return (
-    <Sider className="site-layout-background" width={200}>
+    <Sider
+      width={258}
+      className="site-layout-background"
+      style={{
+        height: "100vh",
+        position: "fixed",
+        left: 0,
+        top: 80,
+        background: "#f0f2f5",
+      }}
+    >
       <Menu
         mode="inline"
         defaultSelectedKeys={["1"]}
         defaultOpenKeys={["sub1"]}
         style={{ height: "100%" }}
+        theme="dark"
+        selectable={false}
       >
-        <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-          <Menu.Item key="1">option1</Menu.Item>
-          <Menu.Item key="2">option2</Menu.Item>
-          <Menu.Item key="3">option3</Menu.Item>
-          <Menu.Item key="4">option4</Menu.Item>
-        </SubMenu>
-        <SubMenu key="sub2" icon={<LaptopOutlined />} title="subnav 2">
-          <Menu.Item key="5">option5</Menu.Item>
-          <Menu.Item key="6">option6</Menu.Item>
-          <Menu.Item key="7">option7</Menu.Item>
-          <Menu.Item key="8">option8</Menu.Item>
-        </SubMenu>
-        <SubMenu key="sub3" icon={<NotificationOutlined />} title="subnav 3">
-          <Menu.Item key="9">option9</Menu.Item>
-          <Menu.Item key="10">option10</Menu.Item>
-          <Menu.Item key="11">option11</Menu.Item>
-          <Menu.Item key="12">option12</Menu.Item>
-        </SubMenu>
+        <Menu.Item key={`menu-item-1`}>
+          <Button
+            type="primary"
+            style={{ width: "100%", textAlign: "center" }}
+            onClick={autoFindRoom}
+          >
+            Chơi nhanh
+          </Button>
+        </Menu.Item>
+        <Menu.Item
+          key={`menu-item-2`}
+          danger={true}
+          icon={<SettingOutlined />}
+          style={{ backgroundColor: "#ff4d4f", color: "#fff" }}
+        >
+          Tùy chỉnh game
+        </Menu.Item>
+        <Menu.Item
+          icon={<AppstoreAddOutlined />}
+          key={`menu-item-3`}
+          style={{ backgroundColor: "transparent" }}
+        >
+          <Link
+            to={{
+              pathname: `${path}/tao-phong`,
+              state: { background: location },
+            }}
+          >
+            Tạo phòng
+          </Link>
+        </Menu.Item>
       </Menu>
     </Sider>
   );
 };
 
-export default SiderCustom;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    quicklyPlay: () => dispatch(quicklyPlayMiddleware()),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(SiderCustom);

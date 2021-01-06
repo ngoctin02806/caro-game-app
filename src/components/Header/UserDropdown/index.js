@@ -6,9 +6,11 @@ import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 
 import { logoutMiddleware } from "../../../redux/Auth/auth.middlewares";
+import { topUpLoginMiddleware } from "../../../redux/Game/game.middlewares";
+import { topUpLogin } from "../../../redux/Game/game.actions";
 
 const UserDropDown = (props) => {
-  const { user, getUserProfile, logout } = props;
+  const { user, getUserProfile, logout, loginTopUp, openTopUpModal } = props;
 
   const menu = (
     <Menu>
@@ -35,7 +37,12 @@ const UserDropDown = (props) => {
   );
 
   useEffect(() => {
-    getUserProfile();
+    loginTopUp().then((res) => {
+      if (res !== "has_top_up") {
+        openTopUpModal();
+      }
+      getUserProfile();
+    });
   }, []); // eslint-disable-line
 
   return (
@@ -45,7 +52,6 @@ const UserDropDown = (props) => {
           float: "right",
           display: "flex",
           alignItems: "center",
-          marginTop: "29px",
         }}
       >
         <Avatar
@@ -64,6 +70,8 @@ const UserDropDown = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     logout: () => dispatch(logoutMiddleware()),
+    loginTopUp: () => dispatch(topUpLoginMiddleware()),
+    openTopUpModal: () => dispatch(topUpLogin()),
   };
 };
 

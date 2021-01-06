@@ -5,6 +5,7 @@ import "./styles.css";
 import { Menu, Row, Col, Button } from "antd";
 
 import UserDropDown from "./UserDropdown";
+import Point from "./Point";
 
 import { getUserProfileMiddleware } from "../../redux/User/user.actions";
 
@@ -24,11 +25,16 @@ const Header = (props) => {
         </Button>
       </>
     ) : (
-      <UserDropDown user={user} getUserProfile={getUserProfile} key="key3" />
+      <>
+        <Point />
+        <UserDropDown user={user} getUserProfile={getUserProfile} key="key3" />
+      </>
     ),
-    <Menu mode="horizontal" defaultSelectedKeys={["home"]} id="nav" key="nav">
-      <Menu.Item key="home">Trang chủ</Menu.Item>
-    </Menu>,
+    !auth.isAuthenticated && (
+      <Menu mode="horizontal" defaultSelectedKeys={["home"]} id="nav" key="nav">
+        <Menu.Item key="home">Trang chủ</Menu.Item>
+      </Menu>
+    ),
   ];
 
   return (
@@ -40,7 +46,17 @@ const Header = (props) => {
             <span>Ant Design</span>
           </a>
         </Col>
-        <Col lg={20} md={19} sm={0} xs={0}>
+        <Col
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+          lg={20}
+          md={19}
+          sm={0}
+          xs={0}
+        >
           {menu}
         </Col>
       </Row>

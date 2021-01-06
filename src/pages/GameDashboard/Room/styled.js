@@ -14,4 +14,15 @@ export const StyledCardCover = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-repeat-x: no-repeat;
+`;
+
+export const StyledBetLevel = styled.div`
+  padding: 5px;
+  background-color: #ea686a;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  color: #fff;
+  z-index: 20;
 `;

@@ -1,4 +1,4 @@
-import { USER_PROFILE } from "./user.types";
+import { UPDATE_POINT_END_GAME, USER_PROFILE } from "./user.types";
 
 const INIT_STATE = {
   isLoading: false,
@@ -15,8 +15,14 @@ const userReducer = (state = INIT_STATE, action) => {
         id: action.value.user._id,
         username: action.value.user.username,
         avatar: action.value.user.avatar,
+        point: action.value.user.point || 0,
       };
-
+    case UPDATE_POINT_END_GAME: {
+      return {
+        ...state,
+        point: state.point + action.value.point,
+      };
+    }
     default:
       return state;
   }
