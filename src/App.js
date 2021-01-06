@@ -1,5 +1,6 @@
 import "./App.css";
 import "antd/dist/antd.css";
+import "ant-design-draggable-modal/dist/index.css";
 
 /* Import all config */
 import "./config/axios.config";

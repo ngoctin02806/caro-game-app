@@ -88,7 +88,6 @@ export const addConversationMiddleware = ({
 
       if (check === -1) {
         const identify = shortid.generate();
-        console.log("loading");
 
         dispatch(loadConversation({ identify }));
 

@@ -1,0 +1,11 @@
+.ant-tooltip-placement-left {
+  left: 1050px !important;
+}
+
+.ant-tooltip-placement-left .ant-tooltip-content {
+  width: 340px;
+}
+
+.ant-tooltip-placement-left .ant-tooltip-arrow {
+  right: -266.071068px !important;
+}

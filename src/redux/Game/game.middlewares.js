@@ -1,4 +1,5 @@
 import axios from "axios";
+import { get } from "lodash";
 
 import socket from "../../config/socket.config";
 
@@ -41,8 +42,8 @@ export const getUserOnlineMiddleware = () => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });
@@ -64,8 +65,8 @@ export const openConversationMiddleware = (roomId) => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });
@@ -90,8 +91,8 @@ export const loadMessageMiddleware = (conversationId) => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });
@@ -156,8 +157,8 @@ export const createRoomGameMiddleware = ({ type, roomSecret, betLevel }) => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
 
@@ -190,8 +191,8 @@ export const loadRoomsGameMiddleware = ({ offset = 1, limit = 20 }) => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });
@@ -211,8 +212,8 @@ export const getRankingsMiddleware = () => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });
@@ -253,14 +254,17 @@ export const enterPasswordToJoinRoom = (roomId, roomSecret = "", user) => {
           dispatch(playerJoinRoom(user));
         }
 
+        console.log(res.data.message);
+
         return res.data.message;
       })
       .catch((e) => {
+        console.log(e);
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
 
@@ -282,8 +286,8 @@ export const getInformationRoomMiddleware = (roomId) => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });
@@ -323,8 +327,8 @@ export const registerLeavingRoomMiddleware = (roomId, userId) => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });
@@ -364,8 +368,8 @@ export const startGameMiddleware = (roomId) => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });
@@ -477,8 +481,8 @@ export const computePointForUserMiddleware = (betLevel, chessBoard) => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });
@@ -513,8 +517,8 @@ export const quicklyPlayMiddleware = () => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
 

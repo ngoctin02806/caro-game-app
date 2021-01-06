@@ -1,7 +1,8 @@
 import axios from "axios";
+import { get } from "lodash";
 import { GET_ERRORS } from "../Error/error.types";
 
-import { UPDATE_POINT_END_GAME, USER_PROFILE } from "./user.types";
+import { USER_PROFILE } from "./user.types";
 
 const getUserProfile = (profile) => {
   return {
@@ -22,8 +23,8 @@ export const getUserProfileMiddleware = () => {
         dispatch({
           type: GET_ERRORS,
           value: {
-            message: e.response.data.message,
-            code: e.response.data.errors[0].code,
+            message: get(e, "response.data.message") || "Lỗi máy chủ",
+            code: get(e, "response.data.errors.0.code") || 5000,
           },
         });
       });

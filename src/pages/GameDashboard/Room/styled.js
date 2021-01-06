@@ -24,5 +24,5 @@ export const StyledBetLevel = styled.div`
   right: 0px;
   top: 0px;
   color: #fff;
-  z-index: 20;
+  z-index: 1;
 `;

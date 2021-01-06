@@ -1,7 +1,8 @@
 import socket from "../../config/socket.config";
 
 import React, { useEffect, useState } from "react";
-import { Layout, Menu, Tooltip, Dropdown, Row, Col, Pagination } from "antd";
+import { DraggableModalProvider } from "ant-design-draggable-modal";
+import { Layout, Menu, Dropdown, Row, Col, Pagination } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import {
@@ -25,6 +26,7 @@ import GameRoom from "../GameRoom";
 import CustomizeModal from "./SiderCustom/CustomizeModal";
 import TopUpModal from "./TopUpModal";
 import EnterPassword from "./EnterPasswordModal";
+import InvitationModal from "./InvitationModal";
 
 import {
   getUserOnlineMiddleware,
@@ -54,6 +56,7 @@ const GameDashboard = (props) => {
 
   const [partnerData, setPartnerData] = useState(null);
   const [openPassword, setOpenPassword] = useState(false);
+  const [invitations, setInvitations] = useState([]);
 
   let { path, url } = useRouteMatch();
 
@@ -105,6 +108,10 @@ const GameDashboard = (props) => {
     }
 
     return;
+  };
+
+  const removeInvitation = (invitations) => {
+    setInvitations(invitations);
   };
 
   useEffect(() => {
@@ -166,6 +173,31 @@ const GameDashboard = (props) => {
     return () => socket.off("conversation-message", callback);
   }, [partnerData]);
 
+  // Listen invitation
+  useEffect(() => {
+    socket.on(
+      "show-invitation",
+      ({ room_id, room_type, bet_level, room_secret, user }) => {
+        console.log("show-invitation", room_id);
+        setInvitations(
+          invitations.concat({
+            room_id,
+            room_type,
+            room_secret,
+            bet_level,
+            user,
+          })
+        );
+
+        // timeoutId = setTimeout(() => {
+        //   setIsModalVisible(false);
+        // }, 20000);
+      }
+    );
+
+    return () => socket.off("show-invitation");
+  }, [invitations]);
+
   const menu = (
     <Menu style={{ width: "300px" }}>
       {game.users.map((user) => (
@@ -182,6 +214,7 @@ const GameDashboard = (props) => {
             isOnline={user.online_state}
             userName={user.username}
             avatar={user.avatar}
+            userId={user._id}
           />
         </Menu.Item>
       ))}
@@ -190,19 +223,28 @@ const GameDashboard = (props) => {
 
   return (
     <WrapperDashboard>
-      <Tooltip placement="left" title="Danh sách người dùng online">
-        <Dropdown overlay={menu} placement="topRight" arrow trigger={["click"]}>
-          <Widget
-            position="fixed"
-            icon={UsergroupAddOutlined}
-            index={100000}
-            bottom={10}
-            right={10}
-          />
-        </Dropdown>
-      </Tooltip>
+      <Dropdown overlay={menu} placement="topRight" arrow trigger={["click"]}>
+        <Widget
+          position="fixed"
+          icon={UsergroupAddOutlined}
+          index={100000}
+          bottom={10}
+          right={10}
+        />
+      </Dropdown>
 
       <TopUpModal />
+
+      <DraggableModalProvider>
+        {invitations.map((modal) => (
+          <InvitationModal
+            invitation={modal}
+            invitations={invitations}
+            removeInvitation={removeInvitation}
+          />
+        ))}
+      </DraggableModalProvider>
+
       <EnterPassword
         visible={openPassword}
         handleCancel={() => setOpenPassword(false)}
