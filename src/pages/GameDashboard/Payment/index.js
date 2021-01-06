@@ -10,6 +10,7 @@ import {
   Tag,
   Radio,
   Alert,
+  Image,
 } from "antd";
 
 import "./styles.css";
@@ -17,10 +18,6 @@ import "./styles.css";
 import VnPayIcon from "../../../public/images/vnpay-logo.png";
 
 const { Panel } = Collapse;
-
-const VnPayLogo = () => {
-  return <img src={VnPayIcon} alt="vnpay logo" />;
-};
 
 const columns = [
   {
@@ -78,6 +75,10 @@ const data = [
 const Payment = () => {
   const [selected, setSelected] = useState(data[0]);
 
+  const VnPayLogo = (expand) => {
+    return <Image src={VnPayIcon} />;
+  };
+
   const radioStyle = {
     display: "block",
     height: "30px",
@@ -92,7 +93,7 @@ const Payment = () => {
     <>
       <Collapse
         defaultActiveKey={["1"]}
-        expandIcon={() => <VnPayLogo />}
+        expandIcon={VnPayLogo}
         className="site-collapse-custom-collapse collapse "
       >
         <Panel
@@ -153,6 +154,7 @@ const Payment = () => {
                     description="VnPay"
                     type="info"
                   />
+                  <VnPayLogo />
                   <Button className="btn-confirm" type="primary" size="large">
                     Xác nhận thanh toán
                   </Button>
