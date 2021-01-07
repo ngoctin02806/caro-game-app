@@ -32,13 +32,13 @@ const UserDropDown = (props) => {
           <label>Thông tin cá nhân</label>
         </Link>
       </Menu.Item>
-      <Menu.Divider />
       <Menu.Item key="2">
         <Link to="/nap-xu">
           <DollarCircleOutlined />
           <label>Nạp xu</label>
         </Link>
       </Menu.Item>
+      <Menu.Divider />
       <Menu.Item key="3" onClick={logout}>
         <LogoutOutlined />
         <label>Đăng xuất</label>
