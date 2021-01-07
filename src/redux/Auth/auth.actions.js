@@ -79,9 +79,10 @@ export const validateEmailLoading = () => {
   };
 };
 
-export const validateEmailSuccess = () => {
+export const validateEmailSuccess = (cert) => {
   return {
     type: USER_VALIDATE_EMAIL_SUCCESS,
+    value: cert,
   };
 };
 

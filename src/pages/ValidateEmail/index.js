@@ -18,6 +18,8 @@ import {
 const ValidateEmail = (props) => {
   const { error, auth, validateEmail, reSendMail } = props;
 
+  document.title = "Xác thực tài khoản";
+
   const [code, setCode] = useState("");
   const [isResend, setIsResend] = useState({
     isAllowed: true,
@@ -28,7 +30,7 @@ const ValidateEmail = (props) => {
   const history = useHistory();
 
   if (auth.isValidated) {
-    history.push({ pathname: "/counter", state: { title: "Trang chủ" } });
+    history.push({ pathname: "/trang-chu", state: { title: "Trang chủ" } });
   }
 
   const onResend = useCallback((e) => {

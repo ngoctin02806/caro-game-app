@@ -128,7 +128,13 @@ export const validateEmailMiddleware = ({ code }) => {
       },
     })
       .then((res) => {
-        dispatch(validateEmailSuccess());
+        axios.defaults.headers.common["x-auth-token"] =
+          res.data.data.auth.token;
+
+        localStorage.setItem("token", res.data.data.auth.token);
+        localStorage.setItem("expire_time", res.data.data.auth.expire_in);
+
+        dispatch(validateEmailSuccess(res.data.data.auth));
       })
       .catch((e) => {
         dispatch(validateEmailFail());

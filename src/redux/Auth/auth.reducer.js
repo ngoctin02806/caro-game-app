@@ -57,6 +57,8 @@ const authReducer = (state = INIT_STATE, action) => {
     case USER_VALIDATE_EMAIL_SUCCESS: {
       return {
         ...state,
+        token: action.value.token,
+        expireTime: action.value.expire_in,
         isLoading: false,
         isValidated: true,
       };
@@ -76,13 +78,18 @@ const authReducer = (state = INIT_STATE, action) => {
       };
     }
     case AUTH_ERROR:
-    case USER_VALIDATE_EMAIL_FAIL:
-    case USER_RESEND_MAIL_FAIL:
     case LOGIN_FAIL:
     case REGISTER_FAIL: {
       return {
         ...state,
         isAuthenticated: false,
+        isLoading: false,
+      };
+    }
+    case USER_VALIDATE_EMAIL_FAIL:
+    case USER_RESEND_MAIL_FAIL: {
+      return {
+        ...state,
         isLoading: false,
       };
     }

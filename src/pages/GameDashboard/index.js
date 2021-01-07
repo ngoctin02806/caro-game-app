@@ -2,7 +2,7 @@ import socket from "../../config/socket.config";
 
 import React, { useEffect, useState } from "react";
 import { DraggableModalProvider } from "ant-design-draggable-modal";
-import { Layout, Menu, Dropdown, Row, Col, Pagination } from "antd";
+import { Layout, Menu, Dropdown, Row, Col, Pagination, Spin } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import {
@@ -46,6 +46,7 @@ const GameDashboard = (props) => {
     auth,
     game,
     user,
+    isLoadingRooms,
     getUserOnline,
     conversations,
     openChatBox,
@@ -282,55 +283,66 @@ const GameDashboard = (props) => {
                   >
                     <Row gutter={[10, 0]}>
                       <Col span={20}>
-                        <Row gutter={[10, 0]}>
-                          {game.dashboard.rooms.map((room, index) => (
-                            <Col key={room._id} span={6}>
-                              <div
-                                onClick={checkPrivateRoom(
-                                  room.type,
-                                  room._id,
-                                  url,
-                                  room.created_by
-                                )}
-                              >
-                                <RoomCard
-                                  status={room.status}
-                                  roomName={
-                                    (game.dashboard.pagination.offset - 1) *
-                                      20 +
-                                    index +
-                                    1
-                                  }
-                                  participants={room.players}
-                                  betLevel={room.bet_level}
-                                  roomType={room.type}
-                                />
-                              </div>
-                            </Col>
-                          ))}
-                        </Row>
-                        <Pagination
-                          onChange={changePage}
-                          style={{
-                            textAlign: "center",
-                            marginTop: "20px",
-                          }}
-                          defaultCurrent={
-                            game.dashboard.pagination
-                              ? game.dashboard.pagination.offset
-                              : 1
-                          }
-                          defaultPageSize={
-                            game.dashboard.pagination
-                              ? game.dashboard.pagination.limit
-                              : 20
-                          }
-                          total={
-                            game.dashboard.pagination
-                              ? game.dashboard.pagination.total
-                              : 10
-                          }
-                        />
+                        <Spin
+                          tip="Đang tải ..."
+                          spinning={isLoadingRooms}
+                          delay
+                        >
+                          <Row
+                            gutter={[10, 0]}
+                            style={{
+                              height: isLoadingRooms ? "100vh" : "auto",
+                            }}
+                          >
+                            {game.dashboard.rooms.map((room, index) => (
+                              <Col key={room._id} span={6}>
+                                <div
+                                  onClick={checkPrivateRoom(
+                                    room.type,
+                                    room._id,
+                                    url,
+                                    room.created_by
+                                  )}
+                                >
+                                  <RoomCard
+                                    status={room.status}
+                                    roomName={
+                                      (game.dashboard.pagination.offset - 1) *
+                                        20 +
+                                      index +
+                                      1
+                                    }
+                                    participants={room.players}
+                                    betLevel={room.bet_level}
+                                    roomType={room.type}
+                                  />
+                                </div>
+                              </Col>
+                            ))}
+                          </Row>
+                          <Pagination
+                            onChange={changePage}
+                            style={{
+                              textAlign: "center",
+                              marginTop: "20px",
+                            }}
+                            defaultCurrent={
+                              game.dashboard.pagination
+                                ? game.dashboard.pagination.offset
+                                : 1
+                            }
+                            defaultPageSize={
+                              game.dashboard.pagination
+                                ? game.dashboard.pagination.limit
+                                : 20
+                            }
+                            total={
+                              game.dashboard.pagination
+                                ? game.dashboard.pagination.total
+                                : 10
+                            }
+                          />
+                        </Spin>
                       </Col>
                     </Row>
                   </Content>
@@ -380,6 +392,7 @@ const mapStateToProps = (state) => {
       avatar: state.user.avatar,
       point: state.user.point,
     },
+    isLoadingRooms: state.game.dashboard.isLoading,
   };
 };
 
