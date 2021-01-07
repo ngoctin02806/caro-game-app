@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import { Avatar, Badge, Button } from "antd";
+import React, { useCallback, useState } from "react";
+import { Avatar, Badge, Button, notification } from "antd";
 import { UserOutlined, ApiOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { connect } from "react-redux";
@@ -15,6 +15,14 @@ const UserInfoWrapper = styled.div`
   align-items: center;
 `;
 
+const openNotification = (placement) => {
+  notification.info({
+    message: `Thông báo`,
+    description: "Đã gửi lời mời thành công !",
+    placement,
+  });
+};
+
 const UserInfo = (props) => {
   const {
     roomId,
@@ -27,14 +35,21 @@ const UserInfo = (props) => {
   } = props;
 
   const sendInvation = useCallback(() => {
-    console.log("sdfsdfsdfd");
+    socket.emit(
+      "emit-invitation-join-room",
+      "1",
+      {
+        room_id: roomId,
+        partner_id: userid,
+        user_id: profileId,
+        room_type: roomType,
+      },
+      (response) => {
+        openNotification("topRight");
+      }
+    );
 
-    socket.emit("emit-invitation-join-room", {
-      room_id: roomId,
-      partner_id: userid,
-      user_id: profileId,
-      room_type: roomType,
-    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
