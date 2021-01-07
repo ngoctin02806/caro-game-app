@@ -53,6 +53,27 @@ const Register = (props) => {
     <WrapperLogin>
       <Row style={{ height: "100%" }} align="middle" justify="center">
         <Col span={6}>
+          <div
+            style={{
+              display: "flex",
+              margin: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
+          >
+            <img src={Logo} alt="logo" />
+            <div
+              style={{
+                fontSize: "25px",
+                fontWeight: "bold",
+                color: "#40a9ff",
+                marginLeft: "5px",
+              }}
+            >
+              Caro game
+            </div>
+          </div>
           <WrapperForm>
             <Form
               name="normal_login"
@@ -62,26 +83,6 @@ const Register = (props) => {
               }}
               onFinish={onFinish}
             >
-              <div
-                style={{
-                  display: "flex",
-                  margin: "10px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <img src={Logo} alt="logo" />
-                <div
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: "bold",
-                    color: "#40a9ff",
-                    marginLeft: "5px",
-                  }}
-                >
-                  Caro game
-                </div>
-              </div>
               {error.message && (
                 <>
                   <Error fontSize={12} message={error.message} />

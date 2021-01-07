@@ -24,6 +24,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ValidateEmail from "./pages/ValidateEmail";
 import GameDashboard from "./pages/GameDashboard";
+import ChangePassword from "./pages/ChangePassword";
+import SendMail from "./pages/SendMail";
 import NotFound from "./pages/NotFound";
 
 import { errorResponse } from "./utils/errorResponse";
@@ -106,6 +108,12 @@ const App = (props) => {
         <PrivateRoute path="/xac-thuc-tai-khoan">
           <ValidateEmail />
         </PrivateRoute>
+        <PublicRoute path="/thay-doi-mat-khau">
+          <ChangePassword />
+        </PublicRoute>
+        <PublicRoute path="/quen-mat-khau">
+          <SendMail />
+        </PublicRoute>
         <PublicRoute>
           <NotFound />
         </PublicRoute>
