@@ -27,6 +27,7 @@ import CustomizeModal from "./SiderCustom/CustomizeModal";
 import TopUpModal from "./TopUpModal";
 import EnterPassword from "./EnterPasswordModal";
 import InvitationModal from "./InvitationModal";
+import ChargeModal from "./ChargeModal";
 
 import {
   getUserOnlineMiddleware,
@@ -236,6 +237,8 @@ const GameDashboard = (props) => {
 
       <TopUpModal />
 
+      <ChargeModal />
+
       <DraggableModalProvider>
         {invitations.map((modal) => (
           <InvitationModal
@@ -266,13 +269,14 @@ const GameDashboard = (props) => {
       <Layout style={{ height: "100%" }}>
         <Content style={{ padding: "0 50px" }}>
           <Layout className="site-layout-background">
-            <RankingSider />
             <Switch>
               <Route exact path={`${path}/tro-choi/:roomId`}>
+                <RankingSider />
                 <GameRoom />
               </Route>
               <Route path={`${path}`}>
                 <>
+                  <RankingSider />
                   <Sider />
                   <Content
                     style={{

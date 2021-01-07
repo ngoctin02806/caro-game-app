@@ -26,6 +26,7 @@ import ValidateEmail from "./pages/ValidateEmail";
 import GameDashboard from "./pages/GameDashboard";
 import ChangePassword from "./pages/ChangePassword";
 import SendMail from "./pages/SendMail";
+import CoinRecharge from "./pages/CoinRecharge";
 import NotFound from "./pages/NotFound";
 
 import { errorResponse } from "./utils/errorResponse";
@@ -104,6 +105,9 @@ const App = (props) => {
         </ValidateEmailRoute>
         <ValidateEmailRoute path="/trang-chu">
           <GameDashboard />
+        </ValidateEmailRoute>
+        <ValidateEmailRoute path="/nap-xu">
+          <CoinRecharge />
         </ValidateEmailRoute>
         <PrivateRoute path="/xac-thuc-tai-khoan">
           <ValidateEmail />

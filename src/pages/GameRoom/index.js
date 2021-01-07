@@ -5,6 +5,7 @@ import { Row, Col } from "antd";
 
 import socket from "../../config/socket.config";
 
+import { CenterCol } from "./styled";
 import ParticipantSider from "./ParticipantSider";
 import ChatBox from "./ChatBox";
 import ChessTable from "./ChessTable";
