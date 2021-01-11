@@ -5,6 +5,8 @@ import { useParams, useHistory } from "react-router-dom";
 
 import Participant from "./Participant";
 
+import { useHistoryModal } from "../../../contexts/HistoryContext";
+
 import CupIcon from "../../../components/Icons/CupIcon";
 
 import { ParticipantWrapper, StyledTextBet } from "./styled";
@@ -33,12 +35,15 @@ const ParticipantSider = (props) => {
     registerLeavingRoom,
     betLevel,
     playerJoinRoom,
+    gameIds,
   } = props;
 
   const [openInforNoti, setOpenInforNoti] = useState(false);
 
   const { roomId } = useParams();
   const history = useHistory();
+
+  const { setOpenHistory } = useHistoryModal();
 
   const closeInforNoti = useCallback(() => setOpenInforNoti(false), []);
 
@@ -115,6 +120,16 @@ const ParticipantSider = (props) => {
           </List.Item>
         )}
       ></List>
+      {gameIds && gameIds.length && (
+        <Button
+          onClick={() => setOpenHistory(true)}
+          type="dashed"
+          danger
+          style={{ width: "100%", marginBottom: "5px" }}
+        >
+          Xem lịch sử
+        </Button>
+      )}
     </ParticipantWrapper>
   );
 };
@@ -126,6 +141,7 @@ const mapStateToProps = (state) => {
     guests: state.game.information.room.guests,
     betLevel: state.game.information.room.bet_level,
     currentPlayer: state.game.information.room.currentPlayer,
+    gameIds: state.game.information.room.game_ids,
   };
 };
 

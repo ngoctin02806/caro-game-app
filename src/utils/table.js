@@ -87,6 +87,8 @@ class ChessBoard {
   }
 
   checkPosition(x, y, character, callback) {
+    if (this.table[x][y]) return;
+
     const newTable = this.table.slice();
     newTable[x][y] = character;
 

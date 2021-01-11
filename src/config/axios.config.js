@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const NODE_ENV = "production";
+const NODE_ENV = "development";
 
 if (NODE_ENV === "development") {
   axios.defaults.baseURL = "http://localhost:8000/api/v1";

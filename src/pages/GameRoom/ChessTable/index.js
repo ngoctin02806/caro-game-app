@@ -7,6 +7,9 @@ import Cell from "./Cell";
 import Player from "./Player";
 import WinnerModal from "../WinnerModal";
 import LoserModal from "../LoserModal";
+import HistoryModal from "../HistoryModal";
+
+import { HistoryCtx } from "../../../contexts/HistoryContext";
 
 import ChessBoard from "../../../utils/table";
 
@@ -153,6 +156,14 @@ class ChessTable extends Component {
 
     return (
       <>
+        <HistoryCtx.Consumer>
+          {(value) => (
+            <HistoryModal
+              openHistory={value.openHistory}
+              setOpenHistory={value.setOpenHistory}
+            />
+          )}
+        </HistoryCtx.Consumer>
         <WinnerModal
           isWinner={this.state.isWinner}
           closeWinnerModal={this.handleCloseWinnerModal}

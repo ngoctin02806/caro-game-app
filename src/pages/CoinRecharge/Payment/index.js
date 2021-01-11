@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 import {
   Collapse,
@@ -77,9 +78,11 @@ const Payment = () => {
   const [selected, setSelected] = useState(data[0]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const location = useLocation();
+
   useEffect(() => {
     document.title = "Nạp xu";
-  }, []);
+  }, [location]);
 
   const VnPayLogo = (expand) => {
     return <Image src={VnPayIcon} />;

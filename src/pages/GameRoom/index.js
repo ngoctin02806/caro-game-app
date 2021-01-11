@@ -5,10 +5,11 @@ import { Row, Col } from "antd";
 
 import socket from "../../config/socket.config";
 
-import { CenterCol } from "./styled";
 import ParticipantSider from "./ParticipantSider";
 import ChatBox from "./ChatBox";
 import ChessTable from "./ChessTable";
+
+import { HistoryProvider } from "../../contexts/HistoryContext";
 
 import {
   openConversationMiddleware,
@@ -77,12 +78,14 @@ const GameRoom = (props) => {
 
   return (
     <Row gutter={[10, 10]} style={{ width: "100%" }}>
-      <Col span={7}>
-        <ParticipantSider />
-      </Col>
-      <Col span={10.5}>
-        <ChessTable roomId={roomId} />
-      </Col>
+      <HistoryProvider>
+        <Col span={7}>
+          <ParticipantSider />
+        </Col>
+        <Col span={10.5}>
+          <ChessTable roomId={roomId} />
+        </Col>
+      </HistoryProvider>
       <ChatBox />
     </Row>
   );
