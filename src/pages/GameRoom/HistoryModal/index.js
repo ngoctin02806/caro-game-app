@@ -14,11 +14,15 @@ const HistoryModal = (props) => {
   const [table, setTable] = useState([]);
 
   useEffect(() => {
-    axios(`/games/${gameId}`, {
-      method: "GET",
-    }).then((res) => {
-      setTable(res.data.steps);
-    });
+    console.log(gameId);
+
+    if (gameId) {
+      axios(`/games/${gameId}`, {
+        method: "GET",
+      }).then((res) => {
+        setTable(res.data.steps);
+      });
+    }
   }, [gameId]);
 
   return (
@@ -45,8 +49,10 @@ const HistoryModal = (props) => {
 const mapStateToProps = (state) => {
   return {
     gameId: state.game.information.room.game_ids
-      ? state.game.information.room.game_ids[0]._id
-      : [],
+      ? state.game.information.room.game_ids.length
+        ? state.game.information.room.game_ids[0]._id
+        : null
+      : null,
   };
 };
 

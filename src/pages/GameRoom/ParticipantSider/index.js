@@ -120,7 +120,7 @@ const ParticipantSider = (props) => {
           </List.Item>
         )}
       ></List>
-      {gameIds && gameIds.length && (
+      {gameIds && (
         <Button
           onClick={() => setOpenHistory(true)}
           type="dashed"
