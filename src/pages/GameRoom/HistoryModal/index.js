@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Pagination } from "antd";
-import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import axios from "axios";
 

@@ -23,6 +23,7 @@ import {
   RESET_CURRENT_PLAYER,
   RESET_GAME,
   RESET_NEXT_PLAYER,
+  SAVE_GAME_HISTORY,
   START_GAME,
   TOPUP_LOGIN,
   USER_ONLINE,
@@ -205,8 +206,6 @@ export const insertXO = (position, character) => {
 };
 
 export const resetGame = () => {
-  console.log("RESET GAME");
-
   return {
     type: RESET_GAME,
   };
@@ -216,5 +215,14 @@ export const endGame = ({ players, point }) => {
   return {
     type: END_GAME,
     value: { players, point },
+  };
+};
+
+export const saveGameHistory = (gameId) => {
+  return {
+    type: SAVE_GAME_HISTORY,
+    value: {
+      _id: gameId,
+    },
   };
 };

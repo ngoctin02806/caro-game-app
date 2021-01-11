@@ -24,6 +24,7 @@ import {
   RESET_CURRENT_PLAYER,
   RESET_GAME,
   RESET_NEXT_PLAYER,
+  SAVE_GAME_HISTORY,
   START_GAME,
   TOPUP_LOGIN,
   USER_ONLINE,
@@ -38,6 +39,7 @@ const INIT_STATE = {
       currentPlayer: null,
       players: [],
       guests: [],
+      game_ids: [],
     },
     newGame: {},
   },
@@ -345,6 +347,18 @@ const userOnlineReducer = (state = INIT_STATE, action) => {
           room: {
             ...state.information.room,
             players: action.value.players,
+          },
+        },
+      };
+    }
+    case SAVE_GAME_HISTORY: {
+      return {
+        ...state,
+        information: {
+          ...state.information,
+          room: {
+            ...state.information.room,
+            game_ids: [action.value].concat(state.information.room.game_ids),
           },
         },
       };

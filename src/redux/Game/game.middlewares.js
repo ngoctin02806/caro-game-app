@@ -26,6 +26,7 @@ import {
   resetNextPlayer,
   endGame,
   errorCreateRoomGame,
+  saveGameHistory,
 } from "./game.actions";
 
 import { GET_ERRORS } from "../Error/error.types";
@@ -465,6 +466,7 @@ export const computePointForUserMiddleware = (betLevel, chessBoard) => {
     })
       .then((res) => {
         dispatch(endGame({ players: newPlayers, point: betLevel }));
+        dispatch(saveGameHistory(gameId));
 
         if (!newPlayers[index].point) {
           return new Promise((resolve, reject) => {

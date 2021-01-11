@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { Avatar, Badge, Button, notification } from "antd";
 import { UserOutlined, ApiOutlined } from "@ant-design/icons";
 import styled from "styled-components";
@@ -50,7 +50,7 @@ const UserInfo = (props) => {
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [roomId]);
 
   return (
     <UserInfoWrapper>

@@ -57,3 +57,5 @@ export const INSERT_X_O = "INSERT_X_O";
 export const RESET_GAME = "RESET_GAME";
 
 export const END_GAME = "END_GAME";
+
+export const SAVE_GAME_HISTORY = "SAVE_GAME_HISTORY";
