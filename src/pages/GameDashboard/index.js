@@ -144,7 +144,7 @@ const GameDashboard = (props) => {
   // Listen message event
   useEffect(() => {
     const callback = (msg) => {
-      const { message, sender_id, room_id, partner_id } = msg;
+      const { message, sender_id, partner_id } = msg;
 
       let partnerInfo = game.users.find((u) => u._id === partner_id);
 
