@@ -55,6 +55,7 @@ const ChatBox = (props) => {
     socket.on("joined-game-room", listener);
 
     return () => socket.off("joined-game-room", listener);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Listen message comming
@@ -76,6 +77,7 @@ const ChatBox = (props) => {
     socket.on("conversation-game-message", listener);
 
     return () => socket.off("conversation-game-message", listener);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -124,7 +126,7 @@ const ChatBox = (props) => {
             )}
           </Card>
           <Search
-            placeholder="input search text"
+            placeholder="Nhập tin nhắn"
             onSearch={addMessageToGame}
             enterButton={<SendOutlined />}
             ref={inputRef}

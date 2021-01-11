@@ -94,7 +94,6 @@ const GameDashboard = (props) => {
           }
         });
       } else {
-        console.log("enter password");
         setOpenPassword(room_id);
       }
     } else {
@@ -146,7 +145,6 @@ const GameDashboard = (props) => {
   useEffect(() => {
     const callback = (msg) => {
       const { message, sender_id, room_id, partner_id } = msg;
-      console.log(partner_id);
 
       let partnerInfo = game.users.find((u) => u._id === partner_id);
 
@@ -154,15 +152,12 @@ const GameDashboard = (props) => {
         partnerInfo = game.users.find((u) => u._id === sender_id);
       }
 
-      console.log(room_id);
-
       openChatBox({
         userId: auth.profileId,
         partnerId: partnerInfo._id,
         avatarPartner: partnerInfo ? partnerInfo.avatar : "",
         userNamePartner: partnerInfo ? partnerInfo.username : "",
       }).then((res) => {
-        console.log(res);
         addMessageFromSocket({
           message: { content: message.content },
           senderId: sender_id,
@@ -170,10 +165,17 @@ const GameDashboard = (props) => {
         });
       });
     };
+
     socket.on("conversation-message", callback);
 
     return () => socket.off("conversation-message", callback);
-  }, [partnerData]);
+  }, [
+    partnerData,
+    game.users,
+    auth.profileId,
+    addMessageFromSocket,
+    openChatBox,
+  ]);
 
   // Listen invitation
   useEffect(() => {

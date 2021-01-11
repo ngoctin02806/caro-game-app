@@ -57,13 +57,9 @@ const conversationReducer = (state = INIT_STATE, action) => {
     }
 
     case ADD_MESSAGE: {
-      console.log(state.conversations);
-
       const conversationIndex = state.conversations.findIndex(
         (con) => con.conversationId === action.value.conversationId
       );
-
-      console.log(action.value);
 
       const conversation = Object.assign(
         {},
@@ -73,6 +69,8 @@ const conversationReducer = (state = INIT_STATE, action) => {
       conversation.messages = conversation.messages.concat(
         action.value.message
       );
+
+      console.log(conversation);
 
       const newConversations = Array.from(state.conversations);
       newConversations.splice(conversationIndex, 1, conversation);
