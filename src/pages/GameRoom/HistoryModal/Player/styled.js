@@ -7,3 +7,8 @@ export const PlayerWrapper = styled.div`
   left: ${(props) => props.left}px;
   right: ${(props) => props.right}px;
 `;
+
+export const WreathWrapper = styled.div`
+  position: absolute;
+  z-index: 10;
+`;

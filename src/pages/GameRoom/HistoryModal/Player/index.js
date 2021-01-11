@@ -1,21 +1,24 @@
 import React from "react";
 import { Card, Tooltip } from "antd";
 import { connect } from "react-redux";
-import { useParams } from "react-router-dom";
 
 import CupIcon from "../../../../components/Icons/CupIcon";
+import WreathIcon from "../../../../components/Icons/WreathIcon";
 
-import { PlayerWrapper } from "./styled";
+import { PlayerWrapper, WreathWrapper } from "./styled";
 
 const { Meta } = Card;
 
 const Player = (props) => {
-  const { left, right, player } = props;
-
-  const { roomId } = useParams();
+  const { isWinner, left, right, player } = props;
 
   return (
     <PlayerWrapper left={left} right={right}>
+      {isWinner && (
+        <WreathWrapper>
+          <WreathIcon />
+        </WreathWrapper>
+      )}
       <Card
         hoverable
         style={{ width: 100, position: "relative" }}

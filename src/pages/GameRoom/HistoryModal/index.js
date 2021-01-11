@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Modal } from "antd";
+import { Modal, Pagination } from "antd";
+import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import axios from "axios";
 
@@ -9,9 +10,19 @@ import Player from "./Player";
 import { ChessTableWrapper } from "./styled";
 
 const HistoryModal = (props) => {
-  const { gameId, openHistory, setOpenHistory } = props;
+  const { gameId, gameIds, openHistory, setOpenHistory } = props;
 
-  const [table, setTable] = useState([]);
+  const [game, setGame] = useState({});
+
+  const getGameByPage = (page) => {
+    const { _id } = gameIds[page - 1];
+
+    axios(`/games/${_id}`, {
+      method: "GET",
+    }).then((res) => {
+      setGame(res.data);
+    });
+  };
 
   useEffect(() => {
     console.log(gameId);
@@ -20,7 +31,7 @@ const HistoryModal = (props) => {
       axios(`/games/${gameId}`, {
         method: "GET",
       }).then((res) => {
-        setTable(res.data.steps);
+        setGame(res.data);
       });
     }
   }, [gameId]);
@@ -33,15 +44,48 @@ const HistoryModal = (props) => {
       onCancel={() => setOpenHistory(false)}
       width={1000}
       footer={null}
-      bodyStyle={{ display: "flex", justifyContent: "center" }}
+      bodyStyle={{
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+        position: "relative",
+      }}
     >
       <ChessTableWrapper>
-        {table.map((cols, i) =>
-          cols.map((c, j) => (
-            <Cell c={c} key={`cell-${i * j + j}`} position={[i, j]} />
-          ))
-        )}
+        {game.steps &&
+          game.steps.map((cols, i) =>
+            cols.map((c, j) => (
+              <Cell c={c} key={`cell-${i * j + j}`} position={[i, j]} />
+            ))
+          )}
+        {game.players &&
+          game.players.map((p, index) => {
+            if (index) {
+              return (
+                <Player
+                  isWinner={game.winner_id === p._id}
+                  left={-100}
+                  player={p}
+                />
+              );
+            }
+
+            return (
+              <Player
+                isWinner={game.winner_id === p._id}
+                right={-100}
+                player={p}
+              />
+            );
+          })}
       </ChessTableWrapper>
+      <Pagination
+        style={{ marginTop: "10px" }}
+        defaultCurrent={1}
+        total={gameIds.length}
+        pageSize={1}
+        onChange={getGameByPage}
+      />
     </Modal>
   );
 };
@@ -53,6 +97,7 @@ const mapStateToProps = (state) => {
         ? state.game.information.room.game_ids[0]._id
         : null
       : null,
+    gameIds: state.game.information.room.game_ids || [],
   };
 };
 
