@@ -26,6 +26,7 @@ import "./style.css";
 
 const GameRoom = (props) => {
   const {
+    roomName,
     auth,
     isRoomLoading,
     openConversation,
@@ -37,6 +38,12 @@ const GameRoom = (props) => {
   } = props;
 
   const { roomId } = useParams();
+
+  useEffect(() => {
+    if (roomName) {
+      document.title = roomName;
+    }
+  }, [roomName]);
 
   useEffect(() => {
     loadInformationRoom(roomId);
@@ -109,6 +116,7 @@ const mapStateToProps = (state) => {
       ...state.auth,
     },
     isRoomLoading: state.game.information.isLoading,
+    roomName: state.game.information.room.room_name,
   };
 };
 

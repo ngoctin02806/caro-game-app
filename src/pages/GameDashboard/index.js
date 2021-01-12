@@ -120,7 +120,7 @@ const GameDashboard = (props) => {
 
   useEffect(() => {
     document.title = "Trang chủ Game";
-  }, []);
+  }, [location.pathname]);
 
   // Load all rooms
   useEffect(() => {
