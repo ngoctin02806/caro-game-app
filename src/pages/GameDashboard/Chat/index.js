@@ -40,6 +40,8 @@ const Chat = (props) => {
   );
 
   const addMessageToConver = () => {
+    if (inputRef.current.state.value === "") return;
+
     addMessage({
       message: { content: inputRef.current.state.value },
       conversationId,

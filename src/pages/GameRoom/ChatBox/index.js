@@ -40,6 +40,8 @@ const ChatBox = (props) => {
   const bodyMsgRef = useRef(null);
 
   const addMessageToGame = () => {
+    if (inputRef.current.state.value !== "") return;
+
     addMessage({
       message: { content: inputRef.current.state.value },
       senderId: auth.profileId,

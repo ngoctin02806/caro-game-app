@@ -25,6 +25,7 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "route-parser": "0.0.5",
     "shortid": "^2.2.16",
     "socket.io-client": "^3.0.3",
     "styled-components": "^5.2.1",

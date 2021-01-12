@@ -13,6 +13,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import queryString from "query-string";
+import RoutePath from "route-parser";
 
 import { WrapperDashboard, ChatBoxWrapper } from "./styled";
 
@@ -184,21 +185,24 @@ const GameDashboard = (props) => {
     socket.on(
       "show-invitation",
       ({ room_id, room_type, bet_level, room_secret, user }) => {
-        console.log("show-invitation", room_id);
-        setInvitations(
-          invitations.concat({
-            room_id,
-            room_type,
-            room_secret,
-            bet_level,
-            user,
-          })
-        );
+        const route = new RoutePath("/trang-chu/tro-choi/:roomId");
+        const { roomId } = route.match(location.pathname);
+        if (!roomId) {
+          setInvitations(
+            invitations.concat({
+              room_id,
+              room_type,
+              room_secret,
+              bet_level,
+              user,
+            })
+          );
+        }
       }
     );
 
     return () => socket.off("show-invitation");
-  }, [invitations]);
+  }, [invitations, location.pathname]);
 
   const menu = (
     <Menu style={{ width: "300px" }}>

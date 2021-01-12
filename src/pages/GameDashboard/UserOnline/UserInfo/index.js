@@ -15,10 +15,18 @@ const UserInfoWrapper = styled.div`
   align-items: center;
 `;
 
-const openNotification = (placement) => {
+const openNotification = (placement, message) => {
   notification.info({
     message: `Thông báo`,
-    description: "Đã gửi lời mời thành công !",
+    description: message,
+    placement,
+  });
+};
+
+const openAlertNotification = (placement, message) => {
+  notification.warning({
+    message: `Thông báo`,
+    description: message,
     placement,
   });
 };
@@ -45,7 +53,16 @@ const UserInfo = (props) => {
         room_type: roomType,
       },
       (response) => {
-        openNotification("topRight");
+        if (response.status === "ok") {
+          openNotification("topRight", "Đã gửi lời mời thành công !");
+        }
+
+        if (response.status === "fail") {
+          openAlertNotification(
+            "topRight",
+            "Người chơi đã ở phòng chơi khác !"
+          );
+        }
       }
     );
 
