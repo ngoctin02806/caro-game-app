@@ -298,7 +298,7 @@ const GameDashboard = (props) => {
                     <Content
                       style={{
                         padding: "120px 24px 80px 24px",
-                        marginLeft: "250px",
+                        marginLeft: "240px",
                       }}
                     >
                       <Row style={{ height: "100%" }} gutter={[10, 0]}>

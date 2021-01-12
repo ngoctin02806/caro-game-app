@@ -63,6 +63,10 @@ const UserInfo = (props) => {
             "Người chơi đã ở phòng chơi khác !"
           );
         }
+
+        if (response.status === "offline") {
+          openAlertNotification("topRight", "Người dùng không online !");
+        }
       }
     );
 

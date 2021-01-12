@@ -24,7 +24,7 @@ const Cell = (props) => {
     <StyledCell
       active={active}
       onClick={() => {
-        if (currentPlayer === profileId) {
+        if (!character && currentPlayer === profileId) {
           onClick();
           handlePlaying(roomId, profileId, position, isXCharacter ? "X" : "O");
         }
