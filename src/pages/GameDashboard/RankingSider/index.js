@@ -40,6 +40,7 @@ const RankingSider = (props) => {
         right: 0,
         top: 80,
         background: "#f0f2f5",
+        zIndex: 2,
       }}
     >
       <Menu

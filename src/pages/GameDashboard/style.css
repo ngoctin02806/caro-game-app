@@ -1,0 +1,16 @@
+.caro-game-spining-dashboard {
+  width: 100%;
+  height: 100vh;
+}
+
+.caro-game-spining-dashboard .ant-spin-container {
+  height: 100vh;
+}
+
+.caro-game-spining-dashboard .ant-spin-container .ant-layout-content {
+  height: 100vh;
+}
+
+.caro-game-spining-dashboard > div > .ant-spin {
+  max-height: 100vh;
+}

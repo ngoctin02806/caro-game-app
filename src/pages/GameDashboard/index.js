@@ -40,6 +40,8 @@ import {
 } from "../../redux/Conversation/conversation.actions";
 import UserInformationModal from "../../components/@core/UserInformationModal";
 
+import "./style.css";
+
 const { Content } = Layout;
 
 const GameDashboard = (props) => {
@@ -192,10 +194,6 @@ const GameDashboard = (props) => {
             user,
           })
         );
-
-        // timeoutId = setTimeout(() => {
-        //   setIsModalVisible(false);
-        // }, 20000);
       }
     );
 
@@ -269,31 +267,38 @@ const GameDashboard = (props) => {
       </ChatBoxWrapper>
 
       <Layout style={{ height: "100%" }}>
-        <Content style={{ padding: "0 50px" }}>
+        <Content>
           <Layout className="site-layout-background">
             <Switch>
               <Route exact path={`${path}/tro-choi/:roomId`}>
-                <RankingSider />
-                <GameRoom />
+                <Row style={{ width: "100%" }}>
+                  <Col span={22}>
+                    <GameRoom />
+                  </Col>
+                  <Col>
+                    <RankingSider />
+                  </Col>
+                </Row>
               </Route>
               <Route path={`${path}`}>
                 <>
                   <RankingSider />
                   <Sider />
-                  <Content
-                    style={{
-                      padding: "0px 24px",
-                      minHeight: 280,
-                      marginLeft: "200px",
-                    }}
+                  <Spin
+                    tip="Đang tải ..."
+                    spinning={isLoadingRooms}
+                    delay
+                    wrapperClassName="caro-game-spining-dashboard"
+                    style={{ height: "100%" }}
                   >
-                    <Row gutter={[10, 0]}>
-                      <Col span={20}>
-                        <Spin
-                          tip="Đang tải ..."
-                          spinning={isLoadingRooms}
-                          delay
-                        >
+                    <Content
+                      style={{
+                        padding: "120px 24px 80px 24px",
+                        marginLeft: "250px",
+                      }}
+                    >
+                      <Row style={{ height: "100%" }} gutter={[10, 0]}>
+                        <Col span={20}>
                           <Row
                             gutter={[10, 0]}
                             style={{
@@ -348,10 +353,10 @@ const GameDashboard = (props) => {
                                 : 10
                             }
                           />
-                        </Spin>
-                      </Col>
-                    </Row>
-                  </Content>
+                        </Col>
+                      </Row>
+                    </Content>
+                  </Spin>
                 </>
               </Route>
             </Switch>

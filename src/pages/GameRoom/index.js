@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
-import { Row, Col } from "antd";
+import { Row, Col, Spin } from "antd";
 
 import socket from "../../config/socket.config";
 
@@ -22,9 +22,12 @@ import {
   playerLeaveRoom,
 } from "../../redux/Game/game.actions";
 
+import "./style.css";
+
 const GameRoom = (props) => {
   const {
     auth,
+    isRoomLoading,
     openConversation,
     loadMessage,
     loadInformationRoom,
@@ -77,17 +80,26 @@ const GameRoom = (props) => {
   }, [playerLeaveRoom]);
 
   return (
-    <Row gutter={[10, 10]} style={{ width: "100%" }}>
-      <HistoryProvider>
-        <Col span={7}>
-          <ParticipantSider />
-        </Col>
-        <Col span={10.5}>
-          <ChessTable roomId={roomId} />
-        </Col>
-      </HistoryProvider>
-      <ChatBox />
-    </Row>
+    <Spin
+      spinning={isRoomLoading}
+      delay={3000}
+      wrapperClassName="caro-game-spining"
+    >
+      <Row
+        gutter={[10, 10]}
+        style={{ width: "100%", padding: "120px 50px 80px 50px" }}
+      >
+        <HistoryProvider>
+          <Col span={8}>
+            <ParticipantSider />
+          </Col>
+          <Col span={10.5}>
+            <ChessTable roomId={roomId} />
+          </Col>
+        </HistoryProvider>
+        <ChatBox />
+      </Row>
+    </Spin>
   );
 };
 
@@ -96,6 +108,7 @@ const mapStateToProps = (state) => {
     auth: {
       ...state.auth,
     },
+    isRoomLoading: state.game.information.isLoading,
   };
 };
 

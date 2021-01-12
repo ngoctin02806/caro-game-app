@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const WrapperDashboard = styled.div`
-  padding: 130px 0px 80px 0px;
   position: relative;
 `;
 
