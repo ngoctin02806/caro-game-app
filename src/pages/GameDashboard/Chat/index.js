@@ -44,15 +44,16 @@ const Chat = (props) => {
       message: { content: inputRef.current.state.value },
       conversationId,
       senderId: userId,
+    }).then(() => {
+      const scrollHeight = bodyMessageRef.current.scrollHeight;
+      const height = bodyMessageRef.current.clientHeight;
+      const maxScrollTop = scrollHeight - height;
+
+      bodyMessageRef.current.scrollTop =
+        maxScrollTop > 0 ? maxScrollTop + 100 : 0;
     });
+
     inputRef.current.state.value = "";
-
-    const scrollHeight = bodyMessageRef.current.scrollHeight;
-    const height = bodyMessageRef.current.clientHeight;
-    const maxScrollTop = scrollHeight - height;
-
-    bodyMessageRef.current.scrollTop =
-      maxScrollTop > 0 ? maxScrollTop + 100 : 0;
   };
 
   useEffect(() => {

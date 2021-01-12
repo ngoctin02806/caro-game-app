@@ -37,6 +37,7 @@ const ChatBox = (props) => {
   const [openChatBox, setOpenChatBox] = useState(false);
 
   const inputRef = useRef(null);
+  const bodyMsgRef = useRef(null);
 
   const addMessageToGame = () => {
     addMessage({
@@ -44,10 +45,24 @@ const ChatBox = (props) => {
       senderId: auth.profileId,
       conversationId: conversation._id,
       gameId: newGame._id,
+    }).then(() => {
+      const scrollHeight = bodyMsgRef.current.scrollHeight;
+      const height = bodyMsgRef.current.clientHeight;
+      const maxScrollTop = scrollHeight - height;
+
+      bodyMsgRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
     });
 
     inputRef.current.state.value = "";
   };
+
+  useEffect(() => {
+    const scrollHeight = bodyMsgRef.current.scrollHeight;
+    const height = bodyMsgRef.current.clientHeight;
+    const maxScrollTop = scrollHeight - height;
+
+    bodyMsgRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+  }, [openChatBox]);
 
   useEffect(() => {
     const listener = ({ user_id, username, avatar }) => {
@@ -97,44 +112,45 @@ const ChatBox = (props) => {
           )}
         </HiddenButtom>
       </div>
-      {openChatBox && (
-        <>
-          <Card
-            title={
-              <div>
-                <MessageOutlined />
-                <label style={{ marginLeft: "10px" }}>Trò chuyện</label>
-              </div>
-            }
-            headStyle={{ padding: "0px 10px" }}
-            bordered={false}
-            style={{ width: "100%" }}
-            bodyStyle={{
-              height: "300px",
-              overflowY: "scroll",
-              padding: "10px",
-            }}
+      <>
+        <Card
+          title={
+            <div>
+              <MessageOutlined />
+              <label style={{ marginLeft: "10px" }}>Trò chuyện</label>
+            </div>
+          }
+          headStyle={{ padding: "0px 10px" }}
+          bordered={false}
+          style={{ width: "100%", height: openChatBox ? "auto" : "0px" }}
+          bodyStyle={{
+            padding: "0px",
+          }}
+        >
+          <div
+            ref={bodyMsgRef}
+            style={{ height: "300px", overflowY: "scroll", padding: "5px" }}
           >
             {messages.map((mess, index) =>
               mess.created_by === auth.profileId ? (
-                <div style={{ overflow: "auto" }}>
+                <div style={{ overflow: "auto" }} key={mess._id}>
                   <Message hasReceived>{mess.content}</Message>
                 </div>
               ) : (
-                <div style={{ overflow: "auto" }}>
+                <div style={{ overflow: "auto" }} key={mess._id}>
                   <PartnerMessage avatar="">{mess.content}</PartnerMessage>
                 </div>
               )
             )}
-          </Card>
+          </div>
           <Search
             placeholder="Nhập tin nhắn"
             onSearch={addMessageToGame}
             enterButton={<SendOutlined />}
             ref={inputRef}
           />
-        </>
-      )}
+        </Card>
+      </>
     </ChatBoxWrapper>
   );
 };

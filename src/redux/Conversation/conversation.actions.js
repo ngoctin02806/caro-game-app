@@ -196,6 +196,8 @@ export const addMessageToConverMiddleware = ({
         conversationId,
       })
     );
+
+    return Promise.resolve();
   };
 };
 

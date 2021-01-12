@@ -120,6 +120,8 @@ export const addMessageMiddleware = ({
     });
 
     dispatch(addMessage({ content: message.content, created_by: senderId }));
+
+    return Promise.resolve();
   };
 };
 
