@@ -87,11 +87,7 @@ const GameRoom = (props) => {
   }, [playerLeaveRoom]);
 
   return (
-    <Spin
-      spinning={isRoomLoading}
-      delay={3000}
-      wrapperClassName="caro-game-spining"
-    >
+    <Spin spinning={isRoomLoading} wrapperClassName="caro-game-spining">
       <Row
         gutter={[10, 10]}
         style={{ width: "100%", padding: "120px 50px 80px 50px" }}
