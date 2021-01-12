@@ -1,7 +1,8 @@
 import { Button, Divider, List, notification } from "antd";
+import { HomeOutlined } from "@ant-design/icons";
 import React, { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
-import { useParams, useHistory, Link, useRouteMatch } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import Participant from "./Participant";
 
@@ -28,6 +29,7 @@ let leavingRoom = false;
 
 const ParticipantSider = (props) => {
   const {
+    roomName,
     profileId,
     currentPlayer,
     participants,
@@ -69,6 +71,11 @@ const ParticipantSider = (props) => {
   return (
     <ParticipantWrapper>
       {openInforNoti && openNotification(closeInforNoti)}
+      <div style={{ fontSize: "18px", color: "#555", fontWeight: "bold" }}>
+        <HomeOutlined style={{ marginRight: "10px" }} />
+        {roomName}
+      </div>
+      <Divider style={{ marginTop: "10px" }} />
       <Button
         type="primary"
         style={{ width: "100%", marginBottom: "5px" }}
@@ -142,6 +149,7 @@ const mapStateToProps = (state) => {
     betLevel: state.game.information.room.bet_level,
     currentPlayer: state.game.information.room.currentPlayer,
     gameIds: state.game.information.room.game_ids,
+    roomName: state.game.information.room.room_name,
   };
 };
 

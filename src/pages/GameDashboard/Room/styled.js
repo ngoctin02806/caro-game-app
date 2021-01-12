@@ -26,3 +26,13 @@ export const StyledBetLevel = styled.div`
   color: #fff;
   z-index: 1;
 `;
+
+export const StyleRoomName = styled.div`
+  padding: 5px;
+  background-color: #ea686a;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  color: #fff;
+  z-index: 1;
+`;

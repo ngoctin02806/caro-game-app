@@ -33,11 +33,12 @@ const CustomizeModal = (props) => {
 
   // Create a game room
   const createRoom = ({
+    room_name: roomName,
     type,
     bet_level: betLevel,
     room_secret: roomSecret = "",
   }) => {
-    createRoomGame({ type, betLevel, roomSecret }).then((room) => {
+    createRoomGame({ roomName, type, betLevel, roomSecret }).then((room) => {
       if (room) {
         history.push("/trang-chu");
         socket.emit("emit-join-room-game", {
@@ -67,6 +68,22 @@ const CustomizeModal = (props) => {
           bet_level: 10,
         }}
       >
+        <div style={{ marginBottom: "5px" }}>
+          <Text strong={true} style={{ fontSize: "15px" }}>
+            Tên phòng chơi
+          </Text>
+          <Form.Item
+            name="room_name"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập tên phòng !",
+              },
+            ]}
+          >
+            <Input placeholder="Tên phòng" />
+          </Form.Item>
+        </div>
         <div style={{ marginBottom: "5px" }}>
           <Text strong={true} style={{ fontSize: "15px" }}>
             Lựa chọn loại phòng chơi
@@ -144,8 +161,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createRoomGame: ({ type, roomSecret, betLevel }) =>
-      dispatch(createRoomGameMiddleware({ type, roomSecret, betLevel })),
+    createRoomGame: ({ roomName, type, roomSecret, betLevel }) =>
+      dispatch(
+        createRoomGameMiddleware({ roomName, type, roomSecret, betLevel })
+      ),
   };
 };
 

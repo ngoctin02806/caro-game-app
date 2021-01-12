@@ -147,12 +147,18 @@ export const listenMessageMiddleware = ({ message, senderId }) => {
   };
 };
 
-export const createRoomGameMiddleware = ({ type, roomSecret, betLevel }) => {
+export const createRoomGameMiddleware = ({
+  roomName,
+  type,
+  roomSecret,
+  betLevel,
+}) => {
   return (dispatch) => {
     dispatch(loadingCreateRoomGame());
     return axios("/rooms", {
       method: "POST",
       data: {
+        room_name: roomName,
         type,
         room_secret: roomSecret,
         bet_level: betLevel,
