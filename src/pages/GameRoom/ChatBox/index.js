@@ -25,6 +25,7 @@ const { Search } = Input;
 
 const ChatBox = (props) => {
   const {
+    newGame,
     conversation,
     messages,
     auth,
@@ -42,6 +43,7 @@ const ChatBox = (props) => {
       message: { content: inputRef.current.state.value },
       senderId: auth.profileId,
       conversationId: conversation._id,
+      gameId: newGame._id,
     });
 
     inputRef.current.state.value = "";
@@ -146,13 +148,16 @@ const mapStateToProps = (state) => {
       ...state.auth,
     },
     messages: state.game.messages,
+    newGame: state.game.information.newGame,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addMessage: ({ message, senderId, conversationId }) =>
-      dispatch(addMessageMiddleware({ message, senderId, conversationId })),
+    addMessage: ({ message, senderId, conversationId, gameId }) =>
+      dispatch(
+        addMessageMiddleware({ message, senderId, conversationId, gameId })
+      ),
     listenMessage: ({ message, senderId }) =>
       dispatch(listenMessageMiddleware({ message, senderId })),
     addParticipant: (participant) =>

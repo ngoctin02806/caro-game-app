@@ -100,11 +100,17 @@ export const loadMessageMiddleware = (conversationId) => {
   };
 };
 
-export const addMessageMiddleware = ({ message, senderId, conversationId }) => {
+export const addMessageMiddleware = ({
+  message,
+  senderId,
+  conversationId,
+  gameId,
+}) => {
   return (dispatch) => {
     console.log(conversationId);
     socket.emit("emit-conversation-game-message", {
       room_id: conversationId,
+      game_id: gameId,
       message: {
         sender_id: senderId,
         content: message.content,

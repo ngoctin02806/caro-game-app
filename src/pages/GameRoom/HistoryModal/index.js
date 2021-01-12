@@ -5,6 +5,7 @@ import axios from "axios";
 
 import Cell from "./Cell";
 import Player from "./Player";
+import ChatBox from "./ChatBox";
 
 import { ChessTableWrapper } from "./styled";
 
@@ -24,8 +25,6 @@ const HistoryModal = (props) => {
   };
 
   useEffect(() => {
-    console.log(gameId);
-
     if (gameId) {
       axios(`/games/${gameId}`, {
         method: "GET",
@@ -85,6 +84,7 @@ const HistoryModal = (props) => {
         pageSize={1}
         onChange={getGameByPage}
       />
+      <ChatBox gameId={game._id} />
     </Modal>
   );
 };
