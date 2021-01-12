@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const WrapperDashboard = styled.div`
   position: relative;
+  width: 100%;
 `;
 
 export const ChatBoxWrapper = styled.div`
