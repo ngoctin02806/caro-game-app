@@ -70,6 +70,8 @@ class ChessTable extends Component {
   }
 
   handleWin(character) {
+    if (this.props.guests.find((g) => g.id === this.props.profileId)) return;
+
     setTimeout(() => {
       this.handleCloseLoserModal();
       this.handleCloseWinnerModal();
@@ -142,6 +144,7 @@ class ChessTable extends Component {
 
   render() {
     const {
+      guests,
       players,
       profileId,
       currentPlayer,
@@ -184,7 +187,7 @@ class ChessTable extends Component {
               />
             ))
           )}
-          {players.map((p) => {
+          {players.map((p, index) => {
             if (profileId === p._id) {
               return (
                 <Player
@@ -205,6 +208,29 @@ class ChessTable extends Component {
                 />
               );
             }
+
+            if (guests.find((g) => g.id === profileId)) {
+              return (
+                <Player
+                  key={p._id}
+                  player={p}
+                  left={index === 0 && -100}
+                  right={index === 1 && -100}
+                  checkPosition={(x, y, character) => {
+                    this.current.x = x;
+                    this.current.y = y;
+                    this.table.checkPosition(x, y, character);
+                  }}
+                  randomPosition={() => this.table.randomPosition()}
+                  setCurrent={(x, y) => {
+                    this.current.x = x;
+                    this.current.y = y;
+                  }}
+                  resetChessBoard={() => this.table.resetChessBoard()}
+                />
+              );
+            }
+
             return (
               <Player
                 key={p._id}
@@ -225,7 +251,7 @@ class ChessTable extends Component {
               />
             );
           })}
-          {!currentPlayer && (
+          {!guests.find((g) => g.id === profileId) && !currentPlayer && (
             <StyledStartGame>
               {players.length === 2 && (
                 <Button
@@ -253,6 +279,7 @@ const mapStateToProps = (state) => {
     currentPlayer: state.game.information.room.currentPlayer,
     isXCharacter: state.game.information.newGame.isXCharacter,
     betLevel: state.game.information.room.bet_level,
+    guests: state.game.information.room.guests,
   };
 };
 
