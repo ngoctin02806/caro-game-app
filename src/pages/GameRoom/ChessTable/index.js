@@ -20,7 +20,11 @@ import {
   startGameMiddleware,
 } from "../../../redux/Game/game.middlewares";
 import socket from "../../../config/socket.config";
-import { insertXO, resetGame } from "../../../redux/Game/game.actions";
+import {
+  insertXO,
+  resetGame,
+  changePlayer,
+} from "../../../redux/Game/game.actions";
 
 class ChessTable extends Component {
   constructor(props) {
@@ -35,6 +39,9 @@ class ChessTable extends Component {
 
     this.handleOpenLoserModal = this.handleOpenLoserModal.bind(this);
     this.handleCloseLoserModal = this.handleCloseLoserModal.bind(this);
+
+    this.handleRunOffTimerLoser = this.handleRunOffTimerLoser.bind(this);
+    this.handleRunOffTimerWinner = this.handleRunOffTimerWinner.bind(this);
 
     this.redirectToHome = this.redirectToHome.bind(this);
 
@@ -67,6 +74,29 @@ class ChessTable extends Component {
 
   updateState(value) {
     this.setState(value);
+  }
+
+  handleRunOffTimerLoser() {
+    this.props.computePoint(-this.props.betLevel, this.state.table);
+    this.handleOpenLoserModal();
+
+    setTimeout(() => {
+      this.handleCloseLoserModal();
+    }, 5000);
+
+    return;
+  }
+
+  handleRunOffTimerWinner() {
+    this.props.computePoint(this.props.betLevel, this.state.table);
+    this.handleOpenWinnerModal();
+
+    this.props.changePlayer(null);
+
+    setTimeout(() => {
+      this.handleCloseWinnerModal();
+    }, 5000);
+    return;
   }
 
   handleWin(character) {
@@ -136,10 +166,15 @@ class ChessTable extends Component {
       this.current = { x: step[0], y: step[1] };
       this.table.checkPosition(step[0], step[1], character, this.handleWin);
     });
+
+    socket.on("run-off-time", ({ user_id }) => {
+      this.handleRunOffTimerWinner();
+    });
   }
 
   componentWillUnmount() {
     socket.off("step-game");
+    socket.off("run-off-time");
   }
 
   render() {
@@ -200,6 +235,7 @@ class ChessTable extends Component {
                     this.table.checkPosition(x, y, character);
                   }}
                   randomPosition={() => this.table.randomPosition()}
+                  handleRunOffTimerLoser={() => this.handleRunOffTimerLoser()}
                   setCurrent={(x, y) => {
                     this.current.x = x;
                     this.current.y = y;
@@ -222,6 +258,7 @@ class ChessTable extends Component {
                     this.table.checkPosition(x, y, character);
                   }}
                   randomPosition={() => this.table.randomPosition()}
+                  handleRunOffTimerWinner={() => this.handleRunOffTimerWinner()}
                   setCurrent={(x, y) => {
                     this.current.x = x;
                     this.current.y = y;
@@ -292,6 +329,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(computePointForUserMiddleware(betLevel, chessBoard)),
     registerLeavingRoom: (roomId, userId) =>
       dispatch(registerLeavingRoomMiddleware(roomId, userId)),
+    changePlayer: (userId) => dispatch(changePlayer(userId)),
   };
 };
 

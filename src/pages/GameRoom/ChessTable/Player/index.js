@@ -18,19 +18,20 @@ let timer = 20;
 
 const Player = (props) => {
   const {
-    isXCharacter,
+    // isXCharacter,
     profileId,
     left,
     right,
     player,
     currentPlayer,
-    nextPlayer,
+    // nextPlayer,
     changePlayer,
     saveGame,
-    checkPosition,
-    randomPosition,
-    setCurrent,
+    // checkPosition,
+    // randomPosition,
+    // setCurrent,
     resetChessBoard,
+    handleRunOffTimerLoser,
   } = props;
 
   const [count, setCount] = useState(0);
@@ -48,7 +49,7 @@ const Player = (props) => {
     });
 
     return () => socket.off("start-game-data");
-  }, [saveGame]);
+  }, [saveGame, resetChessBoard]);
 
   useEffect(() => {
     const callback = ({ user_id }) => {
@@ -74,19 +75,28 @@ const Player = (props) => {
       if (count === 20) {
         clearTimeout(intervalId);
         if (player._id === profileId) {
-          const { x, y } = randomPosition();
+          // const { x, y } = randomPosition();
+          // setCurrent(x, y);
+          // checkPosition(x, y, isXCharacter ? "X" : "O");
+          // nextPlayer(roomId, player._id, [x, y], isXCharacter ? "X" : "O");
 
-          setCurrent(x, y);
+          setCount(0);
 
-          checkPosition(x, y, isXCharacter ? "X" : "O");
+          socket.emit("emit-run-off-time", {
+            room_id: roomId,
+            user_id: profileId,
+          });
 
-          nextPlayer(roomId, player._id, [x, y], isXCharacter ? "X" : "O");
+          handleRunOffTimerLoser();
+
+          changePlayer(null);
         }
       }
     }
 
     return () => clearTimeout(intervalId);
-  }, [currentPlayer, count]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPlayer, count, handleRunOffTimerLoser]);
 
   return (
     <PlayerWrapper left={left} right={right}>
