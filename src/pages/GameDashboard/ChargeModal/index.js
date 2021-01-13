@@ -18,6 +18,8 @@ const ChargeUpModal = (props) => {
 
   const location = useLocation();
 
+  let params = queryString.parse(location.search);
+
   const handleOk = () => {
     setIsModalVisible(false);
   };
@@ -27,8 +29,7 @@ const ChargeUpModal = (props) => {
   };
 
   useEffect(() => {
-    let params = queryString.parse(location.search);
-    if (params.vnp_ResponseCode === "00") {
+    if (params.vnp_ResponseCode === "00" || parseInt(params.errorCode) === 0) {
       setIsModalVisible(true);
     }
 
@@ -61,7 +62,8 @@ const ChargeUpModal = (props) => {
           textAlign: "center",
         }}
       >
-        +{queryString.parse(location.search).vnp_Amount / 100000}
+        {params.vnp_ResponseCode && `+${params.vnp_Amount / 100000}`}
+        {params.errorCode && `+${params.amount / 1000}`}
       </div>
     </StyledModal>
   );

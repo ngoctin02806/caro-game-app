@@ -18,6 +18,7 @@ import {
 import "./styles.css";
 
 import VnPayIcon from "../../../public/images/vnpay-logo.png";
+import MomoIcon from "../../../public/images/momo.png";
 
 const { Panel } = Collapse;
 
@@ -76,6 +77,7 @@ const data = [
 
 const Payment = () => {
   const [selected, setSelected] = useState(data[0]);
+  const [payMethod, setPayMethod] = useState("VNPAY");
   const [isLoading, setIsLoading] = useState(false);
 
   const location = useLocation();
@@ -88,6 +90,10 @@ const Payment = () => {
     return <Image src={VnPayIcon} />;
   };
 
+  const MomoLogo = () => {
+    return <Image src={MomoIcon} />;
+  };
+
   const handlePayment = () => {
     setIsLoading(true);
 
@@ -95,9 +101,9 @@ const Payment = () => {
       method: "POST",
       data: {
         amount: selected.cost,
-        type: "VNPAY",
+        type: payMethod,
         option: {
-          description: `Thanh toán bằng VNPAY với ${selected.cost} VND`,
+          description: `Thanh toán bằng ${payMethod} với ${selected.cost} VND`,
         },
       },
     }).then((res) => {
@@ -119,14 +125,16 @@ const Payment = () => {
   return (
     <>
       <Collapse
-        defaultActiveKey={["1"]}
+        accordion
+        defaultActiveKey="VNPAY"
         expandIcon={VnPayLogo}
         className="site-collapse-custom-collapse collapse "
+        onChange={(method) => setPayMethod(method)}
       >
         <Panel
           className="panel site-collapse-custom-panel"
           header="Thanh toán với VnPay"
-          key="1"
+          key="VNPAY"
           showArrow={false}
         >
           <div className="site-card-wrapper">
@@ -196,30 +204,83 @@ const Payment = () => {
             </Row>
           </div>
         </Panel>
-      </Collapse>
-      <Collapse
-        defaultActiveKey={["1"]}
-        expandIcon={() => <VnPayLogo />}
-        className="collapse"
-      >
         <Panel
           className="panel site-collapse-custom-panel"
           header="Thanh toán với Momo"
-          key="2"
+          key="MOMO"
           showArrow={false}
         >
-          <p className="text">Tính năng đang phát triển</p>
+          <div>
+            <Row gutter={32}>
+              <Col span={8}>
+                <Card className="card" style={{ width: "auto" }}>
+                  <p className="step-text">
+                    Bước 1: <span>&nbsp;Tham khảo bảng giá</span>
+                  </p>
+                  <Table
+                    columns={columns}
+                    dataSource={data}
+                    bordered
+                    pagination={false}
+                  />
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card className="card" style={{ width: "auto" }}>
+                  <p className="step-text">
+                    Bước 2: <span>&nbsp;Nhập số tiền chuyển</span>
+                  </p>
+                  <Radio.Group onChange={(e) => onChange(e)} value={selected}>
+                    {data.map((option, pos) => (
+                      <Radio style={radioStyle} value={option} key={pos}>
+                        {option.text}
+                      </Radio>
+                    ))}
+                  </Radio.Group>
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card className="card" style={{ width: "auto" }}>
+                  <p className="step-text">
+                    Bước 3: <span>&nbsp;Xác nhận thanh toán</span>
+                  </p>
+                  <Alert
+                    style={{ marginBottom: "10px", padding: "10px" }}
+                    message="Số tiền nạp:"
+                    description={selected.text}
+                    type="info"
+                  />
+                  <Alert
+                    style={{ marginBottom: "10px", padding: "10px" }}
+                    message="Số coin nhận được:"
+                    description={selected.coin}
+                    type="info"
+                  />
+                  <Alert
+                    style={{ marginBottom: "10px", padding: "10px" }}
+                    message="Phương thức thanh toán:"
+                    description="MoMo"
+                    type="info"
+                  />
+                  <MomoLogo />
+                  <div style={{ textAlign: "center", marginTop: "20px" }}>
+                    <Button
+                      onClick={handlePayment}
+                      loading={isLoading}
+                      type="primary"
+                    >
+                      Xác nhận thanh toán
+                    </Button>
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+          </div>
         </Panel>
-      </Collapse>
-      <Collapse
-        defaultActiveKey={["1"]}
-        expandIcon={() => <VnPayLogo />}
-        className="collapse "
-      >
         <Panel
           className="panel site-collapse-custom-panel"
           header="Thanh toán với ZaloPay"
-          key="3"
+          key="ZALOPAY"
           showArrow={false}
         >
           <p className="text">Tính năng đang phát triển</p>

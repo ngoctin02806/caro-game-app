@@ -2,9 +2,18 @@ import socket from "../../config/socket.config";
 
 import React, { useEffect, useState } from "react";
 import { DraggableModalProvider } from "ant-design-draggable-modal";
-import { Layout, Menu, Dropdown, Row, Col, Pagination, Spin } from "antd";
+import {
+  Layout,
+  Menu,
+  Dropdown,
+  Row,
+  Col,
+  Pagination,
+  Spin,
+  notification,
+} from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import {
   useRouteMatch,
   Route,
@@ -14,6 +23,8 @@ import {
 } from "react-router-dom";
 import queryString from "query-string";
 import RoutePath from "route-parser";
+import axios from "axios";
+import { get } from "lodash";
 
 import { WrapperDashboard, ChatBoxWrapper } from "./styled";
 
@@ -30,11 +41,14 @@ import EnterPassword from "./EnterPasswordModal";
 import InvitationModal from "./InvitationModal";
 import ChargeModal from "./ChargeModal";
 
+import { GET_ERRORS } from "../../redux/Error/error.types";
+
 import {
   getUserOnlineMiddleware,
   loadRoomsGameMiddleware,
   enterPasswordToJoinRoom,
 } from "../../redux/Game/game.middlewares";
+import { getUserOnline } from "../../redux/Game/game.actions";
 import {
   addConversationMiddleware,
   addMessageFromSocketMiddleware,
@@ -45,13 +59,21 @@ import "./style.css";
 
 const { Content } = Layout;
 
+const openPaymentErrorNotification = (placement, error) => {
+  notification.error({
+    message: `Lỗi thanh toán`,
+    description: error,
+    placement,
+  });
+};
+
 const GameDashboard = (props) => {
   const {
     auth,
     game,
     user,
     isLoadingRooms,
-    getUserOnline,
+    getUserOnlineData,
     conversations,
     openChatBox,
     addMessageFromSocket,
@@ -68,6 +90,8 @@ const GameDashboard = (props) => {
   const history = useHistory();
 
   const location = useLocation();
+
+  const dispatch = useDispatch();
 
   let background = location.state && location.state.background;
 
@@ -119,6 +143,40 @@ const GameDashboard = (props) => {
   };
 
   useEffect(() => {
+    const intervalId = setInterval(() => {
+      axios("/me/user-online", {
+        method: "GET",
+      })
+        .then((res) => {
+          dispatch(getUserOnline({ users: [...res.data.data.users] }));
+        })
+        .catch((e) => {
+          dispatch({
+            type: GET_ERRORS,
+            value: {
+              message: get(e, "response.data.message") || "Lỗi máy chủ",
+              code: get(e, "response.data.errors.0.code") || 5000,
+            },
+          });
+        });
+    }, 10000);
+
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const params = queryString.parse(location.search);
+
+    if (
+      Object.values(params).length &&
+      (params.vnp_ResponseCode !== "00" || parseInt(params.errorCode) !== 0)
+    ) {
+      openPaymentErrorNotification("topRight", "Thanh toán thất bại");
+    }
+  }, [location.search]);
+
+  useEffect(() => {
     document.title = "Trang chủ Game";
   }, [location.pathname]);
 
@@ -129,7 +187,7 @@ const GameDashboard = (props) => {
 
   //Get list user online
   useEffect(() => {
-    getUserOnline();
+    getUserOnlineData();
   }, []); // eslint-disable-line
 
   // Listen join room event
@@ -421,7 +479,7 @@ const mapDispatchToProps = (dispatch) => {
           senderId,
         })
       ),
-    getUserOnline: () => {
+    getUserOnlineData: () => {
       dispatch(getUserOnlineMiddleware());
     },
     openChatBox: ({ userId, partnerId, avatarPartner, userNamePartner }) =>
