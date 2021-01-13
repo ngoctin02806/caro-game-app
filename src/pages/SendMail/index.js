@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 
 import axios from "axios";
 
+import config from "../../config/default.config";
+
 import Error from "../../components/@core/Error";
 
 import "./style.css";
@@ -31,7 +33,7 @@ const SendMail = (props) => {
       method: "POST",
       data: {
         email: values.email,
-        host_fe: "http://localhost:3000",
+        host_fe: config.HOST_FE,
         path_name: "thay-doi-mat-khau",
       },
     }).then((res) => {
