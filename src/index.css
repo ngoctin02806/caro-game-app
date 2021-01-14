@@ -5,6 +5,22 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f2f5 !important;
+}
+
+body::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 10px;
+}
+
+/* Track */
+body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+body::-webkit-scrollbar-thumb {
+  background: #bcc0c4;
 }
 
 code {
@@ -25,4 +41,9 @@ code {
 @font-face {
   font-family: BeVietNamMedium;
   src: url("./public/fonts/BeVietnam-Medium.ttf");
+}
+
+@font-face {
+  font-family: Arcade;
+  src: url("./public/fonts/ARCADECLASSIC.TTF");
 }

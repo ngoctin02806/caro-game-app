@@ -1,0 +1,9 @@
+.caro-game-spining {
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+}
+
+.caro-game-spining > div > .ant-spin {
+  max-height: 100vh;
+}

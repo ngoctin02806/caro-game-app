@@ -1,0 +1,66 @@
+.collapse {
+  margin-bottom: 10px;
+  background-color: #f8f9fc;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  font-weight: normal;
+  border: 1px solid #d6d6d6;
+  box-shadow: 5px 10px 18px #d6d6d6;
+  height: 100%;
+}
+
+.text {
+  display: inline-block;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.step-text {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.step-text > span {
+  display: flex;
+  justify-content: center;
+  font-weight: normal;
+}
+
+.qr-code {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.vnpay-receiver {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: #005aab;
+  margin-bottom: 10px;
+}
+
+.vnpay-min-pay {
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+  color: #005aab;
+  margin-bottom: 10px;
+}
+
+.input-number {
+  width: auto;
+}
+
+.btn-confirm {
+  border-radius: 5px;
+  margin-top: 5px;
+}
