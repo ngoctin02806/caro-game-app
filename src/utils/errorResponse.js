@@ -26,6 +26,8 @@ export const errorResponse = (code) => {
       return "Mật khẩu không đúng";
     case 7017:
       return "Bạn không đủ điểm";
+    case 7022:
+      return "Tài khoản đã bị khóa";
 
     default:
       return "Unknow error";
